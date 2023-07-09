@@ -8,4 +8,4 @@ class CustomSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    field_order = ['username', 'email', 'password1', 'password2', 'telefone']
+    field_order = ['username', 'email', 'idade', 'phone_number', 'password1', 'password2']
