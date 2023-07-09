@@ -122,14 +122,16 @@ SITE_ID = 1
 AUTH_USER_MODEL = 'account_manager.User'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-
 ACCOUNT_EMAIL_REQUIRED = True
-
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
 LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'account_login'
+
+ACCOUNT_FORMS = {
+    'signup': 'account_manager.forms.CustomSignupForm'
+}
 
 
 # Internationalization

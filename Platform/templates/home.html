@@ -1,13 +1,14 @@
+{% extends 'base/base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
-    <title>Home</title>
-</head>
-<body>
-    <h1>Home</h1>
-</body>
-</html>
+
+
+{% block 'head' %}
+  <link href="{% static 'assets/css/main.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block 'title' %} EventEase - Home {% endblock %}
+
+
+{% block 'body' %}
+  <p>Varios bagual</p>
+{% endblock %}
