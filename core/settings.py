@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 # apps allauth
     'allauth',
     'allauth.account',
-    #'allauth.socialaccount'
+    'allauth.socialaccount'
 ]
 
 MIDDLEWARE = [
@@ -120,6 +120,10 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 1
 
 AUTH_USER_MODEL = 'account_manager.User'
+
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+
+ACCOUNT_EMAIL_REQUIRED = True
 
 
 # Internationalization
