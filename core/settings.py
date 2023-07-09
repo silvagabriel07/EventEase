@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'Platform',
-    # apps allauth
+# apps allauth
     'allauth',
     'allauth.account',
     #'allauth.socialaccount'
@@ -117,6 +117,8 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SITE_ID = 1
+
+AUTH_USER_MODEL = 'account_manager.User'
 
 
 # Internationalization
