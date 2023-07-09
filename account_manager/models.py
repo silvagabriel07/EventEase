@@ -39,7 +39,9 @@ class User(AbstractUser):
     idade = models.IntegerField()
 
     objects = CustomUserManager()
+
     USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.username
@@ -51,4 +53,4 @@ class PhoneNumber(models.Model):
         regex=r'^\+\d{2}\d{2}\d{4}\d{4}$',
         message="O número de telefone deve estar em um formato válido."
     )
-    phone_number = models.CharField(max_length=15, validators=phone_number_validators,  default=None)
+    phone_number = models.CharField(max_length=15, validators=[phone_number_validators],  default=None)

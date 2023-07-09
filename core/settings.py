@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'Platform',
+    'account_manager',
 # apps allauth
     'allauth',
     'allauth.account',
