@@ -110,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Authentication
+# conf Authentication 
 
 AUTHENTICATION_BACKENDS = [
     # `allauth` specific authentication methods, such as login by e-mail
@@ -124,6 +124,12 @@ AUTH_USER_MODEL = 'account_manager.User'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 ACCOUNT_EMAIL_REQUIRED = True
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+
+ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'home'
+LOGIN_URL = 'account_login'
 
 
 # Internationalization
