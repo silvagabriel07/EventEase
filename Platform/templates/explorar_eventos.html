@@ -1,76 +1,90 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-
 {% block 'head' %}
+    <link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
 
-<link href="{% static 'assets/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
-<link href="{% static 'assets/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
-<link href="{% static 'assets/vendor/aos/aos.css' %}" rel="stylesheet">
-<link href="{% static 'assets/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
-<link href="{% static 'assets/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
-
-  <style>
-body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        
+    <style>
         header {
-            background-color: #454343;
+            background-color: #333;
             color: #fff;
             padding: 20px;
-        }
-        
-        h1 {
-            font-size: 24px;
-            margin: 0;
-        }
-        
-        p {
-            font-size: 16px;
-            margin: 10px 0;
         }
         
         .container {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
-        .cta-button {
-            display: inline-block;
-            background-color: #f85a40;
+        .color-blue{
+            background-color: blue;
             color: #fff;
-            padding: 10px 20px;
-            text-decoration: none;
+            border-color: #333;
+        }
+
+        .color-blue:hover{
+            background-color: rgb(13, 13, 187);
+            color: #cfcbcb;
+            border-color: #333;
+        }
+        .filter-select {
+            margin-top: 3px;
+            padding: 5px;
+            font-size: 16px;
+            border: none;
             border-radius: 4px;
+            margin-right: 10px;
         }
         
-        .cta-button:hover {
-            background-color: #c94834;
+        .filter-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
-  </style>
+        
+        .filter-button:hover {
+            background-color: #0056b3;
+        }
+        .div-select-filters{
+            display: inline;
+        }    
+        </style>
 {% endblock %}
 
-{% block 'title' %} EventEase - Home {% endblock %}
+{% block 'title' %}EventEase - Explorar{% endblock %}
 
+{% block 'body' %}
+    <header>
+        <div class="input-group">
+            <input type="text" class="form-control" aria-label="Text input with segmented dropdown button">
+            <button type="button" class="btn btn-outline-secondary color-blue">Pesquisar</button>
+        </div>
+          
+        <div class="div-select-filters">
+            <label for="select-categoria">Categoria</label>
+            <select name="select-categoria" id="select-categoria" class="filter-select">
+                <option value="categorias">Tudo</option>
+            </select>
+        </div>
 
-{% block 'body' %} 
-  <header>
-    <div class="container">
-        <h1>EventEase - Gerencie e participe de eventos de maneira descomplicada e eficiente. </h1>
-        <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Cum sit totam animi debitis quam iste, voluptas qui molestiae doloribus nesciunt magni assumenda voluptates ea inventore. Quis ratione fuga enim hic.</p>
-        <a href="#" class="cta-button">Registre-se Agora</a>
-    </div>
-  </header>
-  <div class="container">
-    <h2>Eventos em Destaque</h2>
-    <p>Confira os eventos mais populares e próximos. Para mais, acesse <a href="#">Explorar</a></p>
-  </div>
-  <!-- Listagem de  -->
-  <section id="blog" class="blog">
+          <div class="div-select-filters">
+            <label for="select-livre">Livre</label>
+            <select name="select-categoria" id="select-livre" class="filter-select">
+                <option value="livre-sim">Sim</option>
+                <option value="livre-nao">Não</option>
+            </select>
+        </div>        
+    </header>
+<hr>
+<section id="blog" class="blog">
     <div class="container" data-aos="fade-up">
 
       <div class="row gy-4 posts-list">
@@ -153,4 +167,5 @@ body {
           </article>
         </div><!-- End post list item -->
   </section><!-- End Blog Section -->
+
 {% endblock %}

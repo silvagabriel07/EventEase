@@ -43,7 +43,7 @@ a {
 }
 
 a:hover {
-  color: #00b6a1;
+  color: #380087;
   text-decoration: none;
 }
 
@@ -238,7 +238,7 @@ section {
 # Header
 --------------------------------------------------------------*/
 .topbar {
-  background: #00796b;
+  background: #380087;
   height: 40px;
   font-size: 14px;
   transition: all 0.5s;
@@ -555,8 +555,8 @@ section {
     padding: 10px 0;
     margin: 10px 20px;
     transition: all 0.5s ease-in-out;
-    background-color: #007466;
-    border: 1px solid #006459;
+    background-color: #380087;
+    border: 1px solid #380087;
   }
 
   .navbar .dropdown>.dropdown-active,
@@ -598,7 +598,7 @@ section {
     content: "";
     position: fixed;
     inset: 0;
-    background: rgba(0, 106, 93, 0.8);
+    background: #380087;
     z-index: 9996;
   }
 }
@@ -681,7 +681,7 @@ section {
   animation-timing-function: steps;
   opacity: 1;
   border-radius: 50%;
-  border: 5px solid rgba(0, 131, 116, 0.7);
+  border: 5px solid #380087;
   top: -15%;
   left: -15%;
   background: rgba(198, 16, 0, 0);
@@ -996,7 +996,7 @@ section {
 }
 
 .services .service-item:hover .icon:before {
-  background: #00b6a1;
+  background: #380087;
 }
 
 .services .service-item:hover h3 {
@@ -1050,7 +1050,7 @@ section {
 
 .testimonials .testimonial-item .quote-icon-left,
 .testimonials .testimonial-item .quote-icon-right {
-  color: #009d8b;
+  color: #380087;
   font-size: 26px;
   line-height: 0;
 }
