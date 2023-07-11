@@ -34,16 +34,22 @@
           </a>
           <nav id="navbar" class="navbar">
             <ul>
-              <li><a href="{% url 'home' %}">Home</a></li>
-              <li><a href="{% url 'explorar_eventos' %}">Explorar</a></li>
-              <li class="dropdown"><a href="#"><span>Meus Eventos</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+              <li><a style="text-decoration: none;" href="{% url 'home' %}">Home</a></li>
+              <li><a style="text-decoration: none;" href="{% url 'explorar_eventos' %}">Explorar</a></li>
+              <li class="dropdown"><a style="text-decoration: none;" href="#"><span>Meus Eventos</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                 <ul>
-                  <li><a href="#">Participando</a></li>
-                  <li><a href="#">Organizando</a></li>
+                  <li><a style="text-decoration: none;" href="#">Participando</a></li>
+                  <li><a style="text-decoration: none;" href="#">Organizando</a></li>
                 </ul>
               </li>
-              <li><a href="#">Notificações</a></li>
-              <li><a href="#"><img width="30px" src="{% static 'Platform/img/img_perfil.png' %}"></a></li>
+              <li><a style="text-decoration: none;" href="#">Notificações</a></li>
+                            <li class="dropdown"><a style="text-decoration: none;" href="#"><span><img width="30px" src="{% static 'Platform/img/img_perfil.png' %}"></span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+                <ul>
+                  <li><a style="text-decoration: none;" href="#">Ver Perfil</a></li>
+                  <li><a style="text-decoration: none;" href="#">Logout</a></li>
+                </ul>
+              </li>
+
 
             </ul>
           </nav><!-- .navbar -->

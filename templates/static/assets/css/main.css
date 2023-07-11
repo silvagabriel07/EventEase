@@ -499,7 +499,7 @@ section {
     inset: 0;
     padding: 50px 0 10px 0;
     margin: 0;
-    background: rgba(0, 131, 116, 0.9);
+    background: 380087;
     overflow-y: auto;
     transition: 0.3s;
     z-index: 9998;
@@ -545,7 +545,7 @@ section {
   .navbar .getstarted:hover,
   .navbar .getstarted:focus:hover {
     color: #fff;
-    background: rgba(0, 131, 116, 0.8);
+    background: rgba(55, 0, 133, 0.8);
   }
 
   .navbar .dropdown ul,
@@ -660,7 +660,7 @@ section {
 .about .play-btn {
   width: 94px;
   height: 94px;
-  background: radial-gradient(var(--color-primary) 50%, rgba(0, 131, 116, 0.4) 52%);
+  background: radial-gradient(var(--color-primary) 50%, #380087 52%);
   border-radius: 50%;
   display: block;
   position: absolute;
@@ -834,9 +834,9 @@ section {
 
 .call-to-action .play-btn {
   width: 94px;
-  height: 94px;
+  height: 94px; 
   margin-bottom: 20px;
-  background: radial-gradient(var(--color-primary) 50%, rgba(0, 131, 116, 0.4) 52%);
+  background: radial-gradient(var(--color-primary) 50%, rgba(55, 0, 133, 0.4) 52%);
   border-radius: 50%;
   display: inline-block;
   position: relative;
@@ -855,7 +855,7 @@ section {
   animation-timing-function: steps;
   opacity: 1;
   border-radius: 50%;
-  border: 5px solid rgba(0, 131, 116, 0.7);
+  border: 5px solid rgba(55, 0, 133, 0.7);
   top: -15%;
   left: -15%;
   background: rgba(198, 16, 0, 0);
@@ -1293,7 +1293,7 @@ section {
 }
 
 .portfolio-details .portfolio-info .btn-visit:hover {
-  background: #009d8b;
+  background: #380087;
 }
 
 .portfolio-details .portfolio-description h2 {
@@ -1337,7 +1337,7 @@ section {
 
 .portfolio-details .portfolio-description .testimonial-item .quote-icon-left,
 .portfolio-details .portfolio-description .testimonial-item .quote-icon-right {
-  color: #009d8b;
+  color: #380087;
   font-size: 26px;
   line-height: 0;
 }
@@ -1552,7 +1552,7 @@ section {
   padding: 10px 40px;
   border-radius: 50px;
   color: var(--color-primary);
-  border: 1px solid rgba(0, 131, 116, 0.2);
+  border: 1px solid rgba(55, 0, 133, 0.2);
   transition: none;
   font-size: 16px;
   font-weight: 600;
@@ -1851,7 +1851,7 @@ section {
 }
 
 .contact .php-email-form button[type=submit]:hover {
-  background: rgba(0, 131, 116, 0.8);
+  background: rgba(55, 0, 133, 0.8);
 }
 
 @keyframes animate-loading {
@@ -2346,7 +2346,7 @@ section {
 }
 
 .blog .sidebar .search-form form button:hover {
-  background: rgba(0, 131, 116, 0.8);
+  background: rgba(55, 0, 133, 0.8);
 }
 
 .blog .sidebar .categories ul {
@@ -2524,7 +2524,7 @@ section {
 
 .blog .comments .reply-form input:focus {
   box-shadow: none;
-  border-color: rgba(0, 131, 116, 0.8);
+  border-color: rgba(55, 0, 133, 0.8);
 }
 
 .blog .comments .reply-form textarea {
@@ -2535,7 +2535,7 @@ section {
 
 .blog .comments .reply-form textarea:focus {
   box-shadow: none;
-  border-color: rgba(0, 131, 116, 0.8);
+  border-color: rgba(55, 0, 133, 0.8);
 }
 
 .blog .comments .reply-form .form-group {
@@ -2624,7 +2624,7 @@ section {
 
 .footer .footer-links ul i {
   padding-right: 2px;
-  color: rgba(0, 131, 116, 0.8);
+  color: rgba(55, 0, 133, 0.8);
   font-size: 12px;
   line-height: 0;
 }
