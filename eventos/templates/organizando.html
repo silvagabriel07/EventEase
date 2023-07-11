@@ -3,45 +3,106 @@
 
 {% block 'head' %}
   <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
-  <style>
-    .custom-card-group{
-        margin: 5%;
-        margin-top: 100px;
-        margin-bottom: 30px;
-    }
-    .custom-card{
-        margin-right: 20px;
-    }
-  </style>
 {% endblock %}
 
 {% block 'title' %}Meus Eventos - Organizando{% endblock %}
 
 {% block 'body' %}
-    <div class="card-group custom-card-group">
-        <div class="card custom-card">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-        </div>
-        </div>
-        <div class="card custom-card">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-        </div>
-        </div>
-        <div class="card custom-card">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
-            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
-        </div>
-        </div>
+<header>
+    <div class="container">
+        <h1>Meus eventos  - Organizando</h1>
+        <a href="#" class="cta-button">Organizar novo evento</a>
+
     </div>
+  </header>
+
+<section id="blog" class="blog">
+    <div class="container" data-aos="fade-up">
+
+      <div class="row gy-4 posts-list">
+
+        <div class="col-xl-4 col-md-6">
+          <article>
+
+            <div class="post-img">
+              <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
+            </div>
+
+            <p class="post-category">Categoria A</p>
+
+            <h2 class="title">
+              <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
+            </h2>
+            <p class="caracteristica-evento">Privado</p>
+            <p class="caracteristica-evento">+18</p>
+
+
+            <div class="d-flex align-items-center">
+              <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
+            <div class="post-meta">
+                <p class="post-date"> 
+                  <time datetime="2022-01-01">Jan 1, 2022</time>
+                </p>
+              </div>
+            </div>
+            <a href="#" class="cta-button btn-edit">Editar</a>
+          </article>
+        </div><!-- End post list item -->
+
+        <div class="col-xl-4 col-md-6">
+          <article>
+
+            <div class="post-img">
+              <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
+            </div>
+
+            <p class="post-category">Categoria A</p>
+
+            <h2 class="title">
+              <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
+            </h2>
+            <p class="caracteristica-evento">Privado</p>
+            <p class="caracteristica-evento">+18</p>
+
+
+            <div class="d-flex align-items-center">
+              <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
+            <div class="post-meta">
+                <p class="post-date"> 
+                  <time datetime="2022-01-01">Jan 1, 2022</time>
+                </p>
+              </div>
+            </div>
+            <a href="#" class="cta-button btn-edit">Editar</a>
+          </article>
+        </div><!-- End post list item -->
+
+        <div class="col-xl-4 col-md-6">
+          <article>
+
+            <div class="post-img">
+              <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
+            </div>
+
+            <p class="post-category">Categoria A</p>
+
+            <h2 class="title">
+              <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
+            </h2>
+            <p class="caracteristica-evento">Privado</p>
+            <p class="caracteristica-evento">+18</p>
+
+
+            <div class="d-flex align-items-center">
+              <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
+            <div class="post-meta">
+                <p class="post-date"> 
+                  <time datetime="2022-01-01">Jan 1, 2022</time>
+                </p>
+              </div>
+            </div>
+            <a href="#" class="cta-button btn-edit">Editar</a>
+          </article>
+        </div><!-- End post list item -->
+  </section><!-- End Blog Section -->
 {% endblock %}

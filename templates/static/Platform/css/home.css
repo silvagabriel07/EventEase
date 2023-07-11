@@ -32,3 +32,12 @@ p {
 .cta-button:hover {
     background-color: #c94834;
 }
+
+.caracteristica-evento{
+    font-size: 12px
+  }
+
+  .btn-edit{
+    width: 100%;
+    text-align: center;
+  }
