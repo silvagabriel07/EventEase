@@ -40,11 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'Platform',
+    'eventos',
     'account_manager',
-# apps allauth
+
+# apps django-allauth
     'allauth',
     'allauth.account',
-    'allauth.socialaccount'
+    'allauth.socialaccount',
+    
 ]
 
 MIDDLEWARE = [
