@@ -63,25 +63,28 @@
 
 {% block 'body' %}
     <header>
-        <div class="input-group">
-            <input type="text" class="form-control" aria-label="Text input with segmented dropdown button">
-            <button type="button" class="btn btn-outline-secondary color-blue">Pesquisar</button>
-        </div>
-          
-        <div class="div-select-filters">
-            <label for="select-categoria">Categoria</label>
-            <select name="select-categoria" id="select-categoria" class="filter-select">
-                <option value="categorias">Tudo</option>
-            </select>
-        </div>
+        <p>Procure eventos facilmente...</p>
+        <form action="" method="post">
+            <div class="input-group">
+                <input type="text" class="form-control" aria-label="Text input with segmented dropdown button">
+                <button type="button" class="btn btn-outline-secondary color-blue">Pesquisar</button>
+            </div>
+            <!-- FIltrar -->
+            <div class="div-select-filters">
+                <label for="select-categoria">Categoria</label>
+                <select name="select-categoria" id="select-categoria" class="filter-select">
+                    <option value="tudo">Tudo</option>
+                </select>
+            </div>
 
-          <div class="div-select-filters">
-            <label for="select-livre">Livre</label>
-            <select name="select-categoria" id="select-livre" class="filter-select">
-                <option value="livre-sim">Sim</option>
-                <option value="livre-nao">Não</option>
-            </select>
-        </div>        
+            <div class="div-select-filters">
+                <label for="select-livre">Livre</label>
+                <select name="select-livre" id="select-livre" class="filter-select">
+                    <option value="livre-sim">Sim</option>
+                    <option value="livre-nao">Não</option>
+                </select>
+            </div>        
+        </form>
     </header>
 <hr>
 <section id="blog" class="blog">
@@ -155,7 +158,7 @@
             </h2>
 
             <div class="d-flex align-items-center">
-              <img src="assets/img/blog/blog-author-3.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
+              <img src="#" alt="" class="img-fluid post-author-img flex-shrink-0">
               <div class="post-meta">
                 <p class="post-author-list">Mark Dower</p>
                 <p class="post-date">
