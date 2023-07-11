@@ -1,0 +1,34 @@
+header {
+    background-color: #454343;
+    color: #fff;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #f85a40;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.cta-button:hover {
+    background-color: #c94834;
+}

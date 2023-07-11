@@ -1,5 +1,5 @@
 from django.shortcuts import render
 
 # Create your views here.
-def organizar_eventos(request):
-    pass
+def organizando(request):
+    return render(request, 'organizando.html')

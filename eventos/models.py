@@ -7,7 +7,7 @@ class Event(models.Model):
     description = models.TextField()
 
     organizer = models.ForeignKey(User, on_delete=models.CASCADE)
-    participants = models.ManyToManyField(User)
+    participants = models.ManyToManyField(User, related_name='event_participants')
 
     CATEGORIES = (
         ('birthday', 'Aniversário'),
@@ -18,7 +18,7 @@ class Event(models.Model):
 
     category = models.CharField(max_length=15, choices=CATEGORIES)
     private = models.BooleanField(help_text='definir como True torna preciso a aceitação da requisição de participação')
-    free = models.BooleanField(help_text='definir como true significa que é um evento livre, sem restrição de idade')
+    free = models.BooleanField(help_text='definir como True significa que é um evento livre, sem restrição de idade')
     start_date_time = models.DateTimeField()
     final_date_time = models.DateTimeField()
 

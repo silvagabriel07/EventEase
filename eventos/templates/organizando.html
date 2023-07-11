@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block 'head' %}
+  <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
+  <style>
+    .custom-card-group{
+        margin: 5%;
+        margin-top: 100px;
+        margin-bottom: 30px;
+    }
+    .custom-card{
+        margin-right: 20px;
+    }
+  </style>
+{% endblock %}
+
+{% block 'title' %}Meus Eventos - Organizando{% endblock %}
+
+{% block 'body' %}
+    <div class="card-group custom-card-group">
+        <div class="card custom-card">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+        </div>
+        </div>
+        <div class="card custom-card">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
+            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+        </div>
+        </div>
+        <div class="card custom-card">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This card has even longer content than the first to show that equal height action.</p>
+            <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+        </div>
+        </div>
+    </div>
+{% endblock %}
