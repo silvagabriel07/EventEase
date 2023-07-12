@@ -12,24 +12,20 @@
 {% block 'body' %}
     <div class="container custom-container">
         <h1>Criar Evento</h1><br>
-        <form action="" method="post">
+        <form action="{% url 'criar_evento' %}" method="post" enctype="multipart/form-data"> {% csrf_token %}
             <div class="mb-3">
-              <label for="title" class="form-label">Título</label>
-              <input type="text" class="form-control" name="title" id="title" aria-describedby="emailHelp">
+                <label for="title">{{ form.title.label }}</label>
+                {{ form.title }}
             </div>
             
             <div class="mb-3">
-                Descrição: 
-                <textarea class="form-control" id="floatingTextarea2" style="height: 100px" name="description"></textarea>
+                <label for="description">{{ form.description.label }}</label>
+                {{ form.description }}
             </div>
+
             <div class="mb-3">
-                <label for="select-categories">Selecione as categorias:</label>
-                <select id="select-categories" class="form-select custom-form-width" name="categories" multiple aria-label="multiple select example">
-                    <option selected>Selecionar categorias</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>    
-                </select>
+                {{ form.category.label }}:
+                {{ form.category }}
             </div>
             <div class="mb-3 form-check">
               <input type="checkbox" class="form-check-input" name="free" id="free">
@@ -50,17 +46,15 @@
                 <label for="final_date_time">Data e hora de término: </label>
                 <input type="datetime" name="final_date_time" class="form-control custom-form-width" placeholder="YYYY-MM-DD HH:MM" id="final_date_time" required>
             </div>
+            <div class="mb-3">
+                <label for="banner_event" class="form-label">Default file input example</label>
+                <input class="form-control" type="file" id="banner_event" name="banner_event">
+              </div>              
 
-            <button type="submit" class="btn cta-button">Submit</button>
+            <button type="submit" class="btn cta-button">Criar</button>
           </form>
           
     </div>
     
     <!-- Inicialize o DateTimePicker -->
-    <script>
-        $(function () {
-            $('#datetimepicker').datetimepicker();
-        });
-    </script>
-
 {% endblock %}
