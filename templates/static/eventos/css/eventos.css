@@ -1,0 +1,32 @@
+.custom-container{
+    margin-top: 10%;
+    margin-bottom: 8%;
+    padding: 3%;
+    border-radius: 20px;
+    background-color: #380087;
+    color: white;
+
+}
+
+
+.cta-button {
+    display: inline-block;
+    background-color: #f85a40;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.cta-button:hover {
+    background-color: #c94834;
+    color: #380087;
+}
+
+h1:hover{
+    color: #c94834;
+}
+
+.custom-form-width{
+    width: 200px;
+}

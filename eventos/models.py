@@ -7,7 +7,7 @@ class Event(models.Model):
     description = models.TextField()
 
     organizer = models.ForeignKey(User, on_delete=models.CASCADE)
-    participants = models.ManyToManyField(User, related_name='event_participants')
+    participants = models.ManyToManyField(User, related_name='event_participants', blank=True, null=True)
 
     CATEGORIES = (
         ('birthday', 'Aniversário'),

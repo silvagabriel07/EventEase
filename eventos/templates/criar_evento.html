@@ -1,0 +1,66 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
+
+{% endblock %}
+
+{% block 'title' %}Novo Evento{% endblock %}
+
+
+{% block 'body' %}
+    <div class="container custom-container">
+        <h1>Criar Evento</h1><br>
+        <form action="" method="post">
+            <div class="mb-3">
+              <label for="title" class="form-label">Título</label>
+              <input type="text" class="form-control" name="title" id="title" aria-describedby="emailHelp">
+            </div>
+            
+            <div class="mb-3">
+                Descrição: 
+                <textarea class="form-control" id="floatingTextarea2" style="height: 100px" name="description"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="select-categories">Selecione as categorias:</label>
+                <select id="select-categories" class="form-select custom-form-width" name="categories" multiple aria-label="multiple select example">
+                    <option selected>Selecionar categorias</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>    
+                </select>
+            </div>
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" name="free" id="free">
+              <label class="form-check-label" for="free">Para todas as idades</label>
+            </div>   
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" name="private" id="private">
+                <label class="form-check-label" for="private">Privado</label>
+                <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">selecionar faz com que os usuários que quiserem participar terem que solicitar</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="start_date_time">Data e hora de início: </label>
+                <input type="text" name="start_date_time" class="form-control custom-form-width" placeholder="YYYY-MM-DD HH:MM" id="start_date_time" required>
+            </div>
+            <div class="mb-3">
+                <label for="final_date_time">Data e hora de término: </label>
+                <input type="datetime" name="final_date_time" class="form-control custom-form-width" placeholder="YYYY-MM-DD HH:MM" id="final_date_time" required>
+            </div>
+
+            <button type="submit" class="btn cta-button">Submit</button>
+          </form>
+          
+    </div>
+    
+    <!-- Inicialize o DateTimePicker -->
+    <script>
+        $(function () {
+            $('#datetimepicker').datetimepicker();
+        });
+    </script>
+
+{% endblock %}
