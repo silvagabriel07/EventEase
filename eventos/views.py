@@ -9,7 +9,7 @@ def organizando(request):
 
 def criar_evento(request):
     if request.method == "POST":
-        form = CreatEventForm(request.POST)
+        form = CreatEventForm(request.POST, request.FILES)
         if form.is_valid():
             title = form.cleaned_data['title']
             description = form.cleaned_data['description']
@@ -18,10 +18,11 @@ def criar_evento(request):
             free = form.cleaned_data['free']
             start_date_time = form.cleaned_data['start_date_time']
             final_date_time = form.cleaned_data['final_date_time']
-            event_banner = form.cleaned_data['event_banner']
             
             organizer = request.user
 
+            event_banner = form.cleaned_data['event_banner']
+            print(event_banner)
             event = Event(
                 title=title,
                 description=description,

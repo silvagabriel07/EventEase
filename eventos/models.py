@@ -21,8 +21,7 @@ class Event(models.Model):
     free = models.BooleanField(help_text='definir como True significa que é um evento livre, sem restrição de idade')
     start_date_time = models.DateTimeField()
     final_date_time = models.DateTimeField()
-    # AInda n migrei esse campo
-    event_banner = models.ImageField(upload_to='media')
+    event_banner = models.ImageField(upload_to='event_banners', default='event_banners/default_event_banner.png')
 
     def __str__(self):
         return self.title

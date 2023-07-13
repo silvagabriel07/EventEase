@@ -9,4 +9,4 @@ class CreatEventForm(forms.Form):
     free = forms.BooleanField(required=False, label='Privado:',widget=forms.CheckboxInput(attrs={'class': 'form-check-label'}))
     start_date_time = forms.DateTimeField(required=True, label='Data e hora de início:', widget=forms.DateTimeInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'YYYY-MM-DD HH:MM'}))
     final_date_time = forms.DateTimeField(required=True, label='Data e hora de término:', widget=forms.DateTimeInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'YYYY-MM-DD HH:MM'}))
-    event_banner = forms.FileField(required=False, label='Banner do evento:', widget=forms.FileInput(attrs={'class': 'form-control'}))
+    event_banner = forms.ImageField(required=False, label='Banner do evento:', widget=forms.FileInput(attrs={'class': 'form-control'}))
