@@ -18,18 +18,20 @@
   
 <section id="blog" class="blog">
 
-  {% for event in my_events %}
-
     <div class="container" data-aos="fade-up">
       <div class="row gy-4 posts-list">
-        <div class="col-xl-4 col-md-6">
+        {% for event in my_events %}
+        <div class="col-xl-4 col-md-6 custom-card">
           <article>
             <div class="post-img">
-              <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
+              <img src="{{ event.event_banner.url }}" alt="" class="img-fluid custom-img-fluid">
             </div>
-
             <p class="post-category">
-              
+              {% for category in event.category %}
+                {% if forloop.first %}
+                    <p>{{ category }}</p>
+                {% endif %}
+              {% endfor %}
             </p>
 
             <h2 class="title">
@@ -38,23 +40,23 @@
             <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
             <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>
 
-
             <div class="d-flex align-items-center">
               <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
               <div class="post-meta">
                 <p class="post-date"> 
-                  <time datetime="{{ event.start_date_time }}">{{ event.start_date_time|date:"M j, Y" }}</time>
+                  <time datetime="{{ event.start_date_time }}">{{ event.start_date_time|date:"d/m/Y" }}</time>
                 </p>
               </div>
             </div>
             <a href="#" class="cta-button btn-edit">Editar</a>
           </article>
         </div>
-       </div>
+
    {% empty %}
         <h1>Você não está organizando nenhum evento no momento.</h1>
 
    {% endfor %}
+  </div>
     </div>
 
       <!-- End post list item -->

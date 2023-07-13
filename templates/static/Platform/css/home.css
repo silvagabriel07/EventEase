@@ -20,6 +20,10 @@ p {
     padding: 20px;
 }
 
+.custom-card{
+    border-width: 10px;
+}
+
 .cta-button {
     display: inline-block;
     background-color: #f85a40;
@@ -41,3 +45,47 @@ p {
     width: 100%;
     text-align: center;
   }
+
+.custom-img-fluid{
+    height: 250px;
+    width: 100%;
+}
+
+
+
+/* Template explorar_eventos */
+.color-blue{
+    background-color: blue;
+    color: #fff;
+    border-color: #333;
+}
+
+.color-blue:hover{
+    background-color: rgb(13, 13, 187);
+    color: #cfcbcb;
+    border-color: #333;
+}
+.filter-select {
+    margin-top: 3px;
+    padding: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.filter-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.filter-button:hover {
+    background-color: #0056b3;
+}
+.div-select-filters{
+    display: inline;
+}    

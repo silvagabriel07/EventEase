@@ -16,12 +16,12 @@ class Event(models.Model):
     organizer = models.ForeignKey(User, on_delete=models.CASCADE)
     participants = models.ManyToManyField(User, related_name='event_participants', blank=True)
 
-    category = models.JSONField(max_length=15, choices=CATEGORIES)
+    category = models.JSONField()  
     private = models.BooleanField(help_text='definir como True torna preciso a aceitação da requisição de participação')
     free = models.BooleanField(help_text='definir como True significa que é um evento livre, sem restrição de idade')
     start_date_time = models.DateTimeField()
     final_date_time = models.DateTimeField()
-    event_banner = models.ImageField(upload_to='event_banners', default='event_banners/default_event_banner.png')
+    event_banner = models.FileField(upload_to='event_banners', default='default_event_banner.png')
 
     def __str__(self):
         return self.title

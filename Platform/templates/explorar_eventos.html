@@ -1,57 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
-
 {% block 'head' %}
-
-    <style>
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 20px;
-        }
-        
-        .container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .color-blue{
-            background-color: blue;
-            color: #fff;
-            border-color: #333;
-        }
-
-        .color-blue:hover{
-            background-color: rgb(13, 13, 187);
-            color: #cfcbcb;
-            border-color: #333;
-        }
-        .filter-select {
-            margin-top: 3px;
-            padding: 5px;
-            font-size: 16px;
-            border: none;
-            border-radius: 4px;
-            margin-right: 10px;
-        }
-        
-        .filter-button {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .filter-button:hover {
-            background-color: #0056b3;
-        }
-        .div-select-filters{
-            display: inline;
-        }    
-        </style>
+  <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
 {% endblock %}
 
 {% block 'title' %}EventEase - Explorar{% endblock %}
@@ -86,84 +36,43 @@
   <div class="container" data-aos="fade-up">
 
     <div class="row gy-4 posts-list">
-
-      <div class="col-xl-4 col-md-6">
+      {% for event in events %}
+      <div class="col-xl-4 col-md-6 custom-card">
         <article>
-
           <div class="post-img">
-            <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
+            <img src="{{ event.event_banner.url }}" alt="" class="img-fluid custom-img-fluid">
           </div>
-
-          <p class="post-category">Politics</p>
+          <p class="post-category">
+            {% for category in event.category %}
+              {% if forloop.first %}
+                  <p>{{ category }}</p>
+              {% endif %}
+            {% endfor %}
+          </p>
 
           <h2 class="title">
-            <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
+            <a href="#details">{{ event.title }}</a>
           </h2>
+          <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
+          <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>
 
           <div class="d-flex align-items-center">
             <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
             <div class="post-meta">
-              <p class="post-author-list">Maria Doe</p>
-              <p class="post-date">
-                <time datetime="2022-01-01">Jan 1, 2022</time>
+              <p class="post-date"> 
+                <time datetime="{{ event.start_date_time }}">{{ event.start_date_time|date:"d/m/Y" }}</time>
               </p>
             </div>
           </div>
-
+          <a href="#" class="cta-button btn-edit">Editar</a>
         </article>
-      </div><!-- End post list item -->
+      </div>
 
-      <div class="col-xl-4 col-md-6">
-        <article>
+ {% empty %}
+      <h1>Nenhum evento encontrado.</h1>
 
-          <div class="post-img">
-            <img src="assets/img/blog/blog-2.jpg" alt="" class="img-fluid">
-          </div>
-
-          <p class="post-category">Sports</p>
-
-          <h2 class="title">
-            <a href="blog-details.html">Nisi magni odit consequatur autem nulla dolorem</a>
-          </h2>
-
-          <div class="d-flex align-items-center">
-            <img src="assets/img/blog/blog-author-2.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
-            <div class="post-meta">
-              <p class="post-author-list">Allisa Mayer</p>
-              <p class="post-date">
-                <time datetime="2022-01-01">Jun 5, 2022</time>
-              </p>
-            </div>
-          </div>
-
-        </article>
-      </div><!-- End post list item -->
-
-      <div class="col-xl-4 col-md-6">
-        <article>
-
-          <div class="post-img">
-            <img src="assets/img/blog/blog-3.jpg" alt="" class="img-fluid">
-          </div>
-
-          <p class="post-category">Entertainment</p>
-
-          <h2 class="title">
-            <a href="blog-details.html">Possimus soluta ut id suscipit ea ut in quo quia et soluta</a>
-          </h2>
-
-          <div class="d-flex align-items-center">
-            <img src="assets/img/blog/blog-author-3.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
-            <div class="post-meta">
-              <p class="post-author-list">Mark Dower</p>
-              <p class="post-date">
-                <time datetime="2022-01-01">Jun 22, 2022</time>
-              </p>
-            </div>
-          </div>
-
-        </article>
-      </div><!-- End post list item -->
+ {% endfor %}
+</div>
 </section><!-- End Blog Section -->
 
 {% endblock %}

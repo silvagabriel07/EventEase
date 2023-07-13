@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http import HttpResponse
 from .models import Event
 from .forms import CreatEventForm
@@ -10,15 +11,11 @@ def organizando(request, user_id):
     if not request.user.id == user_id:
         return HttpResponse('Os eventos que você deseja visualizar não são seus.')
     my_events = Event.objects.filter(organizer=user_id)
-    lists_categories = []
     for event in my_events:
-        list_category = []
-        print(list(event.category))
-        for category in list(event.category):
-            list_category.append(category)
-        lists_categories.append(list_category)
-    return render(request, 'organizando.html', {'my_events': my_events, 'lists_categories': lists_categories})
-
+        print(event.category)
+        for category in event.category:
+            print(category)
+    return render(request, 'organizando.html', {'my_events': my_events})
 
 @login_required
 def criar_evento(request):
@@ -32,11 +29,10 @@ def criar_evento(request):
             free = form.cleaned_data['free']
             start_date_time = form.cleaned_data['start_date_time']
             final_date_time = form.cleaned_data['final_date_time']
-            
+            event_banner = form.cleaned_data['event_banner']
+
             organizer = request.user
 
-            event_banner = form.cleaned_data['event_banner']
-            print(event_banner)
             event = Event(
                 title=title,
                 description=description,
@@ -49,7 +45,8 @@ def criar_evento(request):
                 organizer=organizer,
             )
             event.save()
-            return redirect('organizando')
+            redirect_url = reverse('organizando', args=[organizer.id])
+            return redirect(redirect_url)
             
     else:
         form = CreatEventForm()
