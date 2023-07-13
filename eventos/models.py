@@ -16,7 +16,7 @@ class Event(models.Model):
     organizer = models.ForeignKey(User, on_delete=models.CASCADE)
     participants = models.ManyToManyField(User, related_name='event_participants', blank=True)
 
-    category = models.CharField(max_length=15, choices=CATEGORIES)
+    category = models.JSONField(max_length=15, choices=CATEGORIES)
     private = models.BooleanField(help_text='definir como True torna preciso a aceitação da requisição de participação')
     free = models.BooleanField(help_text='definir como True significa que é um evento livre, sem restrição de idade')
     start_date_time = models.DateTimeField()

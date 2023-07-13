@@ -2,11 +2,25 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .models import Event
 from .forms import CreatEventForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-def organizando(request):
-    return render(request, 'organizando.html')
+@login_required
+def organizando(request, user_id):
+    if not request.user.id == user_id:
+        return HttpResponse('Os eventos que você deseja visualizar não são seus.')
+    my_events = Event.objects.filter(organizer=user_id)
+    lists_categories = []
+    for event in my_events:
+        list_category = []
+        print(list(event.category))
+        for category in list(event.category):
+            list_category.append(category)
+        lists_categories.append(list_category)
+    return render(request, 'organizando.html', {'my_events': my_events, 'lists_categories': lists_categories})
 
+
+@login_required
 def criar_evento(request):
     if request.method == "POST":
         form = CreatEventForm(request.POST, request.FILES)
@@ -35,7 +49,9 @@ def criar_evento(request):
                 organizer=organizer,
             )
             event.save()
-        return redirect('organizando')
+            return redirect('organizando')
+            
     else:
         form = CreatEventForm()
         return render(request, 'criar_evento.html', {'form': form})
+    

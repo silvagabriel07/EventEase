@@ -15,94 +15,50 @@
 
     </div>
   </header>
-
+  
 <section id="blog" class="blog">
+
+  {% for event in my_events %}
+
     <div class="container" data-aos="fade-up">
-
       <div class="row gy-4 posts-list">
-
         <div class="col-xl-4 col-md-6">
           <article>
-
             <div class="post-img">
               <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
             </div>
 
-            <p class="post-category">Categoria A</p>
+            <p class="post-category">
+              
+            </p>
 
             <h2 class="title">
-              <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
+              <a href="#details">{{ event.title }}</a>
             </h2>
-            <p class="caracteristica-evento">Privado</p>
-            <p class="caracteristica-evento">+18</p>
+            <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
+            <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>
 
 
             <div class="d-flex align-items-center">
               <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
-            <div class="post-meta">
+              <div class="post-meta">
                 <p class="post-date"> 
-                  <time datetime="2022-01-01">Jan 1, 2022</time>
+                  <time datetime="{{ event.start_date_time }}">{{ event.start_date_time|date:"M j, Y" }}</time>
                 </p>
               </div>
             </div>
             <a href="#" class="cta-button btn-edit">Editar</a>
           </article>
-        </div><!-- End post list item -->
+        </div>
+       </div>
+   {% empty %}
+        <h1>Você não está organizando nenhum evento no momento.</h1>
 
-        <div class="col-xl-4 col-md-6">
-          <article>
+   {% endfor %}
+    </div>
 
-            <div class="post-img">
-              <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
-            </div>
-
-            <p class="post-category">Categoria A</p>
-
-            <h2 class="title">
-              <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
-            </h2>
-            <p class="caracteristica-evento">Privado</p>
-            <p class="caracteristica-evento">+18</p>
+      <!-- End post list item -->
 
 
-            <div class="d-flex align-items-center">
-              <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
-            <div class="post-meta">
-                <p class="post-date"> 
-                  <time datetime="2022-01-01">Jan 1, 2022</time>
-                </p>
-              </div>
-            </div>
-            <a href="#" class="cta-button btn-edit">Editar</a>
-          </article>
-        </div><!-- End post list item -->
-
-        <div class="col-xl-4 col-md-6">
-          <article>
-
-            <div class="post-img">
-              <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
-            </div>
-
-            <p class="post-category">Categoria A</p>
-
-            <h2 class="title">
-              <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
-            </h2>
-            <p class="caracteristica-evento">Privado</p>
-            <p class="caracteristica-evento">+18</p>
-
-
-            <div class="d-flex align-items-center">
-              <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
-            <div class="post-meta">
-                <p class="post-date"> 
-                  <time datetime="2022-01-01">Jan 1, 2022</time>
-                </p>
-              </div>
-            </div>
-            <a href="#" class="cta-button btn-edit">Editar</a>
-          </article>
-        </div><!-- End post list item -->
   </section><!-- End Blog Section -->
 {% endblock %}
