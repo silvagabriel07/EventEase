@@ -4,6 +4,8 @@ from django.http import HttpResponse
 from .models import Event
 from .forms import CreatEventForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.messages import constants
 
 # Create your views here.
 @login_required
@@ -45,8 +47,11 @@ def criar_evento(request):
                 organizer=organizer,
             )
             event.save()
+            messages.add_message(request, constants.SUCCESS, 'Evento criado com sucesso.')
             redirect_url = reverse('organizando', args=[organizer.id])
             return redirect(redirect_url)
+        else:
+            return render(request, 'criar_evento.html', {'form': form})
             
     else:
         form = CreatEventForm()

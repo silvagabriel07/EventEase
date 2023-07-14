@@ -10,3 +10,9 @@ class CreatEventForm(forms.Form):
     start_date_time = forms.DateTimeField(required=True, label='Data e hora de início:', widget=forms.DateTimeInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'YYYY-MM-DD HH:MM'}))
     final_date_time = forms.DateTimeField(required=True, label='Data e hora de término:', widget=forms.DateTimeInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'YYYY-MM-DD HH:MM'}))
     event_banner = forms.FileField(required=False, label='Banner do evento:', widget=forms.FileInput(attrs={'class': 'form-control'}))
+
+    def clean_title(self):
+        title = self.cleaned_data['title']
+        if title:
+            pass
+        # validações

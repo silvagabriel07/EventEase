@@ -10,14 +10,24 @@
 {% block 'body' %}
 <header>
     <div class="container">
-        <h1>Meus eventos  - Organizando</h1>
+          <h1>Meus eventos  - Organizando</h1>
         <a href="{% url 'criar_evento' %}" class="cta-button">Organizar novo evento</a>
 
     </div>
   </header>
-  
-<section id="blog" class="blog">
+  <!-- MENSAGENS -->
+  {% if messages %}
+  <br>
+  <ul class="messages">
+      {% for message in messages %}
+        <div class="{{ message.tags }}" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+  </ul>
+{% endif %}
 
+<section id="blog" class="blog">
     <div class="container" data-aos="fade-up">
       <div class="row gy-4 posts-list">
         {% for event in my_events %}

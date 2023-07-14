@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-
+from django.contrib.messages import constants
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -161,6 +161,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 # Media files
 MEDIA_URLS = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+MESSAGE_TAGS = {
+    constants.DEBUG: 'alert alert-primary',
+    constants.ERROR: 'alert alert-danger',
+    constants.WARNING: 'alert alert-warning',
+    constants.SUCCESS: 'alert alert-success',
+    constants.INFO: 'alert alert-info ',
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
