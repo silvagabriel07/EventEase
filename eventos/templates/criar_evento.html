@@ -11,7 +11,30 @@
 
 {% block 'body' %}
     <div class="container custom-container">
-        <h1>Criar Evento</h1><br>
+        {% if form.errors %}
+        <ul class="errorlist">
+          {% for field_errors in form.errors.values %}
+                {% for error in field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+          {% endfor %}
+        </ul>
+
+        {% if form.errors %}
+            <ul class="errorlist">
+            {% for field, errors in form.errors.items %}
+                {% if field in form.cleaned_data %}
+                    <li>{{ errors }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+      {% endif %}
+    
+
+      {% endif %}
+            <h1>Criar Evento</h1><br>
         <form action="{% url 'criar_evento' %}" method="post" enctype="multipart/form-data"> {% csrf_token %}
             <div class="mb-3">
                 <label for="title">{{ form.title.label }}</label>

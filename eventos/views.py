@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
 from .models import Event
-from .forms import CreatEventForm
+from .forms import CreateEventForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages import constants
@@ -13,16 +13,12 @@ def organizando(request, user_id):
     if not request.user.id == user_id:
         return HttpResponse('Os eventos que você deseja visualizar não são seus.')
     my_events = Event.objects.filter(organizer=user_id)
-    for event in my_events:
-        print(event.category)
-        for category in event.category:
-            print(category)
     return render(request, 'organizando.html', {'my_events': my_events})
 
 @login_required
 def criar_evento(request):
     if request.method == "POST":
-        form = CreatEventForm(request.POST, request.FILES)
+        form = CreateEventForm(request.POST, request.FILES)
         if form.is_valid():
             title = form.cleaned_data['title']
             description = form.cleaned_data['description']
@@ -54,6 +50,6 @@ def criar_evento(request):
             return render(request, 'criar_evento.html', {'form': form})
             
     else:
-        form = CreatEventForm()
+        form = CreateEventForm()
         return render(request, 'criar_evento.html', {'form': form})
     
