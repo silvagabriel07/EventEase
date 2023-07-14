@@ -11,54 +11,111 @@
 
 {% block 'body' %}
     <div class="container custom-container">
-
-        {% if form.errors %}
-        <ul class="errorlist">
-            {% for error in form.errors.values %}
-            <div class="alert alert-danger" role="alert">
-                {{ error }}
-              </div>
-            {% endfor %}
-            <br>
-        {% endif %}
         <h1>Criar Evento</h1><br>
         <form action="{% url 'criar_evento' %}" method="post" enctype="multipart/form-data"> {% csrf_token %}
             <div class="mb-3">
                 <label for="title">{{ form.title.label }}</label>
                 {{ form.title }}
+
+                {% if form.title.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.title.errors %}
+                            <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                
             </div>
             
             <div class="mb-3">
                 <label for="description">{{ form.description.label }}</label>
                 {{ form.description }}
+                {% if form.description.errors %}
+                <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Dê as informações que achar relevante para alguém que deseja se inscrever para participar.</div>
+                <ul class="errorlist">
+                    {% for error in form.description.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
             </div>
 
             <div class="mb-3">
                 {{ form.category.label }}:
                 {{ form.category }}
+                {% if form.category.errors %}
+                <ul class="errorlist">
+                    {% for error in form.category.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
             </div>
             <div class="mb-3 form-check">
-                <label for="description">{{ form.free.label }}</label>
+                <label for="free">{{ form.free.label }}</label>
                 {{ form.free }}
+                {% if form.free.errors %}
+                <ul class="errorlist">
+                    {% for error in form.free.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
             </div>   
 
             <div class="mb-3 form-check">
-                <label for="description">{{ form.private.label }}</label>
+                <label for="private">{{ form.private.label }}</label>
                 {{ form.private }}
                 <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">selecionar faz com que os usuários que quiserem participar terem que solicitar</div>
+                {% if form.private.errors %}
+                <ul class="errorlist">
+                    {% for error in form.private.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
             </div>
 
             <div class="mb-3">
-                <label for="description">{{ form.start_date_time.label }}</label>
+                <label for="start_date_time">{{ form.start_date_time.label }}</label>
                 {{ form.start_date_time }}
+                {% if form.start_date_time.errors %}
+                <ul class="errorlist">
+                    {% for error in form.start_date_time.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
 
             </div>
             <div class="mb-3">
                 <label for="description">{{ form.final_date_time.label }}</label>
-                {{ form.final_date_time }}            </div>
+                {{ form.final_date_time }}
+                {% if form.final_date_time.errors %}
+                <ul class="errorlist">
+                    {% for error in form.final_date_time.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+        
+            </div>
             <div class="mb-3">
                 <label for="description">{{ form.event_banner.label }}</label>
-                {{ form.event_banner }}              
+                {{ form.event_banner }}
+                {% if form.event_banner.errors %}
+                <ul class="errorlist">
+                    {% for error in form.event_banner.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+          
             </div>              
             <button type="submit" class="btn cta-button">Criar</button>
           </form>
