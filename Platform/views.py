@@ -16,12 +16,14 @@ def explorar_eventos(request):
     select_category = request.GET.get('select_category')
     select_num_participants = request.GET.get('select_num_participants')
     select_start_date_time = request.GET.get('select_start_date_time')
-    private = request.GET.get('private')
-    free = request.GET.get('free')
+    select_private = request.GET.get('select_private')
+    select_free = request.GET.get('select_free')
     
     events = Event.objects.all()
+    
     if search:
         events = events.filter(title__icontains=search)
+    
     if select_category:
         events = events.filter()
 
@@ -35,10 +37,18 @@ def explorar_eventos(request):
             events = events.filter(start_date_time__month=data_atual.month + 1)
         elif select_start_date_time == 'this_year':
             events = events.filter(start_date_time__year=data_atual.year)
-    if private:
-        events = events.filter(private=True)
-    if free:
-        events = events.filter(free=True)
+    
+    if select_private:
+        if select_private == "true":
+            events = events.filter(private=True)
+        elif select_private == "false":
+            events = events.filter(private=False)
+
+    if select_free:
+        if select_free == "true":
+            events = events.filter(private=True)
+        elif select_free == "false":
+            events = events.filter(private=False)
 
     if select_num_participants:
         if select_num_participants == 'gt_10':
@@ -57,10 +67,5 @@ def explorar_eventos(request):
             events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gt=100)
         elif select_num_participants == 'lt_100':
             events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lt=100)
-
-        
-
-
-    
         
     return render(request, 'explorar_eventos.html', {'events': events, 'categories': CATEGORIES})

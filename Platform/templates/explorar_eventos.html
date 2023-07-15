@@ -56,16 +56,24 @@
             </div>
 
             <div class="div-select-filters">
-              <label for="private">Privado</label>
-              <input type="checkbox" name="private" id="private" class="form-check-label">
+              <label for="select_private">Privado</label>
+              <select name="select_private" id="select_private" class="filter-select">
+                <option value="">Tudo</option>
+                <option value="true">Sim</option>
+                <option value="false">Não</option>
+              </select>
           </div>
 
             
           <div class="div-select-filters">
-            <label for="free">Livre</label>
-            <input type="checkbox" name="free" id="free" class="form-check-label custom-form-check-label">
-        </div>
-              <a style="padding: 7px; margin-left: 5px;" href="{% url 'explorar_eventos' %}" class="cta-button">Limpar</a>
+            <label for="select_free">Privado</label>
+            <select name="select_free" id="select_free" class="filter-select">
+              <option value="">Tudo</option>
+              <option value="true">Sim</option>
+              <option value="false">Não</option>
+            </select>
+          </div>
+            <a style="padding: 7px; margin-left: 5px;" href="{% url 'explorar_eventos' %}" class="cta-button">Limpar</a>
         </form>
     </header>
 
