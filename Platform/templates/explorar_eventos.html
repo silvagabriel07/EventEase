@@ -12,7 +12,7 @@
         <p>Procure eventos facilmente...</p>
         <form action="{% url 'explorar_eventos' %}" method="get">
             <div class="input-group">
-                <input type="text" class="form-control" name="search" aria-label="Text input with segmented dropdown button">
+                <input type="text" class="form-control" name="search" value="{{ search }}">
                 <button type="submit" class="btn btn-outline-secondary color-blue">Pesquisar</button>
             </div>
             <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Filtre e depois clique no botão "Pesquisar"</div>
@@ -23,10 +23,10 @@
                 <label for="select_category">Categoria</label>
                 <select name="select_category" id="select_category" class="filter-select">
                     <option value="">Tudo</option>
-                    {% for category_value, category_display in categories %}
-                    <option value="{{ category_value }}">{{ category_display }}</option>
+                    {% for category in categories %}
+                      <option value="{{ category.id }}">{{ category }}</option>
                     {% endfor %}
-                </select>
+                  </select>
             </div>
 
             <div class="div-select-filters">
@@ -66,7 +66,7 @@
 
             
           <div class="div-select-filters">
-            <label for="select_free">Privado</label>
+            <label for="select_free">Livre</label>
             <select name="select_free" id="select_free" class="filter-select">
               <option value="">Tudo</option>
               <option value="true">Sim</option>
@@ -88,11 +88,7 @@
             <img src="{{ event.event_banner.url }}" alt="" class="img-fluid custom-img-fluid">
           </div>
           <p class="post-category">
-            {% for category in event.category %}
-              {% if forloop.first %}
-                  <p>{{ category }}</p>
-              {% endif %}
-            {% endfor %}
+            {{ event.category }}
           </p>
 
           <h2 class="title">

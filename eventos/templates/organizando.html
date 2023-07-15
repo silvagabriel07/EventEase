@@ -37,11 +37,7 @@
               <img src="{{ event.event_banner.url }}" alt="" class="img-fluid custom-img-fluid">
             </div>
             <p class="post-category">
-              {% for category in event.category %}
-                {% if forloop.first %}
-                    <p>{{ category }}</p>
-                {% endif %}
-              {% endfor %}
+                {{ event.category }}
             </p>
 
             <h2 class="title">

@@ -46,9 +46,9 @@
                 <ul>
 
                   {% if request.user.is_authenticated %}
-                    <li><a style="text-decoration: none;" href="#participando">Organizando</a></li>
+                    <li><a style="text-decoration: none;" href="#participando">Participando</a></li>
                   {% else %}
-                    <li><a style="text-decoration: none;" href="{% url 'account_login' %}">Organizando</a></li>
+                    <li><a style="text-decoration: none;" href="{% url 'account_login' %}">Participando</a></li>
                   {% endif %}
 
                   {% if request.user.is_authenticated %}

@@ -31,20 +31,20 @@ def criar_evento(request):
 
             organizer = request.user
 
-            print(category)
+            print(category.id)
 
-            # event = Event(
-            #     title=title,
-            #     description=description,
-            #     category=category,
-            #     private=private,
-            #     free=free,
-            #     start_date_time=start_date_time,
-            #     final_date_time=final_date_time,
-            #     event_banner=event_banner,
-            #     organizer=organizer,
-            # )
-            # event.save()
+            event = Event(
+                title=title,
+                description=description,
+                category_id=category.id,
+                private=private,
+                free=free,
+                start_date_time=start_date_time,
+                final_date_time=final_date_time,
+                event_banner=event_banner,
+                organizer=organizer,
+            )
+            event.save()
             messages.add_message(request, constants.SUCCESS, 'Evento criado com sucesso.')
             redirect_url = reverse('organizando', args=[organizer.id])
             return redirect(redirect_url)
