@@ -44,15 +44,29 @@
               <li><a style="text-decoration: none;" href="{% url 'explorar_eventos' %}">Explorar</a></li>
               <li class="dropdown"><a style="text-decoration: none;" href="#"><span>Meus Eventos</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                 <ul>
-                  <li><a style="text-decoration: none;" href="#">Participando</a></li>
-                  <li><a style="text-decoration: none;" href="{% url 'organizando' request.user.id %}">Organizando</a></li>
+
+                  {% if request.user.is_authenticated %}
+                    <li><a style="text-decoration: none;" href="#participando">Organizando</a></li>
+                  {% else %}
+                    <li><a style="text-decoration: none;" href="{% url 'account_login' %}">Organizando</a></li>
+                  {% endif %}
+
+                  {% if request.user.is_authenticated %}
+                    <li><a style="text-decoration: none;" href="{% url 'organizando' request.user.id %}">Organizando</a></li>
+                  {% else %}
+                    <li><a style="text-decoration: none;" href="{% url 'account_login' %}">Organizando</a></li>
+                  {% endif %}
                 </ul>
               </li>
               <li><a style="text-decoration: none;" href="#">Notificações</a></li>
                             <li class="dropdown"><a style="text-decoration: none;" href="#"><span><img width="30px" src="{% static 'Platform/img/img_perfil.png' %}"></span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                 <ul>
                   <li><a style="text-decoration: none;" href="#">Ver Perfil</a></li>
-                  <li><a style="text-decoration: none;" href="#">Logout</a></li>
+                  {% if user.is_authenticated %}
+                    <li><a style="text-decoration: none;" href="{% url 'account_logout' %}">Logout</a></li>
+                  {% else %}
+                  <li><a style="text-decoration: none;" href="{% url 'account_login' %}">Login</a></li>
+                  {% endif %}
                 </ul>
               </li>
 
@@ -141,7 +155,6 @@
       <!-- End Footer -->
 
       <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
 
     <!-- Vendor JS Files -->
 <script src="{% static 'assets/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>

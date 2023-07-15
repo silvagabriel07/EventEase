@@ -2,6 +2,7 @@
 {% load static %}
 {% block 'head' %}
   <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
+  
 {% endblock %}
 
 {% block 'title' %}EventEase - Explorar{% endblock %}
@@ -9,26 +10,62 @@
 {% block 'body' %}
     <header>
         <p>Procure eventos facilmente...</p>
-        <form action="" method="post">
+        <form action="{% url 'explorar_eventos' %}" method="get">
             <div class="input-group">
-                <input type="text" class="form-control" aria-label="Text input with segmented dropdown button">
-                <button type="button" class="btn btn-outline-secondary color-blue">Pesquisar</button>
+                <input type="text" class="form-control" name="search" aria-label="Text input with segmented dropdown button">
+                <button type="submit" class="btn btn-outline-secondary color-blue">Pesquisar</button>
             </div>
+            <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Filtre e depois clique no botão "Pesquisar"</div>
+
             <!-- FIltrar -->
+
             <div class="div-select-filters">
-                <label for="select-categoria">Categoria</label>
-                <select name="select-categoria" id="select-categoria" class="filter-select">
-                    <option value="tudo">Tudo</option>
+                <label for="select_category">Categoria</label>
+                <select name="select_category" id="select_category" class="filter-select">
+                    <option value="">Tudo</option>
+                    {% for category_value, category_display in categories %}
+                    <option value="{{ category_value }}">{{ category_display }}</option>
+                    {% endfor %}
                 </select>
             </div>
 
             <div class="div-select-filters">
-                <label for="select-livre">Livre</label>
-                <select name="select-livre" id="select-livre" class="filter-select">
-                    <option value="livre-sim">Sim</option>
-                    <option value="livre-nao">Não</option>
-                </select>
-            </div>        
+              <label for="select_num_participants">Nº participantes</label>
+              <select name="select_num_participants" id="select_num_participants" class="filter-select">
+                <option value="">Tudo</option>
+                <option value="gt_10">Mais que 10</option>
+                <option value="lt_10">Menos que 10</option>
+                <option value="gt_20">Mais que 20</option>
+                <option value="lt_20">Menos que 20</option>
+                <option value="gt_50">Mais que 50</option>
+                <option value="lt_50">Menos que 50</option>
+                <option value="gt_100">Mais que 100</option>
+                <option value="lt_100">Menos que 100</option>
+              </select>
+            </div>
+
+            <div class="div-select-filters">
+              <label for="select_start_date_time">Data início</label>
+              <select name="select_start_date_time" id="select_start_date_time" class="filter-select">
+                <option value="">Tudo</option>
+                <option value="today">Hoje</option>
+                <option value="this_month">Este mês</option>
+                <option value="next_month">Mês que vem</option>
+                <option value="this_year">Este ano</option>
+              </select>
+            </div>
+
+            <div class="div-select-filters">
+              <label for="private">Privado</label>
+              <input type="checkbox" name="private" id="private" class="form-check-label">
+          </div>
+
+            
+          <div class="div-select-filters">
+            <label for="free">Livre</label>
+            <input type="checkbox" name="free" id="free" class="form-check-label custom-form-check-label">
+        </div>
+              <a style="padding: 7px; margin-left: 5px;" href="{% url 'explorar_eventos' %}" class="cta-button">Limpar</a>
         </form>
     </header>
 
@@ -59,12 +96,13 @@
           <div class="d-flex align-items-center">
             <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
             <div class="post-meta">
+              <p class="post-author-list">Nome Organizador</p>
               <p class="post-date"> 
                 <time datetime="{{ event.start_date_time }}">{{ event.start_date_time|date:"d/m/Y" }}</time>
               </p>
             </div>
           </div>
-          <a href="#" class="cta-button btn-edit">Editar</a>
+          <a href="#" class="cta-button btn-edit">Ver mais</a>
         </article>
       </div>
 
@@ -75,4 +113,5 @@
 </div>
 </section><!-- End Blog Section -->
 
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 {% endblock %}
