@@ -1,0 +1,106 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
+
+    <style>
+        .label-event{
+            text-decoration: underline;
+            font-size: 25px;
+            font-weight: 600;
+            color: #fb6a54;
+            margin-right: 5px;
+        }
+        .label-event:hover{
+            color: #d03119;
+        }
+        h1{
+            font-weight: 700;
+        }
+        .value-event{
+            padding-top: 15px;
+            padding-right: 10px;
+            padding-left: 10px;
+            display: inline-block;
+            border-radius: 10px;
+            background-color: #6126b4b7;
+        }
+        .value-event:hover{
+            background-color: #8d5ad491;
+        }
+        .value-description{
+            padding: 20px;
+            padding-bottom: 0;
+
+        }
+        .value-img{
+            border-radius:  10px;
+            width: 50%;
+            height: 400px;
+        }
+    </style>
+{% endblock %}
+
+{% block 'title' %}Ver mais{% endblock %}
+
+{% block 'body' %}
+<div class="container custom-container">
+    <h1>{{ event.title }}</h1>
+    <hr>
+    <div class="mb-3">
+            <img src="{{ event.event_banner.url }}" alt="" class="value-img">
+    </div>
+
+    <div class="mb-3">
+        <label class="label-event">Descrição:</label>
+        <div class="value-event value-description">
+            <p>{{ event.description }}</p>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="label-event">Categoria:</label> 
+        <div class="value-event">
+            <p>{{ event.category }}</p>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="label-event">Data e Hora de Início:</label> 
+        <div style="margin-right: 10px;" class="value-event">
+            <p>{{ event.start_date_time }}</p>
+        </div>
+        <label class="label-event">Fim do Evento:</label> 
+        <div class="value-event">
+            <p>{{ event.final_date_time }}</p>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="label-event">Privado:</label>
+        {% if event.private == True %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg>
+        {% else %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+          </svg>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label class="label-event">Livre:</label>
+        {% if event.free == True %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg>
+        {% else %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+          </svg>          
+      {% endif %}
+
+    </div>
+    <hr>
+    <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="#">Participar</a>
+
+</div>
+{% endblock %}  

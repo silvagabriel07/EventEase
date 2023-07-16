@@ -34,7 +34,7 @@
     
 
       {% endif %}
-            <h1>Criar Evento</h1><br>
+            <h1>Criar Evento</h1><hr>
         <form action="{% url 'criar_evento' %}" method="post" enctype="multipart/form-data"> {% csrf_token %}
             <div class="mb-3">
                 <label for="title">{{ form.title.label }}</label>
@@ -139,7 +139,8 @@
                 </ul>
             {% endif %}
           
-            </div>              
+            </div>
+            <hr>            
             <button type="submit" class="btn cta-button">Criar</button>
           </form>
           

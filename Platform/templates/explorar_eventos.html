@@ -100,13 +100,13 @@
           <div class="d-flex align-items-center">
             <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
             <div class="post-meta">
-              <p class="post-author-list">Nome Organizador</p>
+              <p class="post-author-list">{{ event.organizer }}</p>
               <p class="post-date"> 
                 <time datetime="{{ event.start_date_time }}">{{ event.start_date_time|date:"d/m/Y" }}</time>
               </p>
             </div>
           </div>
-          <a href="#" class="cta-button btn-edit">Ver mais</a>
+          <a href="{% url 'ver_mais' event.id %}" class="cta-button btn-edit">Ver mais</a>
         </article>
       </div>
 

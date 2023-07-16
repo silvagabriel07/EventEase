@@ -9,7 +9,6 @@ def home(request):
     return render(request, 'home.html')
 
 def explorar_eventos(request):
-
     search = request.GET.get('search', '')
     select_category = request.GET.get('select_category')
     select_num_participants = request.GET.get('select_num_participants')
@@ -75,3 +74,4 @@ def explorar_eventos(request):
         page = event_paginator.page(1)
     
     return render(request, 'explorar_eventos.html', {'page': page, 'categories':  categories})
+

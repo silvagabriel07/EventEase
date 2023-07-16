@@ -55,3 +55,7 @@ def criar_evento(request):
         form = CreateEventForm()
         return render(request, 'criar_evento.html', {'form': form})
     
+
+def ver_mais(request, id_event):
+    event = Event.objects.get(id=id_event)
+    return render(request, 'ver_mais.html', {'event': event})
