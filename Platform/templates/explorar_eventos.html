@@ -12,7 +12,7 @@
         <p>Procure eventos facilmente...</p>
         <form action="{% url 'explorar_eventos' %}" method="get">
             <div class="input-group">
-                <input type="text" class="form-control" name="search" value="{{ search }}">
+                <input type="text" class="form-control" name="search" value="{{ request.GET.search }}">
                 <button type="submit" class="btn btn-outline-secondary color-blue">Pesquisar</button>
             </div>
             <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Filtre e depois clique no botão "Pesquisar"</div>
@@ -81,10 +81,10 @@
     <div class="container" data-aos="fade-up">
 
     <div class="row gy-4 posts-list">
-      {% for event in events %}
+      {% for event in page %}
       <div class="col-xl-4 col-md-6 custom-card">
         <article>
-          <div class="post-img">
+          <div class="post-img">  
             <img src="{{ event.event_banner.url }}" alt="" class="img-fluid custom-img-fluid">
           </div>
           <p class="post-category">
@@ -114,6 +114,32 @@
       <h1>Nenhum evento encontrado.</h1>
 
  {% endfor %}
+
+ <div class="blog-pagination">
+  <ul class="justify-content-center">
+
+    {% if page.has_previous %}
+      <li><a href="{% url 'explorar_eventos' %}?page={{ page.previous_page_number }}&search={{ request.GET.search }}&select_category={{ request.GET.select_category }}&select_num_participants={{ request.GET.select_num_participants }}&select_start_date_time={{ request.GET.select_start_date_time }}&select_private={{ request.GET.select_private }}&select_free={{ request.GET.select_free }}">Anterior</a></li>
+    {% endif %}
+
+    {% for num in page.paginator.page_range %}
+      {% if num == page.number %}
+        <li class="active"><a href="">{{ page.number }}</a></li>
+      {% else %}
+      <li><a href="{% url 'explorar_eventos' %}?page={{ num }}&search={{ request.GET.search }}&select_category={{ request.GET.select_category }}&select_num_participants={{ request.GET.select_num_participants }}&select_start_date_time={{ request.GET.select_start_date_time }}&select_private={{ request.GET.select_private }}&select_free={{ request.GET.select_free }}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page.has_next %}
+      <li><a href="{% url 'explorar_eventos' %}?page={{ page.next_page_number }}&search={{ request.GET.search }}&select_category={{ request.GET.select_category }}&select_num_participants={{ request.GET.select_num_participants }}&select_start_date_time={{ request.GET.select_start_date_time }}&select_private={{ request.GET.select_private }}&select_free={{ request.GET.select_free }}">Próxima</a></li>
+    {% endif %}
+
+  </ul>
+</div><!-- End blog pagination -->
+
+</div>
+</section><!-- End Blog Section -->
+
 </div>
 </section><!-- End Blog Section -->
 

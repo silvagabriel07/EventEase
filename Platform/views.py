@@ -2,6 +2,7 @@ from django.shortcuts import render
 from eventos.models import Event, Category
 from datetime import datetime
 from django.db.models import Count
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Create your views here.
 def home(request):
@@ -66,4 +67,11 @@ def explorar_eventos(request):
         elif select_num_participants == 'lt_100':
             events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lt=100)
         
-    return render(request, 'explorar_eventos.html', {'events': events, 'categories':  categories, 'search': search})
+    page_num = request.GET.get('page', '1')
+    event_paginator = Paginator(events, 4)
+    try:
+        page = event_paginator.page(page_num)
+    except(EmptyPage, PageNotAnInteger):
+        page = event_paginator.page(1)
+    
+    return render(request, 'explorar_eventos.html', {'page': page, 'categories':  categories})
