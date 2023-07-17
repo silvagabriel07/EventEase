@@ -1,11 +1,23 @@
 from django import forms
 from allauth.account.forms import SignupForm
+from .models import User
 
 class CustomSignupForm(SignupForm):
-    phone_number = forms.CharField(max_length=15, widget=forms.TextInput(attrs={'placeholder': '+00 00000-0000'})),
-    idade = forms.IntegerField()
+    idade = forms.IntegerField(required=True)
+    field_order = ['username', 'email', 'idade', 'password1','password2']
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def clean_idade(self):
+        idade = self.cleaned_data["idade"]
+        if not idade:
+            raise forms.ValidationError("A idade é obrigatória.")
+        return idade
 
-    field_order = ['username', 'email', 'idade', 'phone_number', 'password1', 'password2']
+    def save(self, request):
+        user = User.objects.create_user(
+        email=self.cleaned_data['email'],
+        username=self.cleaned_data['username'],
+        password=self.cleaned_data['password1'],
+        idade=self.cleaned_data['idade']
+        # adicione outros campos extras aqui
+        )
+        return user

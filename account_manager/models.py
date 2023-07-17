@@ -21,6 +21,7 @@ class CustomUserManager(UserManager):
         return user
 
     def create_user(self, email, username=None, password=None, **extra_fields):
+
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
         extra_fields.setdefault("is_active", True)
@@ -44,12 +45,18 @@ class User(AbstractUser):
 
     username = models.CharField(max_length=60, validators=[username_validator], unique=False)
     email = models.EmailField(max_length=254, unique=True)
-    idade = models.IntegerField(blank=True, null=True)
+    idade = models.IntegerField(null=True, blank=True)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['idade']
+
+    def is_minor(self):
+        if self.idade < 18:
+            return True
+        else:
+            return False
 
     def __str__(self):
         return self.username

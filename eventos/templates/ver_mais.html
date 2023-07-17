@@ -85,6 +85,7 @@
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
           </svg>
         {% endif %}
+        <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Se é necessário solicitar um pedido para participar do evento.</div>
     </div>
     <div class="mb-3">
         <label class="label-event">Livre:</label>
@@ -97,10 +98,30 @@
             <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
           </svg>          
       {% endif %}
+      <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Se o evento for para todas as idades.</div>
+
 
     </div>
     <hr>
-    <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="#">Participar</a>
+        {% if request.user.is_authenticated %}
+            {% if  request.user.is_minor == True %}
+                {% if event.private %}
+                    <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="#">Solicitar Participação</a>
+                {% else %}
+                    <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="#">Participar</a>
+                {% endif %} 
+            {% else %}
+                <button disabled style="padding-left: 50px; padding-right: 50px; background-color: rgb(160, 154, 154);" class="btn" href="#">Participar</button>
+                <div style="color: rgb(250, 53, 53)" id="titlehelp" class="form-text">Você não pode participar deste evento, pois ele é para maiores de idade.</div>
+        {% endif %}
+
+        {% else %}
+            {% if event.private %}
+                <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'account_login' %}">Solicitar Participação</a>
+            {% else %}
+                <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'account_login' %}">Participação</a>
+            {% endif %} 
+        {% endif %}
 
 </div>
 {% endblock %}  
