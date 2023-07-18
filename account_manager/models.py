@@ -60,6 +60,9 @@ class User(AbstractUser):
 
     def is_user_participant(self, event_instance):
         return event_instance.participants.filter(id=self.id).exists()
+    
+    def user_already_solicitated(self, event_instance):
+        return self.solicitation_set.filter(event=event_instance.id).exists()
 
     def __str__(self):
         return self.username

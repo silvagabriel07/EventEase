@@ -6,6 +6,7 @@ from .forms import CreateEventForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages import constants
+from .models import Solicitation
 
 # Create your views here.
 @login_required
@@ -58,27 +59,36 @@ def criar_evento(request):
 def ver_mais(request, id_event):
     event = Event.objects.get(id=id_event)
     is_user_participant = request.user.is_user_participant(event)
-    return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant})
+    user_already_solicitated = request.user.user_already_solicitated(event)
+    print(user_already_solicitated)
+    return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated})
 
 def participar(request, id_event):
     event = Event.objects.get(id=id_event)
     user = request.user
-    redirect_url = reverse('ver_mais', args=[id_event])
+    redirect_event_details = reverse('ver_mais', args=[id_event])
 
     if user.is_user_participant(event):
         messages.add_message(request, constants.ERROR, 'Você já participa deste evento.')
-        return redirect(redirect_url)
     
     elif not event.free and user.is_minor():
         messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
-        return redirect(redirect_url)
 
     else:
         if not event.private:
             event.participants.add(user.id)
             event.save()
             messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')
-            return redirect(redirect_url)
         else:
             # solicitar a participação do evento privado 
-            pass
+            try:
+                solicitation = Solicitation(
+                    user=user,
+                    event=event
+                )
+                solicitation.save()
+                messages.add_message(request, constants.SUCCESS, 'Solicitação realizada com sucesso, aguarde a reposta.')
+            except:
+                messages.add_message(request, constants.ERROR, 'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
+    return redirect(redirect_event_details)
+
