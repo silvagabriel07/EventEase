@@ -46,6 +46,17 @@
 
 {% block 'body' %}
 <div class="container custom-container">
+    {% if messages %}
+    <br>
+    <ul class="messages">
+        {% for message in messages %}
+        <div class="{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <br>
     <h1>{{ event.title }}</h1>
     <hr>
     <div class="mb-3">
@@ -64,6 +75,15 @@
             <p>{{ event.category }}</p>
         </div>
     </div>
+
+    <div class="mb-3">
+        <label class="label-event">Participants:</label> 
+        <div class="value-event">
+            <p>{{ event.count_participants }}</p>
+        </div>
+    </div>
+
+
     <div class="mb-3">
         <label class="label-event">Data e Hora de Início:</label> 
         <div style="margin-right: 10px;" class="value-event">
@@ -104,18 +124,23 @@
     </div>
     <hr>
         {% if request.user.is_authenticated %}
-            {% if  request.user.is_minor == True %}
-                {% if event.private %}
-                    <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="#">Solicitar Participação</a>
-                {% else %}
-                    <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="#">Participar</a>
-                {% endif %} 
-            {% else %}
-                <button disabled style="padding-left: 50px; padding-right: 50px; background-color: rgb(160, 154, 154);" class="btn" href="#">Participar</button>
-                <div style="color: rgb(250, 53, 53)" id="titlehelp" class="form-text">Você não pode participar deste evento, pois ele é para maiores de idade.</div>
-        {% endif %}
 
+            {% if is_user_participant %}
+                <button disabled style="padding-left: 50px; padding-right: 50px; background-color: #f47d6a;" class="btn" href="#">Já participa</button>
+            {% else %}
+                {% if request.user.is_minor and not event.free %}
+                    <button disabled style="padding-left: 50px; padding-right: 50px; background-color: rgb(160, 154, 154);" class="btn" href="#">Participar</button>
+                    <div style="color: rgb(250, 53, 53)" id="titlehelp" class="form-text">Você não pode participar deste evento, pois ele é para maiores de idade.</div>
+                {% else %}
+                    {% if event.private %}
+                        <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'participar' event.id %}">Solicitar Participação</a>
+                    {% else %}
+                        <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'participar' event.id %}">Participar</a>
+                    {% endif %} 
+                {% endif %}
+            {% endif %}
         {% else %}
+        
             {% if event.private %}
                 <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'account_login' %}">Solicitar Participação</a>
             {% else %}

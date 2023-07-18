@@ -55,7 +55,30 @@ def criar_evento(request):
         form = CreateEventForm()
         return render(request, 'criar_evento.html', {'form': form})
     
-
 def ver_mais(request, id_event):
     event = Event.objects.get(id=id_event)
-    return render(request, 'ver_mais.html', {'event': event})
+    is_user_participant = request.user.is_user_participant(event)
+    return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant})
+
+def participar(request, id_event):
+    event = Event.objects.get(id=id_event)
+    user = request.user
+    redirect_url = reverse('ver_mais', args=[id_event])
+
+    if user.is_user_participant(event):
+        messages.add_message(request, constants.ERROR, 'Você já participa deste evento.')
+        return redirect(redirect_url)
+    
+    elif not event.free and user.is_minor():
+        messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
+        return redirect(redirect_url)
+
+    else:
+        if not event.private:
+            event.participants.add(user.id)
+            event.save()
+            messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')
+            return redirect(redirect_url)
+        else:
+            # solicitar a participação do evento privado 
+            pass

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 from account_manager.models import User
 # Create your models here.
 
@@ -22,6 +23,9 @@ class Event(models.Model):
     start_date_time = models.DateTimeField()
     final_date_time = models.DateTimeField()
     event_banner = models.FileField(upload_to='event_banners', default='default_event_banner.png')
+
+    def count_participants(self):
+        return self.participants.count()
 
     def __str__(self):
         return self.title

@@ -21,6 +21,18 @@
         {% endif %}
     </div>
   </header>
+
+{% if messages %}
+  <br>
+  <ul class="messages">
+      {% for message in messages %}
+        <div class="{{ message.tags }}" role="alert">
+          {{ message }}
+        </div>
+      {% endfor %}
+  </ul>
+{% endif %}
+
   <div class="container">
     <h2 style="color: #f85a40;">Eventos em Destaque</h2>
     <p>Confira os eventos mais populares e próximos. Para mais, acesse <a href="#">Explorar</a></p>
