@@ -1,3 +1,4 @@
+
 h1{
     text-align: center;
 }
@@ -9,4 +10,8 @@ h1{
 .link:hover{
     color: rgb(36, 36, 36);
     text-decoration: underline;
+}
+
+.c-auth{
+    width: 75%;
 }

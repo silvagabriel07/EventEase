@@ -3,9 +3,9 @@
 {% load i18n %}
 {% load static %}
 
-{% block 'title' %}{% trans "Signup" %}{% endblock %}
+{% block 'title' %}Cadastrar-se{% endblock %}
 {% block 'head' %}
-  <link rel="stylesheet" href="{% static 'accounts/css/signup.css' %}">
+  <link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
   <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
 
 {% endblock %}
@@ -13,68 +13,95 @@
 {% block 'body' %}
   {% block content %}
 
-  <div class="container custom-container">
+  <div class="container custom-container c-auth">
   <h1>Cadastrar</h1>
 
   <p>Já tem uma conta? Então faça login <a class="link" href="{{ login_url }}">sign in</a></p>
 
-  <form class="signup" id="signup_form" method="post" action="{% url 'account_signup' %}" enctype="multipart/form-data">
+  <form class="signup row g-3" id="signup_form" method="post" action="{% url 'account_signup' %}" enctype="multipart/form-data">
     {% csrf_token %}
-  
-    <p><span style="color: red;">*</span> {{ form.username.label }}:
-      {{ form.username }} </p>
+    <hr>
+    <div>
+      <span class="form-text" style="color: red;">*</span> {{form.username.label }}
+      {{ form.username }} 
+    </div> 
+      {% if form.username.errors %}
       <ul class="errorlist">
         {% for error in form.username.errors %}
             <li style="color: rgb(229, 70, 70);">{{ error }}</li>
         {% endfor %}
-    </ul>
+      </ul>
+      {% endif %}
     
-    <p><span style="color: red;">*</span> {{ form.email.label }}:
-      {{ form.email }}</p>
-      <ul class="errorlist">
+
+      <div>
+        <span class="form-text" style="color: red;">*</span> {{form.email.label }}
+        {{ form.email }} 
+      </div>
+    {% if form.email.errors %}
+    <ul class="errorlist">
         {% for error in form.email.errors %}
             <li style="color: rgb(229, 70, 70);">{{ error }}</li>
         {% endfor %}
     </ul>   
+    {% endif %}
     
-    <p><span style="color: red;">*</span> {{ form.idade.label }}:
-      {{ form.idade }}</p>
-      <ul class="errorlist">
+    <div>
+      <span class="form-text" style="color: red;">*</span> {{form.idade.label }}
+      {{ form.idade }}
+    </div>
+    
+    {% if form.idade.errors %}
+    <ul class="errorlist">
         {% for error in form.idade.errors %}
             <li style="color: rgb(229, 70, 70);">{{ error }}</li>
         {% endfor %}
     </ul>
+    {% endif %}
       
-    <p>{{ form.phone_number.label }}:
-      {{ form.phone_number }}</p>
-      <ul class="errorlist">
+    <div>
+      {{form.phone_number.label }}
+      {{ form.phone_number }} 
+    </div>
+    {% if form.phone_number.errors %}
+    <ul class="errorlist">
         {% for error in form.phone_number.errors %}
             <li style="color: rgb(229, 70, 70);">{{ error }}</li>
         {% endfor %}
     </ul>    
+    {% endif %}
     
-    <p><span style="color: red;">*</span> {{ form.password1.label }}:
-      {{ form.password1 }}</p>
+    <div>
+      <span class="form-text" style="color: red;">*</span> {{form.password1.label }}
+      {{ form.password1 }} 
+    </div>
+    {% if form.password1.errors %}
     <ul class="errorlist">
         {% for error in form.password1.errors %}
             <li style="color: rgb(229, 70, 70);">{{ error }}</li>
         {% endfor %}
     </ul>
+    {% endif %}
       
-      <p>{{ form.password2.label }}:
-      {{ form.password2 }}</p>
-      <ul class="errorlist">
+    <div>
+      <span class="form-text" style="color: red;">*</span> {{form.password2.label }}
+      {{ form.password2 }} 
+    </div>
+    {% if form.password2.errors %}
+    <ul class="errorlist">
         {% for error in form.password2.errors %}
             <li style="color: rgb(229, 70, 70);">{{ error }}</li>
         {% endfor %}
-    </ul>    <br>
-
-
+    </ul>   
+    {% endif %}
+    <br>
 
       {% if redirect_field_value %}
-      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}">
       {% endif %}
-      <button class="btn cta-button" type="submit">{% trans "Sign Up" %} &raquo;</button>
+
+      <hr>
+      <button class="btn cta-button" type="submit">Cadastrar &raquo;</button>
   </form>
 </div>
   {% endblock %}

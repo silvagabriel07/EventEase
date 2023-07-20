@@ -1,13 +1,25 @@
 from django import forms
 from .models import phone_number_validators
-from allauth.account.forms import SignupForm
+from allauth.account.forms import SignupForm, LoginForm
 from .models import User
 
 class CustomSignupForm(SignupForm):
-    idade = forms.IntegerField(required=True)
+    def __init__(self, *args, **kwargs):
+        super(CustomSignupForm, self).__init__(*args, **kwargs)
+        self.fields['password1'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Senha',})
+        self.fields['password1'].label = 'Senha:'
+        self.fields['password2'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Senha (novamente)',})
+        self.fields['password2'].label = 'Confirmar Senha:'
+        self.fields['username'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Nome de usuário'})
+        self.fields['username'].label = 'Nome de Usuário:'
+        self.fields['email'].widget.attrs.update({'class': 'form-control custom-form-width', "placeholder": "Endereço de email"})
+        self.fields['email'].label = 'Endereço de email:'
+
+    
+    idade = forms.IntegerField(required=True, label='Idade:', widget=forms.NumberInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'Idade'}))
     # Não obrigatórios
-    phone_number = forms.CharField(required=False, max_length=14, validators=[phone_number_validators], widget=forms.TextInput(attrs={'placeholder': '+00 00000-0000'}))
-  
+    phone_number = forms.CharField(required=False, label='Número de telefone:', max_length=14, validators=[phone_number_validators], widget=forms.TextInput(attrs={'class': 'form-control custom-form-width', 'placeholder': '+00 00000-0000'}))
+    
     field_order = ['username', 'email', 'idade', 'password1', 'password2', 'user_img']
 
     def clean_idade(self):
@@ -29,3 +41,11 @@ class CustomSignupForm(SignupForm):
         )
         user.phonenumber_set.create(phone_number=self.cleaned_data['phone_number'])
         return user
+
+class CustomLoginForm(LoginForm):
+    def __init__(self, *args, **kwargs):
+        super(CustomLoginForm, self).__init__(*args, **kwargs)
+        self.fields['login'].widget.attrs.update({'class': 'form-control custom-form-width', "placeholder": "Endereço de email"})
+        self.fields['login'].label = 'Endereço de email:'
+        self.fields['password'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Senha',})
+        self.fields['password'].label = 'Senha:'

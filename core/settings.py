@@ -118,6 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTHENTICATION_BACKENDS = [
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
+
 ]
 
 SITE_ID = 1
@@ -133,7 +134,8 @@ LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'account_login'
 
 ACCOUNT_FORMS = {
-    'signup': 'account_manager.forms.CustomSignupForm'
+    'signup': 'account_manager.forms.CustomSignupForm',
+    'login': 'account_manager.forms.CustomLoginForm',
 }
 
 
