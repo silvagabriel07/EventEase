@@ -1,15 +1,17 @@
 
 h1{
+    font-weight: 800;
     text-align: center;
 }
 
 .link{
-    color: black;
+    color: #f85a40;
+    text-decoration: underline;
 
 }
 .link:hover{
-    color: rgb(36, 36, 36);
-    text-decoration: underline;
+    color: #c54734;
+    text-decoration:solid;
 }
 
 .c-auth{
