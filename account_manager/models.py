@@ -1,8 +1,13 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
-from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.core.validators import RegexValidator
+
+phone_number_validators = RegexValidator(
+        regex=r'^\+\d{2} \d{5}-\d{4}$',
+        message="O número de telefone deve estar em um formato válido."
+    )
+
 
 # Create your models here.
 class CustomUserManager(UserManager):
@@ -41,11 +46,11 @@ class CustomUserManager(UserManager):
 
 class User(AbstractUser):
     last_name = first_name = None
-    username_validator = UnicodeUsernameValidator()
 
-    username = models.CharField(max_length=60, validators=[username_validator], unique=False)
+    username = models.CharField(max_length=60, unique=False)
     email = models.EmailField(max_length=254, unique=True)
-    idade = models.IntegerField(null=True, blank=True)
+    idade = models.IntegerField(default=None)
+    user_img = models.FileField(upload_to='user_img', default='/user_img/user_img.png')
 
     objects = CustomUserManager()
 
@@ -69,9 +74,5 @@ class User(AbstractUser):
 
 
 class PhoneNumber(models.Model):
-    phone_number_validators = RegexValidator(
-        regex=r'^\+\d{2}\d{2}\d{4}\d{4}$',
-        message="O número de telefone deve estar em um formato válido."
-    )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    phone_number = models.CharField(max_length=15, validators=[phone_number_validators],  default=None)
+    phone_number = models.CharField(max_length=14, validators=[phone_number_validators])

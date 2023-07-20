@@ -58,8 +58,14 @@
                   {% endif %}
                 </ul>
               </li>
-              <li><a style="text-decoration: none;" href="#">Notificações</a></li>
-                            <li class="dropdown"><a style="text-decoration: none;" href="#"><span><img width="30px" src="{% static 'Platform/img/img_perfil.png' %}"></span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
+              {% if request.user.is_authenticated %}
+                <li><a style="text-decoration: none;" href="#">Notificações</a></li>
+              {% endif %}
+              {% if request.user.is_authenticated %}
+                  <li class="dropdown"><a style="text-decoration: none;" href="#"><span><img width="30px" src="{{ request.user.user_img.url }}"></span> <i class="bi bi-chevron-down dropdown-indicator profile-picture"></i></a>
+                {% else %}
+                <li class="dropdown"><a style="text-decoration: none;" href="#"><span><img width="30px" src="{% static 'Platform/img/img_perfil.png' %}"></span> <i class="bi bi-chevron-down dropdown-indicator profile-picture"></i></a>
+                  {% endif %}
                 <ul>
                   <li><a style="text-decoration: none;" href="#">Ver Perfil</a></li>
                   {% if user.is_authenticated %}

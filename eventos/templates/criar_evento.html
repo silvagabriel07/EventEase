@@ -53,8 +53,9 @@
             <div class="mb-3">
                 <label for="description">{{ form.description.label }}</label>
                 {{ form.description }}
-                {% if form.description.errors %}
                 <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Dê as informações que achar relevante para alguém que deseja se inscrever para participar.</div>
+
+                {% if form.description.errors %}
                 <ul class="errorlist">
                     {% for error in form.description.errors %}
                         <li style="color: rgb(229, 70, 70);">{{ error }}</li>

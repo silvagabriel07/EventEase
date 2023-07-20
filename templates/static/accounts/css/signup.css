@@ -1,0 +1,12 @@
+h1{
+    text-align: center;
+}
+
+.link{
+    color: black;
+
+}
+.link:hover{
+    color: rgb(36, 36, 36);
+    text-decoration: underline;
+}
