@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
 {% endblock %}
 
-{% block head_title %}Fazer Login{% endblock %}
+{% block 'title' %}Fazer Login{% endblock %}
 
 {% block 'body' %}
   {% block content %}
@@ -44,6 +44,19 @@
     <form class="login row g-3" method="POST" action="{% url 'account_login' %}">
       {% csrf_token %}
       <hr>
+
+      {% if messages %}
+      <br>
+      <ul class="messages">
+          {% for message in messages %}
+            <div class="{{ message.tags }}" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+      </ul>
+      <hr>
+    {% endif %}
+
         {% if form.errors.values %}
         <ul class="errorlist">
           {% for error in form.errors.values %}
@@ -66,14 +79,13 @@
           {{ form.remember }}
         </div>
 
-  
-
       {% if redirect_field_value %}
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
       {% endif %}
-      <a class="button secondaryAction link" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
       <hr>
       <button class="btn cta-button" type="submit">{% trans "Sign In" %}</button>
+      <a class="button secondaryAction link" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+
     </form>
   </div>
   {% endblock %}

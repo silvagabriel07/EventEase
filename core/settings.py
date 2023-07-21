@@ -136,10 +136,13 @@ LOGIN_URL = 'account_login'
 ACCOUNT_FORMS = {
     'signup': 'account_manager.forms.CustomSignupForm',
     'login': 'account_manager.forms.CustomLoginForm',
+    'change_password': 'account_manager.forms.CustomChangePasswordForm',
+
 }
 
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 15
 ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_MAX_EMAIL_ADDRESSES = 1
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 

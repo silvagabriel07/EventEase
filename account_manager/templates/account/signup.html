@@ -21,6 +21,19 @@
   <form class="signup row g-3" id="signup_form" method="post" action="{% url 'account_signup' %}" enctype="multipart/form-data">
     {% csrf_token %}
     <hr>
+    
+    {% if messages %}
+    <br>
+    <ul class="messages">
+        {% for message in messages %}
+          <div class="{{ message.tags }}" role="alert">
+            {{ message }}
+          </div>
+        {% endfor %}
+    </ul>
+    <hr>
+  {% endif %}
+  
     <div>
       <label for="id_username"><span class="form-text" style="color: red;">*</span> {{form.username.label }} </label>
       {{ form.username }} 
