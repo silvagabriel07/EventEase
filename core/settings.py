@@ -138,7 +138,8 @@ ACCOUNT_FORMS = {
     'login': 'account_manager.forms.CustomLoginForm',
 }
 
-
+ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 15
+ACCOUNT_LOGOUT_ON_GET = True
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 

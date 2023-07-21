@@ -44,31 +44,28 @@
     <form class="login row g-3" method="POST" action="{% url 'account_login' %}">
       {% csrf_token %}
       <hr>
-
-      <div>
-        <span class="form-text" style="color: red;">*</span> {{form.login.label }}
-        {{ form.login }} 
-      </div> 
-        {% if form.login.errors %}
+        {% if form.errors.values %}
         <ul class="errorlist">
-          {% for error in form.login.errors %}
+          {% for error in form.errors.values %}
               <li style="color: rgb(229, 70, 70);">{{ error }}</li>
           {% endfor %}
         </ul>
         {% endif %}
-      
+      <div>
+        <label for="id_login">{{ form.login.label }}</label>
+        {{ form.login }} 
+      </div> 
   
         <div>
-          <span class="form-text" style="color: red;">*</span> {{form.password.label }}
+          <label for="id_password">{{ form.password.label }}</label>
           {{ form.password }} 
         </div>
-      {% if form.password.errors %}
-      <ul class="errorlist">
-          {% for error in form.password.errors %}
-              <li style="color: rgb(229, 70, 70);">{{ error }}</li>
-          {% endfor %}
-      </ul>   
-      {% endif %}
+
+        <div>
+          <label for="id_remember">{{ form.remember.label }}:</label>
+          {{ form.remember }}
+        </div>
+
   
 
       {% if redirect_field_value %}

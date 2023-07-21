@@ -22,7 +22,7 @@
     {% csrf_token %}
     <hr>
     <div>
-      <span class="form-text" style="color: red;">*</span> {{form.username.label }}
+      <label for="id_username"><span class="form-text" style="color: red;">*</span> {{form.username.label }} </label>
       {{ form.username }} 
     </div> 
       {% if form.username.errors %}
@@ -35,7 +35,7 @@
     
 
       <div>
-        <span class="form-text" style="color: red;">*</span> {{form.email.label }}
+        <label for="id_email"><span class="form-text" style="color: red;">*</span> {{form.email.label }} </label>
         {{ form.email }} 
       </div>
     {% if form.email.errors %}
@@ -47,7 +47,7 @@
     {% endif %}
     
     <div>
-      <span class="form-text" style="color: red;">*</span> {{form.idade.label }}
+      <label for="id_idade"><span class="form-text" style="color: red;">*</span> {{form.idade.label }} </label>
       {{ form.idade }}
     </div>
     
@@ -60,7 +60,7 @@
     {% endif %}
       
     <div>
-      {{form.phone_number.label }}
+      <label for="id_phone_number">{{form.phone_number.label }}</label>
       {{ form.phone_number }} 
     </div>
     {% if form.phone_number.errors %}
@@ -72,7 +72,7 @@
     {% endif %}
     
     <div>
-      <span class="form-text" style="color: red;">*</span> {{form.password1.label }}
+      <label for="id_password1"><span class="form-text" style="color: red;">*</span> {{form.password1.label }} </label>
       {{ form.password1 }} 
     </div>
     {% if form.password1.errors %}
@@ -84,7 +84,7 @@
     {% endif %}
       
     <div>
-      <span class="form-text" style="color: red;">*</span> {{form.password2.label }}
+      <label for="id_password2"><span class="form-text" style="color: red;">*</span> {{form.password2.label }} </label>
       {{ form.password2 }} 
     </div>
     {% if form.password2.errors %}

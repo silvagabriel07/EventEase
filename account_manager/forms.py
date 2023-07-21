@@ -6,19 +6,19 @@ from .models import User
 class CustomSignupForm(SignupForm):
     def __init__(self, *args, **kwargs):
         super(CustomSignupForm, self).__init__(*args, **kwargs)
-        self.fields['password1'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Senha',})
+        self.fields['password1'].widget.attrs.update({'id': 'id_password1', 'class': 'form-control custom-form-width', 'placeholder': 'Senha',})
         self.fields['password1'].label = 'Senha:'
-        self.fields['password2'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Senha (novamente)',})
+        self.fields['password2'].widget.attrs.update({'id': 'id_password2', 'class': 'form-control custom-form-width', 'placeholder': 'Senha (novamente)',})
         self.fields['password2'].label = 'Confirmar Senha:'
-        self.fields['username'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Nome de usuário'})
+        self.fields['username'].widget.attrs.update({'id': 'id_username', 'class': 'form-control custom-form-width', 'placeholder': 'Nome de usuário'})
         self.fields['username'].label = 'Nome de Usuário:'
-        self.fields['email'].widget.attrs.update({'class': 'form-control custom-form-width', "placeholder": "Endereço de email"})
+        self.fields['email'].widget.attrs.update({'id': 'id_email', 'class': 'form-control custom-form-width', "placeholder": "Endereço de email"})
         self.fields['email'].label = 'Endereço de email:'
 
     
-    idade = forms.IntegerField(required=True, label='Idade:', widget=forms.NumberInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'Idade'}))
+    idade = forms.IntegerField(required=True, label='Idade:', widget=forms.NumberInput(attrs={'id': 'id_idade', 'class': 'form-control custom-form-width', 'placeholder': 'Idade'}))
     # Não obrigatórios
-    phone_number = forms.CharField(required=False, label='Número de telefone:', max_length=14, validators=[phone_number_validators], widget=forms.TextInput(attrs={'class': 'form-control custom-form-width', 'placeholder': '+00 00000-0000'}))
+    phone_number = forms.CharField(required=False, label='Número de telefone:', max_length=14, validators=[phone_number_validators], widget=forms.TextInput(attrs={'id': 'id_phone_number', 'class': 'form-control custom-form-width', 'placeholder': '+00 00000-0000'}))
     
     field_order = ['username', 'email', 'idade', 'password1', 'password2', 'user_img']
 
@@ -45,7 +45,8 @@ class CustomSignupForm(SignupForm):
 class CustomLoginForm(LoginForm):
     def __init__(self, *args, **kwargs):
         super(CustomLoginForm, self).__init__(*args, **kwargs)
-        self.fields['login'].widget.attrs.update({'class': 'form-control custom-form-width', "placeholder": "Endereço de email"})
+        self.fields['login'].widget.attrs.update({'id': 'id_login', 'class': 'form-control custom-form-width', "placeholder": "Endereço de email"})
         self.fields['login'].label = 'Endereço de email:'
-        self.fields['password'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Senha',})
+        self.fields['password'].widget.attrs.update({'id': 'id_password', 'class': 'form-control custom-form-width', 'placeholder': 'Senha',})
         self.fields['password'].label = 'Senha:'
+        self.fields['remember'].widget.attrs.update({'id': 'id_remember'})
