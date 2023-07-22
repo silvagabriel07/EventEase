@@ -28,5 +28,10 @@ h1:hover{
 }
 
 .custom-form-width{
-    width: 300px;
+    width: 35%;
+}
+
+.custom-errorlist{
+    color: rgb(229, 70, 70);
+    margin: 0;
 }

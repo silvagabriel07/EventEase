@@ -58,9 +58,9 @@
     {% endif %}
 
         {% if form.errors.values %}
-        <ul class="errorlist">
+        <ul class="custom-errorlist">
           {% for error in form.errors.values %}
-              <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+            {{ error }}
           {% endfor %}
         </ul>
         {% endif %}

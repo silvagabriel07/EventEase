@@ -1,7 +1,7 @@
-{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name %}Hello from {{ site_name }}!{% endblocktrans %}
+{% load i18n %}{% autoescape off %}{% blocktrans with site_name=current_site.name %}Olá, somos nós do site {{ site_name }}!{% endblocktrans %}
 
 {% block content %}{% endblock %}
 
-{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Thank you for using {{ site_name }}!
-{{ site_domain }}{% endblocktrans %}
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Obrigado por usar o site {{ site_name }}!
+{{ site_domain }}/home/{% endblocktrans %}
 {% endautoescape %}

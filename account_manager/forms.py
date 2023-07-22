@@ -1,6 +1,6 @@
 from django import forms
 from .models import phone_number_validators
-from allauth.account.forms import SignupForm, LoginForm, ChangePasswordForm, ResetPasswordForm
+from allauth.account.forms import SignupForm, LoginForm, ChangePasswordForm, ResetPasswordForm, ResetPasswordKeyForm
 from .models import User
 
 class CustomSignupForm(SignupForm):
@@ -61,3 +61,9 @@ class CustomResetPasswordForm(ResetPasswordForm):
     def __init__(self, *args, **kwargs):
         super(CustomResetPasswordForm, self).__init__(*args, **kwargs)
         self.fields['email'].widget.attrs.update({'class': 'form-control custom-form-width'})
+
+class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
+    def __init__(self, *ars, **kwargs):
+        super(CustomResetPasswordKeyForm, self).__init__(*ars, **kwargs)
+        self.fields['password1'].widget.attrs.update({'class': 'form-control custom-form-width'})
+        self.fields['password2'].widget.attrs.update({'class': 'form-control custom-form-width'})

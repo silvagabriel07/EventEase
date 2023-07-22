@@ -55,14 +55,17 @@ def criar_evento(request):
     else:
         form = CreateEventForm()
         return render(request, 'criar_evento.html', {'form': form})
-    
+
 def ver_mais(request, id_event):
     event = Event.objects.get(id=id_event)
-    is_user_participant = request.user.is_user_participant(event)
-    user_already_solicitated = request.user.user_already_solicitated(event)
-    print(user_already_solicitated)
+    is_user_participant = False
+    user_already_solicitated = False
+    if request.user.is_authenticated:
+        is_user_participant = request.user.is_user_participant(event)
+        user_already_solicitated = request.user.user_already_solicitated(event)
     return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated})
 
+@login_required
 def participar(request, id_event):
     event = Event.objects.get(id=id_event)
     user = request.user

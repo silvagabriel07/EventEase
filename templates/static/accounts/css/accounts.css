@@ -18,7 +18,13 @@ h1{
     width: 75%;
 }
 
+.c-form-text{
+    color: rgb(172, 172, 172);
+    font-size: small;
+}
+
 .warning-container{
     width: 45%;
 }
+
 
