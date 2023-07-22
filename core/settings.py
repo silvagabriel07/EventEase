@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+from decouple import config
 from pathlib import Path
 import os
 from django.contrib.messages import constants
@@ -137,12 +137,13 @@ ACCOUNT_FORMS = {
     'signup': 'account_manager.forms.CustomSignupForm',
     'login': 'account_manager.forms.CustomLoginForm',
     'change_password': 'account_manager.forms.CustomChangePasswordForm',
+    'reset_password': 'account_manager.forms.CustomResetPasswordForm'
 
 }
 
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 15
 ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_MAX_EMAIL_ADDRESSES = 1
+ACCOUNT_UNIQUE_EMAIL = True
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -181,3 +182,12 @@ MESSAGE_TAGS = {
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
