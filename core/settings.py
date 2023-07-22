@@ -127,6 +127,7 @@ AUTH_USER_MODEL = 'account_manager.User'
 
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_LOGOUT_REDIRECT_URL = 'account_login'
@@ -144,7 +145,7 @@ ACCOUNT_FORMS = {
 
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 15
 ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_UNIQUE_EMAIL = True
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -170,7 +171,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URLS = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
+# message
 MESSAGE_TAGS = {
     constants.DEBUG: 'alert alert-primary',
     constants.ERROR: 'alert alert-danger',

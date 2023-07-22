@@ -40,7 +40,7 @@
       {% if form.username.errors %}
           <ul class="custom-errorlist">
           {% for error in form.username.errors %}
-              {{ error }}
+              <li>{{ error }}</li>
           {% endfor %}
           </ul>
       {% endif %}
@@ -52,7 +52,7 @@
         {% if form.email.errors %}
         <ul class="custom-errorlist">
         {% for error in form.email.errors %}
-            {{ error }}
+        <li>{{ error }}</li>
         {% endfor %}
         </ul>
     {% endif %}
@@ -64,7 +64,7 @@
       {% if form.idade.errors %}
           <ul class="custom-errorlist">
           {% for error in form.idade.errors %}
-              {{ error }}
+          <li>{{ error }}</li>
           {% endfor %}
           </ul>
       {% endif %}
@@ -76,7 +76,7 @@
       {% if form.phone_number.errors %}
           <ul class="custom-errorlist">
           {% for error in form.phone_number.errors %}
-              {{ error }}
+          <li>{{ error }}</li>
           {% endfor %}
           </ul>
       {% endif %}
@@ -91,7 +91,7 @@
       {% if form.password1.errors %}
           <ul class="custom-errorlist">
           {% for error in form.password1.errors %}
-              {{ error }}
+          <li>{{ error }}</li>
           {% endfor %}
           </ul>
       {% endif %}
@@ -103,7 +103,7 @@
       {% if form.password2.errors %}
           <ul class="custom-errorlist">
           {% for error in form.password2.errors %}
-              {{ error }}
+          <li>{{ error }}</li>
           {% endfor %}
           </ul>
       {% endif %}

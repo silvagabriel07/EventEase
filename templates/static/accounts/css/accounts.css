@@ -25,6 +25,10 @@ h1{
 
 .warning-container{
     width: 45%;
+    text-align: center;
+}
+.warning-container p{
+    color: rgb(219, 252, 72);
 }
 
 
