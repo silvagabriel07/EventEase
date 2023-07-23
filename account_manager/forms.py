@@ -22,6 +22,16 @@ class CustomSignupForm(SignupForm):
     
     field_order = ['username', 'email', 'idade', 'password1', 'password2', 'user_img']
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if email:
+            if User.objects.filter(email=email).exists():
+                self.add_error('email', 'Alguém já se registrou com este endereço de e-mail.')
+            else:
+                return email
+        else:
+            self.add_error('email', 'O email deve ser informada.')
+
     def clean_idade(self):
         idade = self.cleaned_data["idade"]
         if idade:

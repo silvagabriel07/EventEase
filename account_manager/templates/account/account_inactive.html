@@ -1,11 +1,27 @@
 {% extends "account/base.html" %}
 
+{% load static %}
 {% load i18n %}
 
-{% block head_title %}{% trans "Account Inactive" %}{% endblock %}
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
+{% endblock %}
 
-{% block content %}
-<h1>{% trans "Account Inactive" %}</h1>
+{% block 'title' %}{% trans "Account Inactive" %}{% endblock %}
 
-<p>{% trans "This account is inactive." %}</p>
+{% block 'body' %}
+    {% block content %}
+
+    <div class="container custom-container c-auth">
+    <h1>{% trans "Account Inactive" %}</h1>
+    <hr>
+          <div class="alert alert-info" role="alert">
+            {{ message|safe }}
+          </div>
+    <hr>
+
+    <p>Para ativar sua conta, assim que você criar uma conta ou logar em sua conta desativada lhe enviaremos um email para reativar.</p>
+    </div>
+    {% endblock %}
 {% endblock %}

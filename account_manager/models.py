@@ -29,7 +29,7 @@ class CustomUserManager(UserManager):
 
         extra_fields.setdefault("is_staff", False)
         extra_fields.setdefault("is_superuser", False)
-        extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("is_active", False)
         return self._create_user(email=email, username=username, password=password, **extra_fields)
 
     def create_superuser(self, email, password=None, username=None, **extra_fields):
@@ -46,6 +46,7 @@ class CustomUserManager(UserManager):
 
 class User(AbstractUser):
     last_name = first_name = None
+    is_active = models.BooleanField(default=False)
 
     username = models.CharField(max_length=60, unique=False)
     email = models.EmailField(max_length=254, unique=True)
