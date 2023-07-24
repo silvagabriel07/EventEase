@@ -16,30 +16,8 @@
 
   <div class="container custom-container c-auth">
     <h1>{% trans "Sign In" %}</h1>
-   
-    {% get_providers as socialaccount_providers %}
-
-    {% if socialaccount_providers %}
-    <p>{% blocktrans with site.name as site_name %}Please sign in with one
-    of your existing third party accounts. Or, <a class="link" href="{{ signup_url }}">sign up</a>
-    for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
-
-    <div class="socialaccount_ballot">
-
-      <ul class="socialaccount_providers">
-        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-      </ul>
-
-      <div class="login-or">{% trans 'or' %}</div>
-
-    </div>
-
-    {% include "socialaccount/snippets/login_extra.html" %}
-
-    {% else %}
-    <p>Se você ainda não criou uma conta ainda, se cadastre
-    <a class="link" href="{{ signup_url }}">sign up</a> primeiro.</p>
-    {% endif %}
+    <p>Se você ainda não criou uma conta, <b>se cadastre
+      <a class="link" href="{{ signup_url }}">sign up</a></b>, ou se <b>conecte com sua conta Google</b>, logo abaixo.</p>
   
     <form class="login row g-3" method="POST" action="{% url 'account_login' %}">
       {% csrf_token %}
@@ -54,7 +32,6 @@
             </div>
           {% endfor %}
       </ul>
-      <hr>
     {% endif %}
 
         {% if form.errors.values %}
@@ -83,10 +60,25 @@
       <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
       {% endif %}
       <hr>
+      <a style="margin: 0;" class="button secondaryAction link" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
       <button class="btn cta-button" type="submit">{% trans "Sign In" %}</button>
-      <a class="button secondaryAction link" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
 
     </form>
+    {% get_providers as socialaccount_providers %}
+
+    {% if socialaccount_providers %}
+
+    <div class="socialaccount_ballot">
+      
+      <ul class="socialaccount_providers">
+        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+      </ul>
+
+    </div>
+      {% include "socialaccount/snippets/login_extra.html" %}
+   
+    {% endif %}
+
   </div>
   {% endblock %}
 {% endblock %}

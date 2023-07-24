@@ -1,4 +1,5 @@
 {% load socialaccount %}
+{% load static %}
 
 {% get_providers as socialaccount_providers %}
 
@@ -7,14 +8,19 @@
 {% for brand in provider.get_brands %}
 <li>
   <a title="{{brand.name}}" 
-     class="socialaccount_provider {{provider.id}} {{brand.id}}" 
+     class="socialaccount_provider {{provider.id}} {{brand.id}} link" 
      href="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
      >{{brand.name}}</a>
 </li>
 {% endfor %}
 {% endif %}
 <li>
-  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}}" 
-     href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
+  {% if provider.name == 'Google' %}
+  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}} link" 
+  href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"><img width="200px" src="{% static 'accounts/img/btn_google_signin_dark_normal_web@2x.png' %}"></a>
+  {% else %}
+  <a title="{{provider.name}}" class="socialaccount_provider {{provider.id}} link" 
+  href="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}">{{provider.name}}</a>
+  {% endif %}   
 </li>
 {% endfor %}
