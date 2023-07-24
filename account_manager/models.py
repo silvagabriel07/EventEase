@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.validators import RegexValidator
-from allauth.account.signals import user_signed_up
 
 
 phone_number_validators = RegexValidator(
@@ -66,6 +65,7 @@ class User(AbstractUser):
             return True
         else:
             return False
+        
 
     def is_user_participant(self, event_instance):
         return event_instance.participants.filter(id=self.id).exists()

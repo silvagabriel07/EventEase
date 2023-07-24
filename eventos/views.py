@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages import constants
 from .models import Solicitation
-
+from account_manager.utils import need_set_age
 # Create your views here.
 @login_required
 def organizando(request, user_id):
@@ -74,8 +74,10 @@ def participar(request, id_event):
     if user.is_user_participant(event):
         messages.add_message(request, constants.ERROR, 'Você já participa deste evento.')
     
-    elif not event.free and user.is_minor():
-        messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
+    elif not event.free:
+        need_set_age(request, user)
+        if user.is_minor():
+            messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
 
     else:
         if not event.private:
