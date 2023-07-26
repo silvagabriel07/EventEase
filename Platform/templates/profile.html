@@ -13,13 +13,13 @@
     <ul class="messages">
         {% for message in messages %}
         <div class="{{ message.tags }}" role="alert">
-            {{ message }}
+            {{ message|safe }}
         </div>
         {% endfor %}
     </ul>
     {% endif %}
 
-    <form action="" method="post">{% csrf_token %}
+    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
         {{ form.as_p }}
         {{ form_filho.as_p }}
         <button type="submit" class="btn cta-button">Salvar</button>

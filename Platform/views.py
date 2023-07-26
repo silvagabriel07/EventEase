@@ -8,6 +8,7 @@ from django import forms
 from account_manager.models import User, PhoneNumber
 from django.contrib.messages import constants
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
@@ -79,6 +80,7 @@ def explorar_eventos(request):
     
     return render(request, 'explorar_eventos.html', {'page': page, 'categories':  categories})
 
+@login_required
 def profile(request):
     if request.method == 'GET':
         phone_numbers = request.user.phonenumber_set.all()
@@ -94,7 +96,7 @@ def profile(request):
     elif request.method == 'POST':
         form_factory = forms.inlineformset_factory(User, PhoneNumber, form=PhoneNumberForm)
         form_filho = form_factory(request.POST, instance=request.user)
-        form = ProfileForm(request.POST, instance=request.user)
+        form = ProfileForm(request.POST, request.FILES, instance=request.user)
         if form.is_valid() and form_filho.is_valid():
             formulario = form.save()
             form_filho.instance = formulario
@@ -102,6 +104,8 @@ def profile(request):
             messages.add_message(request, constants.SUCCESS, 'Alterações salvas.')
             return redirect('profile')
         else:
+            print(form_filho.errors)
+            print(form.errors)
             messages.add_message(request, constants.ERROR, 'Algo deu errado.')
             return redirect('profile')
         

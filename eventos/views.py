@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from .models import Solicitation
 from account_manager.utils import need_set_age
+from account_manager.utils import need_set_age
 # Create your views here.
 @login_required
 def organizando(request, user_id):
@@ -67,8 +68,12 @@ def ver_mais(request, id_event):
 
 @login_required
 def participar(request, id_event):
-    event = Event.objects.get(id=id_event)
     user = request.user
+    
+    if need_set_age(request, user):
+        return redirect('profile')
+
+    event = Event.objects.get(id=id_event)
     redirect_event_details = reverse('ver_mais', args=[id_event])
 
     if user.is_user_participant(event):
