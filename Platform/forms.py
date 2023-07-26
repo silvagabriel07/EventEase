@@ -7,7 +7,8 @@ class PhoneNumberForm(forms.ModelForm):
         model = PhoneNumber
         fields = ['phone_number']
         widgets = {
-            'phone_number': forms.TextInput(attrs={'class': 'form-control custom-form-width', 'placeholder': '+00 00000-0000'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control custom-form-width', 'placeholder': '+00 00000-0000', 'style': 'display: inline-block;'}),
+            'DELETE': forms.CheckboxInput(attrs={})
         }
         labels = {
             'phone_number': 'Número de telefone',

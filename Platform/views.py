@@ -82,6 +82,7 @@ def explorar_eventos(request):
 
 @login_required
 def profile(request):
+    user_img = request.user.user_img
     if request.method == 'GET':
         phone_numbers = request.user.phonenumber_set.all()
         extra = 0
@@ -92,10 +93,10 @@ def profile(request):
 
         form_filho = form_factory(instance=request.user)
         form = ProfileForm(instance=request.user)
-        return render(request, 'profile.html', {'form': form, 'form_filho': form_filho})
+        return render(request, 'profile.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
     elif request.method == 'POST':
         form_factory = forms.inlineformset_factory(User, PhoneNumber, form=PhoneNumberForm)
-        
+
         form_filho = form_factory(request.POST, instance=request.user)
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
@@ -108,5 +109,5 @@ def profile(request):
         else:
             if not form_filho and not form:
                 messages.add_message(request, constants.ERROR, 'Algo deu errado.')
-            return render(request, 'profile.html', {'form': form, 'form_filho': form_filho})
+            return render(request, 'profile.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
         

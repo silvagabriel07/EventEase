@@ -36,6 +36,11 @@ h1:hover{
     margin: 0;
 }
 
+.errorlist li{
+    color: rgb(229, 70, 70);
+    margin: 0;
+}
+
 .label-event{
     text-decoration: underline;
     font-size: 25px;
@@ -46,6 +51,7 @@ h1:hover{
 .label-event:hover{
     color: #d03119;
 }
+
 h1{
     font-weight: 700;
 }
@@ -67,6 +73,6 @@ h1{
 }
 .value-img{
     border-radius:  10px;
-    width: 50%;
+    width: 60%;
     height: 400px;
 }
