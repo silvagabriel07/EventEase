@@ -1,9 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from eventos.models import Event, Category
 from datetime import datetime
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from .forms import ProfileForm, PhoneNumberForm
+from django import forms
+from account_manager.models import User, PhoneNumber
+from django.contrib.messages import constants
+from django.contrib import messages
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
@@ -75,3 +79,29 @@ def explorar_eventos(request):
     
     return render(request, 'explorar_eventos.html', {'page': page, 'categories':  categories})
 
+def profile(request):
+    if request.method == 'GET':
+        phone_numbers = request.user.phonenumber_set.all()
+        extra = 0
+        for ex in range(3, -1, -1):
+            if len(phone_numbers) == ex:
+                extra = 3 - ex 
+        form_factory = forms.inlineformset_factory(User, PhoneNumber, form=PhoneNumberForm, extra=extra)
+
+        form_filho = form_factory(instance=request.user)
+        form = ProfileForm(instance=request.user)
+        return render(request, 'profile.html', {'form': form, 'form_filho': form_filho})
+    elif request.method == 'POST':
+        form_factory = forms.inlineformset_factory(User, PhoneNumber, form=PhoneNumberForm)
+        form_filho = form_factory(request.POST, instance=request.user)
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid() and form_filho.is_valid():
+            formulario = form.save()
+            form_filho.instance = formulario
+            form_filho.save()
+            messages.add_message(request, constants.SUCCESS, 'Alterações salvas.')
+            return redirect('profile')
+        else:
+            messages.add_message(request, constants.ERROR, 'Algo deu errado.')
+            return redirect('profile')
+        

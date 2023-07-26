@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
+{% endblock %}
+
+{% block 'title' %}Perfil{% endblock %}
+
+{% block 'body' %}
+    {% if messages %}
+    <br>
+    <ul class="messages">
+        {% for message in messages %}
+        <div class="{{ message.tags }}" role="alert">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <form action="" method="post">{% csrf_token %}
+        {{ form.as_p }}
+        {{ form_filho.as_p }}
+        <button type="submit" class="btn cta-button">Salvar</button>
+    </form>
+{% endblock %}  

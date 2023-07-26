@@ -51,7 +51,7 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=False)
 
     username = models.CharField(max_length=60, unique=False)
-    email = models.EmailField(max_length=254, unique=True)
+    email = models.EmailField(max_length=254, unique=True, blank=False, null=False)
     idade = models.IntegerField(default=None, blank=True, null=True)
     user_img = models.FileField(upload_to='user_img', default='/user_img/user_img.png')
 

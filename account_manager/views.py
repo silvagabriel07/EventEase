@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
@@ -17,13 +18,13 @@ from allauth.account.views import LoginView, SignupView
 
 class CustomSignupView(SignupView):
     def form_valid(self, form):
-        super().form_valid(form)
-        email = form.cleaned_data['email']
-        user = User.objects.get(email=email)
-
+        user = form.save(self.request)
+        
         if not user.is_active:
             activateEmail(self.request, user, user.email)
             return redirect('account_inactive')
+        login(self.request, user)
+        return HttpResponseRedirect(self.get_success_url())
         
         
 class CustomLoginView(LoginView):
