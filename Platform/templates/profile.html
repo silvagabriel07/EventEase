@@ -3,25 +3,80 @@
 
 {% block 'head' %}
     <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
 {% endblock %}
 
 {% block 'title' %}Perfil{% endblock %}
 
-{% block 'body' %}
-    {% if messages %}
-    <br>
-    <ul class="messages">
-        {% for message in messages %}
-        <div class="{{ message.tags }}" role="alert">
-            {{ message|safe }}
-        </div>
-        {% endfor %}
-    </ul>
-    {% endif %}
+{% block 'body' %}    
 
-    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-        {{ form.as_p }}
-        {{ form_filho.as_p }}
-        <button type="submit" class="btn cta-button">Salvar</button>
-    </form>
+    <div class="container custom-container c-auth">
+    {% if messages %}
+        <br>
+        <ul class="messages">
+            {% for message in messages %}
+            <div class="{{ message.tags }}" role="alert">
+                {{ message|safe }}
+            </div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <h1>Perfil</h1>
+        <hr>
+        <!-- {% if form.errors.values %} <br>
+        <ul class="custom-errorlist">
+          {% for error in form.errors.values %}
+            {{ error }}
+          {% endfor %}
+        </ul>
+        {% endif %} -->
+        <form action="" method="post" enctype="multipart/form-data" class="row g-3">{% csrf_token %}
+            <div class="mb-3">
+                <label for="id_user_img">{{ form.user_img.label }}</label>
+                {{ form.user_img }}
+
+                {% if form.user_img.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.user_img.errors %}
+                            <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_username">{{ form.username.label }}</label>
+                {{ form.username }}
+
+                {% if form.username.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.username.errors %}
+                            <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <div class="mb-3">
+                <label for="id_idade">{{ form.idade.label }}</label>
+                {{ form.idade }}
+
+                {% if form.idade.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.idade.errors %}
+                            <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+
+            <hr>
+            {{ form_filho.management_form }}
+            {% for form_ in form_filho %}
+                {{ form_ }}
+            {% endfor %}
+            <hr>
+            <button type="submit" class="btn cta-button">Salvar</button>
+        </form>
+    </div>
 {% endblock %}  

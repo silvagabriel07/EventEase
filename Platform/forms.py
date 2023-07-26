@@ -7,10 +7,10 @@ class PhoneNumberForm(forms.ModelForm):
         model = PhoneNumber
         fields = ['phone_number']
         widgets = {
-            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+00 00000-0000'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control custom-form-width', 'placeholder': '+00 00000-0000'}),
         }
         labels = {
-            'phone_number': 'Número de telefone'
+            'phone_number': 'Número de telefone',
         }
 
 
@@ -19,9 +19,9 @@ class ProfileForm(forms.ModelForm):
         model = User
         fields = ['username', 'idade', 'user_img']
         widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Insira seu nome de usuário'}),
-            'idade': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Insira sua idade',}),
-            'user_img': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
+            'username': forms.TextInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'Insira seu nome de usuário'}),
+            'idade': forms.NumberInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'Insira sua idade', }),
+            'user_img': forms.ClearableFileInput(attrs={'class': 'form-control custom-form-width'}),
         }
         labels = {
             'username': 'Nome de usuário',
