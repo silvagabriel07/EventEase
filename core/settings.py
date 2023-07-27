@@ -143,6 +143,7 @@ ACCOUNT_FORMS = {
     'signup': 'account_manager.forms.CustomSignupForm',
     'login': 'account_manager.forms.CustomLoginForm',
     'change_password': 'account_manager.forms.CustomChangePasswordForm',
+    'set_password': 'account_manager.forms.CustomSetPasswordForm',
     'reset_password': 'account_manager.forms.CustomResetPasswordForm',
     'reset_password_from_key': 'account_manager.forms.CustomResetPasswordKeyForm',
 

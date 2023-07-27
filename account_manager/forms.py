@@ -1,6 +1,6 @@
 from django import forms
 from .models import phone_number_validators
-from allauth.account.forms import SignupForm, LoginForm, ChangePasswordForm, ResetPasswordForm, ResetPasswordKeyForm
+from allauth.account.forms import SignupForm, LoginForm, ChangePasswordForm, ResetPasswordForm, ResetPasswordKeyForm, SetPasswordForm
 from .models import User
 
 class CustomSignupForm(SignupForm):
@@ -14,7 +14,6 @@ class CustomSignupForm(SignupForm):
         self.fields['username'].label = 'Nome de Usuário:'
         self.fields['email'].widget.attrs.update({'class': 'form-control custom-form-width', "placeholder": "Endereço de email"})
         self.fields['email'].label = 'Endereço de email:'
-
     
     idade = forms.IntegerField(required=True, label='Idade:', widget=forms.NumberInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'Idade'}))
     # Não obrigatórios
@@ -75,5 +74,11 @@ class CustomResetPasswordForm(ResetPasswordForm):
 class CustomResetPasswordKeyForm(ResetPasswordKeyForm):
     def __init__(self, *ars, **kwargs):
         super(CustomResetPasswordKeyForm, self).__init__(*ars, **kwargs)
+        self.fields['password1'].widget.attrs.update({'class': 'form-control custom-form-width'})
+        self.fields['password2'].widget.attrs.update({'class': 'form-control custom-form-width'})
+
+class CustomSetPasswordForm(SetPasswordForm):
+    def __init__(self, *ars, **kwargs):
+        super(CustomSetPasswordForm, self).__init__(*ars, **kwargs)
         self.fields['password1'].widget.attrs.update({'class': 'form-control custom-form-width'})
         self.fields['password2'].widget.attrs.update({'class': 'form-control custom-form-width'})

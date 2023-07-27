@@ -3,7 +3,7 @@ from . import views
 from allauth.account.views import (
     LogoutView, SignupView, PasswordChangeView,
     PasswordResetView, PasswordResetDoneView, PasswordResetFromKeyView,
-    PasswordResetFromKeyDoneView
+    PasswordResetFromKeyDoneView, PasswordSetView
 )
 from allauth.socialaccount.views import (
     SignupView, 
@@ -18,6 +18,7 @@ from allauth.socialaccount.providers.google.provider import GoogleProvider
 urlpatterns = [
     path('login/', views.CustomLoginView.as_view(), name='account_login'),
     path('signup/', views.CustomSignupView.as_view(), name='account_signup'),
+    path('password/set/', PasswordSetView.as_view(), name='account_set_password'),
     path('logout/', LogoutView.as_view(), name='account_logout'),
     path('password/change/', PasswordChangeView.as_view(), name='account_change_password'),
     path('password/reset/', PasswordResetView.as_view(), name='account_reset_password'),
