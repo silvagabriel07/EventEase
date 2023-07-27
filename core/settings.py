@@ -54,7 +54,6 @@ INSTALLED_APPS = [
 ]
 
 
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -151,6 +150,7 @@ ACCOUNT_FORMS = {
 
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 15
 ACCOUNT_LOGOUT_ON_GET = True
+SOCIALACCOUNT_LOGIN_ON_GET = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/

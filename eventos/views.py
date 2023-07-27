@@ -69,9 +69,6 @@ def ver_mais(request, id_event):
 @login_required
 def participar(request, id_event):
     user = request.user
-    
-    if need_set_age(request, user):
-        return redirect('profile')
 
     event = Event.objects.get(id=id_event)
     redirect_event_details = reverse('ver_mais', args=[id_event])
@@ -80,25 +77,28 @@ def participar(request, id_event):
         messages.add_message(request, constants.ERROR, 'Você já participa deste evento.')
     
     elif not event.free:
-        need_set_age(request, user)
-        if user.is_minor():
+        if need_set_age(request, user):
+            return redirect('profile')
+        
+        elif user.is_minor():
             messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
-
-    else:
-        if not event.private:
-            event.participants.add(user.id)
-            event.save()
-            messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')
+            return redirect(redirect_event_details)
+        
         else:
-            # solicitar a participação do evento privado 
-            try:
-                solicitation = Solicitation(
-                    user=user,
-                    event=event
-                )
-                solicitation.save()
-                messages.add_message(request, constants.SUCCESS, 'Solicitação realizada com sucesso, aguarde a reposta.')
-            except:
-                messages.add_message(request, constants.ERROR, 'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
+            if not event.private:
+                event.participants.add(user.id)
+                event.save()
+                messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')
+            else:
+                # solicitar a participação do evento privado 
+                try:
+                    solicitation = Solicitation(
+                        user=user,
+                        event=event
+                    )
+                    solicitation.save()
+                    messages.add_message(request, constants.SUCCESS, 'Solicitação realizada com sucesso, aguarde a reposta.')
+                except:
+                    messages.add_message(request, constants.ERROR, 'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
     return redirect(redirect_event_details)
 
