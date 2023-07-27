@@ -25,8 +25,9 @@
 {% block 'body' %}    
 
     <div class="container custom-container c-auth">
-    {% if messages %}
-        <br>
+        <h1>Perfil</h1>
+        {% if messages %}
+        
         <ul class="messages">
             {% for message in messages %}
             <div class="{{ message.tags }}" role="alert">
@@ -35,7 +36,7 @@
             {% endfor %}
         </ul>
         {% endif %}
-        <h1>Perfil</h1>
+
         <hr>
         <form action="" method="post" enctype="multipart/form-data" class="row g-3">{% csrf_token %}
             <div class="mb-3">
@@ -82,26 +83,52 @@
             </div>
 
             <hr>
-            {{ form_filho.management_form }}
-            <label for="">Número de Telefone:</label>
+            <label>Número de Telefone:</label>
             <div class="mb-3">
-            {% for form_ in form_filho %}
-                <p>{{ form_.phone_number }} <label for="{{ form_.DELETE.id_for_label }}">Apagar:</label>     {{ form_.DELETE }}</p>
-                {% if form_.phone_number.errors %}
-                <ul class="errorlist">
-                    {% for error in form_.phone_number.errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-                {% endif %}
-                
-                {% if not forloop.last %}
-                    <br>
-                {% endif %}
-            {% endfor %}
+                {{ form_filho.management_form }}
+                {% for form_ in form_filho %}
+                    {% if forloop.first %}
+                        <p class="form_">
+                            {{ form_ }}
+                        </p>
+                    {% else %}
+                        {% if form_.has_changed %}
+                            <p class="form_">
+                                {{ form_ }}
+                            </p>
+                        {% else %}
+                            <p hidden class="hid-form">
+                                {{ form_ }}
+                            </p>
+                        {% endif %}
+                    {% endif %}
+                    {% if forloop.last %} 
+                        {% if not form_.has_changed %}
+                            <button onclick="addNumber(this)" type="button">add número</button>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+
             </div>
             <hr>
             <button type="submit" class="btn cta-button">Salvar</button>
         </form>
     </div>
-{% endblock %}  
+{% endblock %}
+
+{% block 'endbody' %}  
+<script>
+
+let hiddens = document.getElementsByClassName('hid-form');
+function addNumber(btn) {
+    hidden = hiddens[0]
+    hidden.removeAttribute('hidden')
+    hidden.classList.remove('hid-form')
+    
+    hiddens = document.getElementsByClassName('hid-form');
+    if (hiddens.length == 0){
+        btn.remove()
+    }
+}
+</script>
+{% endblock %}

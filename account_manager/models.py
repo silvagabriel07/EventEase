@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.validators import RegexValidator
-from .utils import need_set_age
 
 phone_number_validators = RegexValidator(
         regex=r'^\+\d{2} \d{5}-\d{4}$',

@@ -8,10 +8,10 @@ class PhoneNumberForm(forms.ModelForm):
         fields = ['phone_number']
         widgets = {
             'phone_number': forms.TextInput(attrs={'class': 'form-control custom-form-width', 'placeholder': '+00 00000-0000', 'style': 'display: inline-block;'}),
-            'DELETE': forms.CheckboxInput(attrs={})
         }
         labels = {
-            'phone_number': 'Número de telefone',
+            'phone_number': '',
+            'DELETE': 'Remover'
         }
 
 
@@ -21,7 +21,7 @@ class ProfileForm(forms.ModelForm):
         fields = ['username', 'idade', 'user_img']
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'Insira seu nome de usuário'}),
-            'idade': forms.NumberInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'Insira sua idade', }),
+            'idade': forms.NumberInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'Insira sua idade', 'required': 'required'}),
             'user_img': forms.ClearableFileInput(attrs={'class': 'form-control custom-form-width'}),
         }
         labels = {

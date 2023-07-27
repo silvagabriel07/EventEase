@@ -89,6 +89,7 @@ def profile(request):
         for ex in range(3, -1, -1):
             if phone_numbers.count() == ex:
                 extra = 3 - ex 
+
         form_factory = forms.inlineformset_factory(User, PhoneNumber, form=PhoneNumberForm, extra=extra)
 
         form_filho = form_factory(instance=request.user)
@@ -96,7 +97,6 @@ def profile(request):
         return render(request, 'profile.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
     elif request.method == 'POST':
         form_factory = forms.inlineformset_factory(User, PhoneNumber, form=PhoneNumberForm)
-
         form_filho = form_factory(request.POST, instance=request.user)
         form = ProfileForm(request.POST, request.FILES, instance=request.user)
 
@@ -107,7 +107,5 @@ def profile(request):
             messages.add_message(request, constants.SUCCESS, 'Alterações salvas.')
             return redirect('profile')
         else:
-            if not form_filho and not form:
-                messages.add_message(request, constants.ERROR, 'Algo deu errado.')
             return render(request, 'profile.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
         
