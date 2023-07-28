@@ -60,12 +60,18 @@ class CustomLoginForm(LoginForm):
         self.fields['password'].label = 'Senha:'
 
 class CustomChangePasswordForm(ChangePasswordForm):
+
     def __init__(self, *args, **kwargs):
         super(CustomChangePasswordForm, self).__init__(*args, **kwargs)
         self.fields['oldpassword'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Senha atual',})
         self.fields['password1'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Senha nova',})
         self.fields['password2'].widget.attrs.update({'class': 'form-control custom-form-width', 'placeholder': 'Senha nova (novamente)',})
 
+    def clean_oldpassword(self):
+        if not self.user.check_password(self.cleaned_data.get("oldpassword")):
+            raise forms.ValidationError('A senha atual está incorreta.')
+        return self.cleaned_data["oldpassword"]
+    
 class CustomResetPasswordForm(ResetPasswordForm):
     def __init__(self, *args, **kwargs):
         super(CustomResetPasswordForm, self).__init__(*args, **kwargs)

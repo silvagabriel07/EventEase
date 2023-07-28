@@ -46,7 +46,7 @@
                 <ul>
 
                   {% if request.user.is_authenticated %}
-                    <li><a style="text-decoration: none;" href="#participando">Participando</a></li>
+                    <li><a style="text-decoration: none;" href="{% url 'participando' request.user.id %}">Participando</a></li>
                   {% else %}
                     <li><a style="text-decoration: none;" href="{% url 'account_login' %}">Participando</a></li>
                   {% endif %}

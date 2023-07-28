@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
 from .models import Event
+from account_manager.models import User
 from .forms import CreateEventForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -13,7 +14,8 @@ from account_manager.utils import need_set_age
 @login_required
 def organizando(request, user_id):
     if not request.user.id == user_id:
-        return HttpResponse('Os eventos que você deseja visualizar não são seus.')
+        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
+        return redirect('home')
     my_events = Event.objects.filter(organizer=user_id)
     return render(request, 'organizando.html', {'my_events': my_events})
 
@@ -102,3 +104,10 @@ def participar(request, id_event):
                     messages.add_message(request, constants.ERROR, 'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
     return redirect(redirect_event_details)
 
+def participando(request, user_id):
+    if not request.user.id == user_id:
+        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
+        return redirect('home')
+    user = request.user
+    events = user.event_participants.all()
+    return render(request, 'participando.html', {'events': events})
