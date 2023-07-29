@@ -137,7 +137,8 @@ def participando_solicitacoes(request, user_id):
 
 def leave_event(request, event_id):
     event = Event.objects.get(id=event_id)
+    print(event.title)
     event.participants.remove(request.user)
     event.save()
-    messages.add_message(request, constants, f'Você removeu sua participação no evento {{ event.title }}')
-    return redirect()
+    messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')
+    return redirect(reverse('participando', args=[request.user.id, 0]))

@@ -54,7 +54,7 @@
   <ul class="messages">
       {% for message in messages %}
         <div class="{{ message.tags }}" role="alert">
-          {{ message }}
+          {{ message|safe }}
         </div>
       {% endfor %}
   </ul>
