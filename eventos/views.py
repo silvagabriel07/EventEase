@@ -136,12 +136,13 @@ def participando_solicitacoes(request, user_id):
     return redirect(participando_url_redirect)
 
 def leave_event(request, event_id, render_solicitations=0):
+    event = Event.objects.get(id=event_id)
+
     if render_solicitations == 1:
-        print('kkeruivbdishfvbksbfkjvnsnvomps')
-        print('ojsbvuicsoanconsdo')
+        solicitation_ = event.solicitation_set.get(user=request.user)
+        solicitation_.delete()
+        messages.add_message(request, constants.SUCCESS, f'Solicitação de participação para o evento <b>{event.title} removida com sucessa</b>')  
     else:
-        print('uee')
-        event = Event.objects.get(id=event_id)
         event.participants.remove(request.user)
         event.save()
         messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')

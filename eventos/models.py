@@ -31,7 +31,7 @@ class Event(models.Model):
 
     def accept_user(self, user):
         try:
-            solicitation = self.solicitation_set.get(user)
+            solicitation = self.solicitation_set.get(user=user)
             solicitation.status = 'a'
             event = self.participants.add(user)
             event.save()
