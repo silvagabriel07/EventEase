@@ -23,8 +23,8 @@ class Event(models.Model):
     start_date_time = models.DateTimeField()
     final_date_time = models.DateTimeField()
     event_banner = models.FileField(upload_to='event_banners', default='default_event_banner.png')
-
-    def count_participants(self):
+    
+    def qtd_participants(self):
         return self.participants.count()
 
     def __str__(self):

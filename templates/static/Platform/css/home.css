@@ -93,3 +93,11 @@ p {
 .btn-inline{
     display: inline;
 }
+
+.status label{
+    color: #481194;
+    font-weight: 700;
+}
+.waiting{
+    color: rgb(218, 218, 4);
+}

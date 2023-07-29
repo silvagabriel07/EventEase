@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.http import HttpResponse
 from .models import Event
-from account_manager.models import User
+from django.db.models import Count, Sum
 from .forms import CreateEventForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -10,6 +10,7 @@ from django.contrib.messages import constants
 from .models import Solicitation
 from account_manager.utils import need_set_age
 from account_manager.utils import need_set_age
+
 # Create your views here.
 @login_required
 def organizando(request, user_id):
@@ -34,8 +35,6 @@ def criar_evento(request):
             event_banner = form.cleaned_data['event_banner']
 
             organizer = request.user
-
-            print(category.id)
 
             event = Event(
                 title=title,
@@ -77,7 +76,7 @@ def participar(request, id_event):
 
     if user.is_user_participant(event):
         messages.add_message(request, constants.ERROR, 'Você já participa deste evento.')
-    
+
     elif not event.free:
         if need_set_age(request, user):
             return redirect('profile')
@@ -86,28 +85,45 @@ def participar(request, id_event):
             messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
             return redirect(redirect_event_details)
         
+    else:
+        if not event.private:
+            event.participants.add(user.id)
+            event.save()
+            messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')
         else:
-            if not event.private:
-                event.participants.add(user.id)
-                event.save()
-                messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')
-            else:
                 # solicitar a participação do evento privado 
-                try:
-                    solicitation = Solicitation(
-                        user=user,
-                        event=event
-                    )
-                    solicitation.save()
-                    messages.add_message(request, constants.SUCCESS, 'Solicitação realizada com sucesso, aguarde a reposta.')
-                except:
-                    messages.add_message(request, constants.ERROR, 'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
+            try:
+                solicitation = Solicitation(
+                    user=user,
+                    event=event
+                )
+                solicitation.save()
+                messages.add_message(request, constants.SUCCESS, 'Solicitação realizada com sucesso, aguarde a reposta.')
+            except:
+                messages.add_message(request, constants.ERROR, 'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
+
     return redirect(redirect_event_details)
 
+
+@login_required
 def participando(request, user_id):
-    if not request.user.id == user_id:
+    user = request.user
+    if not user.id == user_id:
         messages.add_message(request, constants.ERROR, 'Algo deu errado.')
         return redirect('home')
-    user = request.user
-    events = user.event_participants.all()
-    return render(request, 'participando.html', {'events': events})
+    
+    events = Event.objects.filter(participants=user)
+    order = request.GET.get('select_order', 'title')
+    dec_or_cres = request.GET.get('select_dec_cre', 'crescent')
+    
+    if dec_or_cres == 'crescent':
+        dec_or_cres = ''
+    else:
+        dec_or_cres = '-'
+        
+    if order == 'num_participants':
+        events = Event.objects.annotate(num_participants=Count('participants')).filter(participants=user) 
+    
+    order = f'{dec_or_cres}{order}'    
+    events_sorted = events.order_by(order)
+    return render(request, 'participando.html', {'events': events_sorted})
