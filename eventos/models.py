@@ -1,6 +1,8 @@
 from django.db import models
 from django.db.models import Count
 from account_manager.models import User
+from django.core.exceptions import ObjectDoesNotExist
+
 # Create your models here.
 
 class Category(models.Model):
@@ -27,6 +29,17 @@ class Event(models.Model):
     def qtd_participants(self):
         return self.participants.count()
 
+    def accept_user(self, user):
+        try:
+            solicitation = self.solicitation_set.get(user)
+            solicitation.status = 'a'
+            event = self.participants.add(user)
+            event.save()
+            return True
+        except ObjectDoesNotExist:
+            return False
+        
+
     def __str__(self):
         return self.title
 
@@ -43,3 +56,7 @@ class Solicitation(models.Model):
 
     class Meta:
         unique_together = ('user', 'event')
+
+    
+    def __str__(self) -> str:
+        return (f'u: {self.user}-e: {self.event}-s: {self.status}')

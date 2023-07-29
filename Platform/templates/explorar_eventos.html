@@ -93,7 +93,7 @@
           </p>
 
           <h2 class="title">
-            <a href="#details">{{ event.title }}</a>
+            <a href="{% url 'ver_mais' event.id %}">{{ event.title }}</a>
           </h2>
           <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
           <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>

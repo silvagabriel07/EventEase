@@ -89,3 +89,12 @@ h1{
     color: #380087;
     text-decoration: underline;
 }
+
+.btn-leave{
+    width: 70px;
+    background-color: rgb(186, 4, 4);
+}
+  .btn-leave:hover{
+    background-color: rgb(148, 4, 4);
+    color: regb(56, 27, 27);
+}

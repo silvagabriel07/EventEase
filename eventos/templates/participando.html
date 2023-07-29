@@ -7,13 +7,12 @@
 
 {% endblock %}
 
-
 {% block 'title' %}Eventos - Participando{% endblock %}
 
 {% block 'body' %}
 <header>
     <div class="container">
-          <h1>Meus Eventos - Participando</h1>
+          <h1>Meus Eventos - {% if not render_solicitations %}Participando{% else %}Solicitações para Participação{% endif %}</h1>
         <p>Descubra eventos intererssantes e emocionantes para participar e se divertir ao máximo!</p>
 
         <a href="{% url 'explorar_eventos' %}" class="cta-button">Explorar novos eventos</a> <br>
@@ -75,7 +74,7 @@
             </p>
 
             <h2 class="title">
-              <a href="#details">{{ event.title }}</a>
+              <a href="{% url 'ver_mais' event.id %}">{{ event.title }}</a>
             </h2>
             
             <!-- <p class="status waiting"><label>Estado solicitação:</label> Estado </p> -->
@@ -90,7 +89,8 @@
                 </p>
               </div>
             </div><br>
-            <a href="{% url 'ver_mais' event.id %}" class="cta-button btn-inline">Ver Detalhes</a>
+            <a href="{% url 'ver_mais' event.id %}" style="width: 100px" class="cta-button btn-inline">Detalhes</a>
+            <a href="{% url 'ver_mais' event.id %}" style="" class="cta-button btn-inline btn-leave">Sair</a>
           </article>
         </div>
 
