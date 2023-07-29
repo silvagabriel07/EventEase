@@ -23,16 +23,15 @@
           <div class="div-select-filters">
             <label for="select_order">Ordem:</label>
             <select style="width: 57px;" name="select_order" class="filter-select">
-                <option value="title" selected>Alfabética</option>
-                <option value="num_participants">QTD Participantes</option>
-                <option value="start_date_time">Data Início</option>
+                  <option value="title" {% if not request.GET.select_dec_cre or request.GET.select_order == 'title' %}selected{% endif %} >Alfabética</option>
+                  <option value="num_participants" {% if request.GET.select_order == 'num_participants' %}selected{% endif %}>Populariedade</option>
+                  <option value="start_date_time" {% if request.GET.select_order == 'start_date_time' %}selected{% endif %}>Data Início</option>
               </select>
           </div>
           <div class="div-select-filters">
             <select style="width: 57px;" name="select_dec_cre" class="filter-select">
-                <option selected value="crescent">Crescente</option>
-                <option value="decrescent">Decrescente</option>
-
+                  <option value="crescent" {% if not request.GET.select_dec_cre or request.GET.select_dec_cre == 'crescent' %}selected{% endif %}>Crescente</option>
+                  <option value="decrescent" {% if request.GET.select_dec_cre == 'decrescent' %}selected{% endif %}>Decrescente</option>
               </select> 
   
             <button style="padding: 4px; width: 50px;" class="cta-button" type="submit">ir »</button>

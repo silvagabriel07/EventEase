@@ -78,7 +78,7 @@ def explorar_eventos(request):
     except(EmptyPage, PageNotAnInteger):
         page = event_paginator.page(1)
     
-    return render(request, 'explorar_eventos.html', {'page': page, 'categories':  categories})
+    return render(request, 'explorar_eventos.html', {'page': page, 'categories':  categories, 'value_select_category': select_category})
 
 @login_required
 def profile(request):

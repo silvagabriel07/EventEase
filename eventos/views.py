@@ -116,7 +116,7 @@ def participando(request, user_id):
     order = request.GET.get('select_order', 'title')
     dec_or_cres = request.GET.get('select_dec_cre', 'crescent')
     
-    if dec_or_cres == 'crescent':
+    if dec_or_cres == 'crescent':   
         dec_or_cres = ''
     else:
         dec_or_cres = '-'

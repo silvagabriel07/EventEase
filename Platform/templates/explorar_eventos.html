@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+
 {% block 'head' %}
   <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
   
@@ -20,11 +21,11 @@
             <!-- FIltrar -->
 
             <div class="div-select-filters">
-                <label for="select_category">Categoria</label>
+                <label for="select_category">Categoria</label> 
                 <select name="select_category" id="select_category" class="filter-select">
                     <option value="">Tudo</option>
                     {% for category in categories %}
-                      <option value="{{ category.id }}">{{ category }}</option>
+                      <option value="{{ category.id }}" {% if request.GET.select_category == category.id|stringformat:"s" %}selected{% endif %}>{{ category }}</option>
                     {% endfor %}
                   </select>
             </div>
@@ -33,14 +34,14 @@
               <label for="select_num_participants">Nº participantes</label>
               <select name="select_num_participants" id="select_num_participants" class="filter-select">
                 <option value="">Tudo</option>
-                <option value="gt_10">Mais que 10</option>
-                <option value="lt_10">Menos que 10</option>
-                <option value="gt_20">Mais que 20</option>
-                <option value="lt_20">Menos que 20</option>
-                <option value="gt_50">Mais que 50</option>
-                <option value="lt_50">Menos que 50</option>
-                <option value="gt_100">Mais que 100</option>
-                <option value="lt_100">Menos que 100</option>
+                <option value="gt_10" {% if request.GET.select_num_participants == 'gt_10' %}selected{% endif %}>Mais que 10</option>
+                <option value="lt_10" {% if request.GET.select_num_participants == 'lt_10' %}selected{% endif %}>Menos que 10</option>
+                <option value="gt_20" {% if request.GET.select_num_participants == 'gt_20' %}selected{% endif %}>Mais que 20</option>
+                <option value="lt_20" {% if request.GET.select_num_participants == 'lt_20' %}selected{% endif %}>Menos que 20</option>
+                <option value="gt_50" {% if request.GET.select_num_participants == 'gt_50' %}selected{% endif %}>Mais que 50</option>
+                <option value="lt_50" {% if request.GET.select_num_participants == 'lt_50' %}selected{% endif %}>Menos que 50</option>
+                <option value="gt_100" {% if request.GET.select_num_participants == 'gt_100' %}selected{% endif %}>Mais que 100</option>
+                <option value="lt_100" {% if request.GET.select_num_participants == 'lt_10' %}selected{% endif %}>Menos que 100</option>
               </select>
             </div>
 
@@ -48,10 +49,10 @@
               <label for="select_start_date_time">Data início</label>
               <select name="select_start_date_time" id="select_start_date_time" class="filter-select">
                 <option value="">Tudo</option>
-                <option value="today">Hoje</option>
-                <option value="this_month">Este mês</option>
-                <option value="next_month">Mês que vem</option>
-                <option value="this_year">Este ano</option>
+                <option value="today" {% if request.GET.select_start_date_time == 'today' %}selected{% endif %}>Hoje</option>
+                <option value="this_month" {% if request.GET.select_start_date_time == 'this_month' %}selected{% endif %}>Este mês</option>
+                <option value="next_month" {% if request.GET.select_start_date_time == 'next_month' %}selected{% endif %}>Mês que vem</option>
+                <option value="this_year" {% if request.GET.select_start_date_time == 'this_year' %}selected{% endif %}>Este ano</option>
               </select>
             </div>
 
@@ -59,8 +60,8 @@
               <label for="select_private">Privado</label>
               <select name="select_private" id="select_private" class="filter-select">
                 <option value="">Tudo</option>
-                <option value="true">Sim</option>
-                <option value="false">Não</option>
+                <option value="true" {% if request.GET.select_private == 'true' %}selected{% endif %}>Sim</option>
+                <option value="false" {% if request.GET.select_private == 'false' %}selected{% endif %}>Não</option>
               </select>
           </div>
 
@@ -69,8 +70,8 @@
             <label for="select_free">Livre</label>
             <select name="select_free" id="select_free" class="filter-select">
               <option value="">Tudo</option>
-              <option value="true">Sim</option>
-              <option value="false">Não</option>
+              <option value="true" {% if request.GET.select_free == 'true' %}selected{% endif %}>Sim</option>
+              <option value="false" {% if request.GET.select_free == 'false' %}selected{% endif %}>Não</option>
             </select>
           </div>
             <a style="padding: 7px; margin-left: 5px;" href="{% url 'explorar_eventos' %}" class="cta-button">Limpar</a>
