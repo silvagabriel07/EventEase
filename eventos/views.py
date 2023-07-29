@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.http import HttpResponse
 from .models import Event
-from django.db.models import Count, Sum
+from django.db.models import Count
 from .forms import CreateEventForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -53,7 +52,6 @@ def criar_evento(request):
             return redirect(redirect_url)
         else:
             return render(request, 'criar_evento.html', {'form': form})
-            
     else:
         form = CreateEventForm()
         return render(request, 'criar_evento.html', {'form': form})
@@ -106,13 +104,16 @@ def participar(request, id_event):
 
 
 @login_required
-def participando(request, user_id):
+def participando(request, user_id, render_solicitations):
     user = request.user
     if not user.id == user_id:
         messages.add_message(request, constants.ERROR, 'Algo deu errado.')
         return redirect('home')
     
-    events = Event.objects.filter(participants=user)
+    if render_solicitations == 1:
+        events = Event.objects.filter(solicitation__user=user)
+    else:
+        events = Event.objects.filter(participants=user)
     order = request.GET.get('select_order', 'title')
     dec_or_cres = request.GET.get('select_dec_cre', 'crescent')
     
@@ -120,10 +121,16 @@ def participando(request, user_id):
         dec_or_cres = ''
     else:
         dec_or_cres = '-'
-        
+
     if order == 'num_participants':
         events = Event.objects.annotate(num_participants=Count('participants')).filter(participants=user) 
     
     order = f'{dec_or_cres}{order}'    
     events_sorted = events.order_by(order)
     return render(request, 'participando.html', {'events': events_sorted})
+
+
+def participando_solicitacoes(request, user_id):
+    render_solicitations = 1
+    participando_url_redirect = reverse('participando', args=[user_id, render_solicitations])
+    return redirect(participando_url_redirect)
