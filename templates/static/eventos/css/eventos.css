@@ -76,3 +76,16 @@ h1{
     width: 60%;
     height: 400px;
 }
+.div-btns-solicitations{
+    display: inline; 
+    border: 2px solid #380087;
+    border-radius: 4px;
+    float: right;
+}
+.div-btns-solicitations:hover{
+    border-color: blueviolet;
+}
+.div-btns-solicitations a{
+    color: #380087;
+    text-decoration: underline;
+}

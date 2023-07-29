@@ -104,7 +104,7 @@ def participar(request, id_event):
 
 
 @login_required
-def participando(request, user_id, render_solicitations):
+def participando(request, user_id, render_solicitations=0):
     user = request.user
     if not user.id == user_id:
         messages.add_message(request, constants.ERROR, 'Algo deu errado.')
@@ -127,7 +127,7 @@ def participando(request, user_id, render_solicitations):
     
     order = f'{dec_or_cres}{order}'    
     events_sorted = events.order_by(order)
-    return render(request, 'participando.html', {'events': events_sorted})
+    return render(request, 'participando.html', {'events': events_sorted, 'render_solicitations': render_solicitations})
 
 
 def participando_solicitacoes(request, user_id):

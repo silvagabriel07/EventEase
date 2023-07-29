@@ -36,8 +36,12 @@
   
             <button style="padding: 4px; width: 50px;" class="cta-button" type="submit">ir »</button>
             
-            <div style="display: inline; float: right;" >
-              <a class="cta-button" href="{% url 'participando_solicitacoes' request.user.id %}">Solicitações ▴</a>
+            <div class="div-btns-solicitations" >
+              {% if not render_solicitations %}
+                <a class="cta-button" href="{% url 'participando_solicitacoes' request.user.id %}">Solicitações ▲</a>
+              {% else %}
+                <a class="cta-button" href="{% url 'participando' request.user.id 0 %}">Participando ▼</a>
+              {% endif %}
             </div>
           </div>
 
