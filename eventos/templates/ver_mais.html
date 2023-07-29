@@ -88,12 +88,12 @@
     <hr>
         {% if request.user.is_authenticated %}
 
-            {% if user_already_solicitated %}
-                <button disabled style="padding-left: 50px; padding-right: 50px; background-color: #f47d6a;" class="btn" href="#">Já Solicitou Participação</button>
-                <div style="color: rgb(250, 53, 53)" id="titlehelp" class="form-text">Espere a resposta pela sua solicitação.</div>
+            {% if is_user_participant %}
+                <button disabled style="padding-left: 50px; padding-right: 50px; background-color: #f47d6a;" class="btn" href="#">Já participa</button>
             {% else %}
-                {% if is_user_participant %}
-                    <button disabled style="padding-left: 50px; padding-right: 50px; background-color: #f47d6a;" class="btn" href="#">Já participa</button>
+                {% if user_already_solicitated %}
+                    <button disabled style="padding-left: 50px; padding-right: 50px; background-color: #f47d6a;" class="btn" href="#">Já Solicitou Participação</button>
+                    <div style="color: rgb(250, 53, 53)" id="titlehelp" class="form-text">Espere a resposta pela sua solicitação.</div>
                 {% else %}
                     {% if request.user.is_minor and not event.free %}
                         <button disabled style="padding-left: 50px; padding-right: 50px; background-color: rgb(160, 154, 154);" class="btn" href="#">Participar</button>

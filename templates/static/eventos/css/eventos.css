@@ -91,7 +91,7 @@ h1{
 }
 
 .btn-leave{
-    width: 70px;
+    padding: 10px;
     background-color: rgb(186, 4, 4);
 }
   .btn-leave:hover{

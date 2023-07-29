@@ -6,6 +6,7 @@ urlpatterns = [
     path('organizando/criar_evento/', views.criar_evento, name='criar_evento'),
     path('participando/<int:user_id>/<int:render_solicitations>/', views.participando, name='participando'),
     path('participando/solicitacoes/<int:user_id>/', views.participando_solicitacoes, name='participando_solicitacoes'),
+    path('participando/sair/<int:event_id>', views.leave_event, name='leave_event'),
     path('ver_mais/<int:id_event>/', views.ver_mais, name='ver_mais'),
     path('participar/<int:id_event>/', views.participar, name='participar'),
 ] 

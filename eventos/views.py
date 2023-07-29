@@ -134,3 +134,10 @@ def participando_solicitacoes(request, user_id):
     render_solicitations = 1
     participando_url_redirect = reverse('participando', args=[user_id, render_solicitations])
     return redirect(participando_url_redirect)
+
+def leave_event(request, event_id):
+    event = Event.objects.get(id=event_id)
+    event.participants.remove(request.user)
+    event.save()
+    messages.add_message(request, constants, f'Você removeu sua participação no evento {{ event.title }}')
+    return redirect()
