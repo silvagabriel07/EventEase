@@ -74,33 +74,33 @@ def participar(request, id_event):
 
     if user.is_user_participant(event):
         messages.add_message(request, constants.ERROR, 'Você já participa deste evento.')
+        return redirect(redirect_event_details)
 
-    elif not event.free:
+    if not event.free:
         if need_set_age(request, user):
             return redirect('profile')
         
         elif user.is_minor():
             messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
             return redirect(redirect_event_details)
-        
-    else:
-        if not event.private:
+                
+    if not event.private:
             event.participants.add(user.id)
             event.save()
             messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')
-        else:
-                # solicitar a participação do evento privado 
-            try:
-                solicitation = Solicitation(
-                    user=user,
-                    event=event
-                )
-                solicitation.save()
-                messages.add_message(request, constants.SUCCESS, 'Solicitação realizada com sucesso, aguarde a reposta.')
-            except:
-                messages.add_message(request, constants.ERROR, 'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
-
+    else:
+        # solicitar a participação do evento privado 
+        try:
+            solicitation = Solicitation(
+                user=user,
+                event=event
+            )
+            solicitation.save()
+            messages.add_message(request, constants.SUCCESS, 'Solicitação realizada com sucesso, aguarde a reposta.')
+        except:
+            messages.add_message(request, constants.ERROR, 'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
     return redirect(redirect_event_details)
+
 
 
 @login_required
@@ -135,10 +135,14 @@ def participando_solicitacoes(request, user_id):
     participando_url_redirect = reverse('participando', args=[user_id, render_solicitations])
     return redirect(participando_url_redirect)
 
-def leave_event(request, event_id):
-    event = Event.objects.get(id=event_id)
-    print(event.title)
-    event.participants.remove(request.user)
-    event.save()
-    messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')
-    return redirect(reverse('participando', args=[request.user.id, 0]))
+def leave_event(request, event_id, render_solicitations=0):
+    if render_solicitations == 1:
+        print('kkeruivbdishfvbksbfkjvnsnvomps')
+        print('ojsbvuicsoanconsdo')
+    else:
+        print('uee')
+        event = Event.objects.get(id=event_id)
+        event.participants.remove(request.user)
+        event.save()
+        messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')
+    return redirect(reverse('participando', args=[request.user.id, render_solicitations]))
