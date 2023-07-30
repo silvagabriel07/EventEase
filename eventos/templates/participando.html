@@ -65,7 +65,7 @@
       <div class="row gy-4 posts-list">
         {% for event in events %}
         <div class="col-xl-4 col-md-6 custom-card">
-          <article>
+          <article class="article-{{event.status_solicitation}}">
             <div class="post-img">
               <img src="{{ event.event_banner.url }}" alt="" class="img-fluid custom-img-fluid">
             </div>
@@ -76,8 +76,13 @@
             <h2 class="title">
               <a href="{% url 'ver_mais' event.id %}">{{ event.title }}</a>
             </h2>
-            
-            <!-- <p class="status waiting"><label>Estado solicitação:</label> Estado </p> -->
+            {% if render_solicitations %}
+              <p class="status {{event.status_solicitation}}"><label>Estado solicitação:</label>
+                {% if event.status_solicitation == 'w' %} Aguardando {% endif %}
+                {% if event.status_solicitation == 'a' %} Aceita {% endif %}
+                {% if event.status_solicitation == 'r' %} Rejeitada {% endif %}
+              </p>
+            {% endif %}
 
             <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
             <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>

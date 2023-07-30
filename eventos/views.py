@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Event
-from django.db.models import Count
+from django.db.models import Count, F
 from .forms import CreateEventForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -109,9 +109,10 @@ def participando(request, user_id, render_solicitations=0):
     if not user.id == user_id:
         messages.add_message(request, constants.ERROR, 'Algo deu errado.')
         return redirect('home')
-    
+
     if render_solicitations == 1:
         events = Event.objects.filter(solicitation__user=user)
+        events = events.annotate(status_solicitation=F('solicitation__status'))
     else:
         events = Event.objects.filter(participants=user)
     order = request.GET.get('select_order', 'title')
@@ -129,12 +130,13 @@ def participando(request, user_id, render_solicitations=0):
     events_sorted = events.order_by(order)
     return render(request, 'participando.html', {'events': events_sorted, 'render_solicitations': render_solicitations})
 
-
+@login_required
 def participando_solicitacoes(request, user_id):
     render_solicitations = 1
     participando_url_redirect = reverse('participando', args=[user_id, render_solicitations])
     return redirect(participando_url_redirect)
 
+@login_required
 def leave_event(request, event_id, render_solicitations=0):
     event = Event.objects.get(id=event_id)
 

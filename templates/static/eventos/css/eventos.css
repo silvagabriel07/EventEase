@@ -98,3 +98,23 @@ h1{
     background-color: rgb(148, 4, 4);
     color: regb(56, 27, 27);
 }
+
+.w{
+    color: rgb(171, 160, 3);
+}
+.a{
+    color: rgb(45, 201, 8)
+}
+.r{
+    color: rgb(247, 32, 32)
+}
+
+.article-w{
+    background-color: rgb(250, 245, 177)
+}
+.article-a{
+    background-color: rgb(181, 250, 165)
+}
+.article-r{
+    background-color: rgb(245, 135, 143)
+}
