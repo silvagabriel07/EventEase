@@ -70,7 +70,7 @@
               <img src="{{ event.event_banner.url }}" alt="" class="img-fluid custom-img-fluid">
             </div>
             <p class="post-category">   
-                {{ event.category }}
+                {{ event.category }} 
             </p>
 
             <h2 class="title">
@@ -95,8 +95,8 @@
               </div>
             </div><br>
 
-            <a href="{% url 'ver_mais' event.id %}" style="width: 100px" class="cta-button btn-inline">Detalhes</a>
-            <a href="{% url 'leave_event' event.id render_solicitations %}" style="" class="cta-button btn-inline btn-leave">
+            <a href="{% url 'ver_mais' event.id %}" class="cta-button btn-inline btn-edit">Detalhes</a>
+            <a href="{% url 'leave_event' event.id render_solicitations %}" class="cta-button btn-inline btn-leave">
               {% if not render_solicitations %}
               Sair
               {% else %}

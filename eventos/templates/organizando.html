@@ -3,6 +3,7 @@
 
 {% block 'head' %}
   <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
 {% endblock %}
 
 {% block 'title' %}Meus Eventos - Organizando{% endblock %}
@@ -41,7 +42,7 @@
             </p>
 
             <h2 class="title">
-              <a href="#details">{{ event.title }}</a>
+              <a href="{% url 'ver_mais' event.id %}">{{ event.title }}</a>
             </h2>
             <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
             <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>
@@ -52,8 +53,10 @@
                   <time datetime="{{ event.start_date_time }}">{{ event.start_date_time|date:"d/m/Y" }}</time>
                 </p>
               </div>
-            </div>
-            <a href="#" class="cta-button btn-edit">Editar</a>
+            </div><br>
+
+            <a href="#" class="cta-button btn-inline btn-edit">Editar</a>
+            <a href="" class="cta-button btn-inline btn-solicitations"><i style="display: inline;" class="bi bi-envelope-fill"><p style="font-size: small; display: inline;"> {{ event.qtd_solicitations }}</p></i></a>
           </article>
         </div>
 

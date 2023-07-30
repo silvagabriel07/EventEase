@@ -26,6 +26,9 @@ class Event(models.Model):
     final_date_time = models.DateTimeField()
     event_banner = models.FileField(upload_to='event_banners', default='default_event_banner.png')
     
+    def qtd_solicitations(self):
+        return self.solicitation_set.count()
+    
     def qtd_participants(self):
         return self.participants.count()
 
@@ -39,7 +42,6 @@ class Event(models.Model):
         except ObjectDoesNotExist:
             return False
         
-
     def __str__(self):
         return self.title
 
@@ -59,4 +61,4 @@ class Solicitation(models.Model):
 
     
     def __str__(self) -> str:
-        return (f'u: {self.user}-e: {self.event}-s: {self.status}')
+        return (f'u: {self.user} | e: {self.event} | s: {self.status}')

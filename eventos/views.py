@@ -17,6 +17,9 @@ def organizando(request, user_id):
         messages.add_message(request, constants.ERROR, 'Algo deu errado.')
         return redirect('home')
     my_events = Event.objects.filter(organizer=user_id)
+    for event in my_events:
+        print(f'{event.title} - {event.qtd_solicitations()}')
+    
     return render(request, 'organizando.html', {'my_events': my_events})
 
 @login_required
