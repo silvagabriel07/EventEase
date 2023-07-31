@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path('organizando/<int:user_id>/', views.organizando, name='organizando'),
     path('organizando/criar_evento/', views.criar_evento, name='criar_evento'),
+    path('organizando/<int:user_id>/editar_event/<int:event_id>', views.editar_evento, name='editar_evento'),
     path('participando/<int:user_id>/<int:render_solicitations>/', views.participando, name='participando'),
     path('participando/solicitacoes/<int:user_id>/', views.participando_solicitacoes, name='participando_solicitacoes'),
     path('participando/sair/<int:event_id>/<int:render_solicitations>/', views.leave_event, name='leave_event'),

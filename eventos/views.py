@@ -16,6 +16,7 @@ def organizando(request, user_id):
     if not request.user.id == user_id:
         messages.add_message(request, constants.ERROR, 'Algo deu errado.')
         return redirect('home')
+    
     my_events = Event.objects.filter(organizer=user_id)
     for event in my_events:
         print(f'{event.title} - {event.qtd_solicitations()}')
@@ -38,6 +39,26 @@ def criar_evento(request):
 
     return render(request, 'criar_evento.html', {'form': form})
 
+@login_required
+def editar_evento(request, user_id, event_id):
+    redirect_url = reverse('organizando', args=[request.user.id])
+    
+    if not user_id == request.user.id:
+        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
+        return redirect(redirect_url)
+    
+    event = Event.objects.get(id=event_id)
+    if request.method == 'POST':
+        form = EventForm(request.POST, request.FILE, instance=event)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request, constants.SUCCESS, 'Evento editado com sucesso.')
+            return redirect(redirect_url)
+    else:
+        form = EventForm(instance=event)
+        
+    return render(request, 'editar_evento.html', {'form': form})
+    
 
 def ver_mais(request, id_event):
     event = Event.objects.get(id=id_event)
@@ -133,6 +154,3 @@ def leave_event(request, event_id, render_solicitations=0):
         messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')
     return redirect(reverse('participando', args=[request.user.id, render_solicitations]))
 
-def edit_event(request, event_id):
-    event = Event.objects.get(id=event_id)
-    

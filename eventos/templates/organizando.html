@@ -55,7 +55,7 @@
               </div>
             </div><br>
 
-            <a href="#" class="cta-button btn-inline btn-edit">Editar</a>
+            <a href="{% url 'editar_evento' request.user.id event.id %}" class="cta-button btn-inline btn-edit">Editar</a>
             <a href="" class="cta-button btn-inline btn-solicitations"><i style="display: inline;" class="bi bi-envelope-fill"><p style="font-size: small; display: inline;"> {{ event.qtd_solicitations }}</p></i></a>
           </article>
         </div>
