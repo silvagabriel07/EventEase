@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from .models import Event
 from django.db.models import Count, F
-from .forms import CreateEventForm
+from .forms import EventForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages import constants
@@ -25,39 +25,19 @@ def organizando(request, user_id):
 @login_required
 def criar_evento(request):
     if request.method == "POST":
-        form = CreateEventForm(request.POST, request.FILES)
+        form = EventForm(request.POST, request.FILES)
         if form.is_valid():
-            title = form.cleaned_data['title']
-            description = form.cleaned_data['description']
-            category = form.cleaned_data['category']
-            private = form.cleaned_data['private']
-            free = form.cleaned_data['free']
-            start_date_time = form.cleaned_data['start_date_time']
-            final_date_time = form.cleaned_data['final_date_time']
-            event_banner = form.cleaned_data['event_banner']
-
-            organizer = request.user
-
-            event = Event(
-                title=title,
-                description=description,
-                category_id=category.id,
-                private=private,
-                free=free,
-                start_date_time=start_date_time,
-                final_date_time=final_date_time,
-                event_banner=event_banner,
-                organizer=organizer,
-            )
-            event.save()
-            messages.add_message(request, constants.SUCCESS, 'Evento criado com sucesso.')
-            redirect_url = reverse('organizando', args=[organizer.id])
+            event = form.save(commit=False) 
+            event.organizer = request.user  
+            event.save() 
+            messages.success(request, 'Evento criado com sucesso.')
+            redirect_url = reverse('organizando', args=[event.organizer.id])
             return redirect(redirect_url)
-        else:
-            return render(request, 'criar_evento.html', {'form': form})
     else:
-        form = CreateEventForm()
-        return render(request, 'criar_evento.html', {'form': form})
+        form = EventForm()
+
+    return render(request, 'criar_evento.html', {'form': form})
+
 
 def ver_mais(request, id_event):
     event = Event.objects.get(id=id_event)
@@ -152,3 +132,7 @@ def leave_event(request, event_id, render_solicitations=0):
         event.save()
         messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')
     return redirect(reverse('participando', args=[request.user.id, render_solicitations]))
+
+def edit_event(request, event_id):
+    event = Event.objects.get(id=event_id)
+    

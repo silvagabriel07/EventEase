@@ -24,7 +24,7 @@ class Event(models.Model):
     free = models.BooleanField(help_text='definir como True significa que é um evento livre, sem restrição de idade')
     start_date_time = models.DateTimeField()
     final_date_time = models.DateTimeField()
-    event_banner = models.FileField(upload_to='event_banners', default='default_event_banner.png')
+    event_banner = models.FileField(upload_to='event_banners', default='/default_event_banner.png')
     
     def qtd_solicitations(self):
         return self.solicitation_set.count()
