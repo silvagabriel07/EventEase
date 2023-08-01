@@ -115,10 +115,9 @@
                 </ul>
             {% endif %}
 
-
             </div>
             <div class="mb-3">
-                <label for="description">{{ form.final_date_time.label }}</label>
+                <label for="final_date_time">{{ form.final_date_time.label }}</label>
                 {{ form.final_date_time }}
                 {% if form.final_date_time.errors %}
                 <ul class="errorlist">
@@ -130,7 +129,7 @@
         
             </div>
             <div class="mb-3">
-                <label for="description">{{ form.event_banner.label }}</label>
+                <label for="event_banner">{{ form.event_banner.label }}</label>
                 {{ form.event_banner }}
                 {% if form.event_banner.errors %}
                 <ul class="errorlist">

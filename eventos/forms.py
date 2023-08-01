@@ -40,9 +40,6 @@ class EventForm(forms.ModelForm):
         start_date_time = self.cleaned_data.get('start_date_time')
         final_date_time = self.cleaned_data.get('final_date_time')        
         if start_date_time and final_date_time:
-            start_date_time = start_date_time.replace(second=0)
-            final_date_time = final_date_time.replace(second=0)
-            print(start_date_time, final_date_time)
             if start_date_time > final_date_time:
                 raise forms.ValidationError('Data inicial não pode ser após a data final do evento.')
             if start_date_time < data_atual or final_date_time < data_atual:

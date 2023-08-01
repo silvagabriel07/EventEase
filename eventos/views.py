@@ -45,6 +45,7 @@ def editar_evento(request, user_id, event_id):
         return redirect(redirect_url)
     
     event = Event.objects.get(id=event_id)
+    event_banner = event.event_banner
     if request.method == 'POST':    
         form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
@@ -54,7 +55,7 @@ def editar_evento(request, user_id, event_id):
     else:
         form = EventForm(instance=event)
                 
-    return render(request, 'editar_evento.html', {'form': form})
+    return render(request, 'editar_evento.html', {'form': form, 'event_banner': event_banner, 'event_id': event.id})
     
 
 def ver_mais(request, id_event):
@@ -64,7 +65,9 @@ def ver_mais(request, id_event):
     if request.user.is_authenticated:
         is_user_participant = request.user.is_user_participant(event)
         user_already_solicitated = request.user.user_already_solicitated(event)
+        
     return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated})
+
 
 @login_required
 def participar(request, id_event):
@@ -75,7 +78,7 @@ def participar(request, id_event):
 
     if user.is_user_participant(event):
         messages.add_message(request, constants.ERROR, 'Você já participa deste evento.')
-        return redirect(redirect_event_details)
+        return redirect(redirect_event_details)        
 
     if not event.free:
         if need_set_age(request, user):
@@ -85,7 +88,7 @@ def participar(request, id_event):
             messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
             return redirect(redirect_event_details)
                 
-    if not event.private:
+    if not event.private or user.id == event.organizer.id:
             event.participants.add(user.id)
             event.save()
             messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')
@@ -101,7 +104,6 @@ def participar(request, id_event):
         except:
             messages.add_message(request, constants.ERROR, 'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
     return redirect(redirect_event_details)
-
 
 
 @login_required
@@ -131,11 +133,13 @@ def participando(request, user_id, render_solicitations=0):
     events_sorted = events.order_by(order)
     return render(request, 'participando.html', {'events': events_sorted, 'render_solicitations': render_solicitations})
 
+
 @login_required
 def participando_solicitacoes(request, user_id):
     render_solicitations = 1
     participando_url_redirect = reverse('participando', args=[user_id, render_solicitations])
     return redirect(participando_url_redirect)
+
 
 @login_required
 def leave_event(request, event_id, render_solicitations=0):
@@ -150,4 +154,5 @@ def leave_event(request, event_id, render_solicitations=0):
         event.save()
         messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')
     return redirect(reverse('participando', args=[request.user.id, render_solicitations]))
+
 

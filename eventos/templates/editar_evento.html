@@ -1,21 +1,157 @@
 {% extends 'base/base.html' %}
-
 {% load static %}
 
 {% block 'head' %}
     <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
-    <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
-{% endblock 'head'%}
 
-{% block 'title' %}Editar Evento{% endblock 'title' %}
+{% endblock %}
+
+{% block 'title' %}Editar Evento{% endblock %}
 
 {% block 'body' %}
-    {% for message in messages %}
-        {{ message }}
-    {% endfor %}
-<form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Atualizar</button>
-    </form>
+    <div class="container custom-container">
+        {% if form.errors %}
+        <ul class="errorlist">
+          {% for field_errors in form.errors.values %}
+                {% for error in field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+          {% endfor %}
+        </ul>
 
-{% endblock 'body' %}
+        {% if form.errors %}
+            <ul class="errorlist">
+            {% for field, errors in form.errors.items %}
+                {% if field in form.cleaned_data %}
+                    <li>{{ errors }}</li>
+                {% endif %}
+            {% endfor %}
+            </ul>
+      {% endif %}
+    
+      {% endif %}
+            <h1>Editar Evento</h1><hr>
+        <form method="post" enctype="multipart/form-data"> {% csrf_token %}
+            <div class="mb-3">
+                <label for="img_event_banner">Banner do Evento Atual:</label> <br>
+                <a id="img_event_banner" href="{{ event_banner.url }}">
+                    <img class="value-img" src="{{ event_banner.url }}">
+                </a> 
+            </div>
+
+            <div class="mb-3">
+                <label for="event_banner">{{ form.event_banner.label }}</label>
+                {{ form.event_banner }}
+                {% if form.event_banner.errors %}
+                <ul class="errorlist">
+                    {% for error in form.event_banner.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+          
+            </div>
+
+            <div class="mb-3">
+                <label for="title">{{ form.title.label }}</label>
+                {{ form.title }}
+
+                {% if form.title.errors %}
+                    <ul class="errorlist">
+                        {% for error in form.title.errors %}
+                            <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                
+            </div>
+            
+            <div class="mb-3">
+                <label for="description">{{ form.description.label }}</label>
+                {{ form.description }}
+                <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Dê as informações que achar relevante para alguém que deseja se inscrever para participar.</div>
+
+                {% if form.description.errors %}
+                <ul class="errorlist">
+                    {% for error in form.description.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            </div>
+
+            <div class="mb-3">
+                {{ form.category.label }}:
+                {{ form.category }}
+                {% if form.category.errors %}
+                <ul class="errorlist">
+                    {% for error in form.category.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            </div>
+            <div class="mb-3 form-check">
+                <label for="free">{{ form.free.label }}</label>
+                {{ form.free }}
+                {% if form.free.errors %}
+                <ul class="errorlist">
+                    {% for error in form.free.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            </div>   
+
+            <div class="mb-3 form-check">
+                <label for="private">{{ form.private.label }}</label>
+                {{ form.private }}
+                <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">selecionar faz com que os usuários que quiserem participar terem que solicitar</div>
+                {% if form.private.errors %}
+                <ul class="errorlist">
+                    {% for error in form.private.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            </div>
+
+            <div class="mb-3">
+                <label for="start_date_time">{{ form.start_date_time.label }}</label>
+                {{ form.start_date_time }}
+                {% if form.start_date_time.errors %}
+                <ul class="errorlist">
+                    {% for error in form.start_date_time.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+
+            </div>
+            <div class="mb-3">
+                <label for="final_date_time">{{ form.final_date_time.label }}</label>
+                {{ form.final_date_time }}
+                {% if form.final_date_time.errors %}
+                <ul class="errorlist">
+                    {% for error in form.final_date_time.errors %}
+                        <li style="color: rgb(229, 70, 70);">{{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+        
+            </div>
+            <hr>            
+            <button type="submit" class="btn cta-button">Atualizar</button>
+          </form>
+          
+    </div>
+    
+    <!-- Inicialize o DateTimePicker -->
+{% endblock %}

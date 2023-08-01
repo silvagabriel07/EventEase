@@ -87,10 +87,10 @@
     </div>
     <hr>
         {% if request.user.is_authenticated %}
-
             {% if is_user_participant %}
                 <button disabled style="padding-left: 50px; padding-right: 50px; background-color: #f47d6a;" class="btn" href="#">Já participa</button>
             {% else %}
+
                 {% if user_already_solicitated %}
                     <button disabled style="padding-left: 50px; padding-right: 50px; background-color: #f47d6a;" class="btn" href="#">Já Solicitou Participação</button>
                     <div style="color: rgb(250, 53, 53)" id="titlehelp" class="form-text">Espere a resposta pela sua solicitação.</div>
@@ -99,11 +99,16 @@
                         <button disabled style="padding-left: 50px; padding-right: 50px; background-color: rgb(160, 154, 154);" class="btn" href="#">Participar</button>
                         <div style="color: rgb(250, 53, 53)" id="titlehelp" class="form-text">Você não pode participar deste evento, pois ele é para maiores de idade.</div>
                     {% else %}
-                        {% if event.private %}
-                            <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'participar' event.id %}">Solicitar Participação</a>
-                        {% else %}
+                        
+                        {% if request.user.id == event.organizer.id %}
                             <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'participar' event.id %}">Participar</a>
-                        {% endif %} 
+                        {% else %}
+                            {% if event.private %}
+                                <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'participar' event.id %}">Solicitar Participação</a>
+                            {% else %}
+                                <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'participar' event.id %}">Participar</a>
+                            {% endif %} 
+                        {% endif %}
                     {% endif %}
                 {% endif %}
             {% endif %}
