@@ -10,7 +10,10 @@
 {% block 'title' %}Editar Evento{% endblock 'title' %}
 
 {% block 'body' %}
-    <form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
+    {% for message in messages %}
+        {{ message }}
+    {% endfor %}
+<form action="" method="post" enctype="multipart/form-data">{% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Atualizar</button>
     </form>

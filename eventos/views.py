@@ -18,9 +18,6 @@ def organizando(request, user_id):
         return redirect('home')
     
     my_events = Event.objects.filter(organizer=user_id)
-    for event in my_events:
-        print(f'{event.title} - {event.qtd_solicitations()}')
-    
     return render(request, 'organizando.html', {'my_events': my_events})
 
 @login_required
@@ -48,15 +45,15 @@ def editar_evento(request, user_id, event_id):
         return redirect(redirect_url)
     
     event = Event.objects.get(id=event_id)
-    if request.method == 'POST':
-        form = EventForm(request.POST, request.FILE, instance=event)
+    if request.method == 'POST':    
+        form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
             form.save()
             messages.add_message(request, constants.SUCCESS, 'Evento editado com sucesso.')
             return redirect(redirect_url)
     else:
         form = EventForm(instance=event)
-        
+                
     return render(request, 'editar_evento.html', {'form': form})
     
 

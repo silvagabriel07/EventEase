@@ -12,7 +12,6 @@ phone_number_validators = RegexValidator(
 # Create your models here.
 class CustomUserManager(UserManager):
     def _create_user(self, email, password, username, **extra_fields):
-        print(extra_fields)
         if not email:
             raise ValueError("O endereço de e-mail deve ser informado.")
         email = self.normalize_email(email)
