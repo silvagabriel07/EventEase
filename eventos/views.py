@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from .models import Solicitation
 from account_manager.utils import need_set_age
-from account_manager.utils import need_set_age
+from account_manager.models import User
 
 # Create your views here.
 @login_required
@@ -66,8 +66,15 @@ def solicitacoes_evento(request, user_id, event_id):
         messages.add_message(request, constants.ERROR, 'Algo deu errado.')
         return render(reverse('organizando', args=[request.user.id]))
     
+    search = request.GET.get('search-input')
+    status_select = request.GET.get('status_select', 'w')
     event = Event.objects.filter(organizer=user_id, id=event_id).first()
+    
     solicitations = event.solicitation_set.all()    
+    if search:
+        solicitations = solicitations.filter(user__username__icontains=search)
+    if status_select:
+        solicitations = solicitations.filter(status=status_select)
     return render(request, 'solicitacoes_evento.html', {'solicitations': solicitations, 'event': event})
 
 
@@ -83,29 +90,32 @@ def ver_mais(request, id_event):
 
 
 @login_required
-def rejeitar_solicitacao(request, user_id, event_id, id_solicitation):
+def rejeitar_solicitacao(request, user_id, event_id, id_user_solicitation):
     if not request.user.id ==  user_id:
         messages.add_message(request, constants.ERROR, 'Algo deu errado.')
         return redirect('home')
+            
     event = Event.objects.filter(organizer=user_id, id=event_id).first()
-    solicitation = event.solicitation_set.get(id=id_solicitation)
+    solicitation = event.solicitation_set.get(user_id=id_user_solicitation)
     solicitation.status = 'r'
     solicitation.save()
     messages.add_message(request, constants.SUCCESS, 'Solicitação <b>rejeitada</b> com sucesso.')
-    return redirect(reverse('organizando', args=[user_id]))
+    return redirect(reverse('solicitacoes_evento', args=[user_id, event_id]))
 
 @login_required
-def aceitar_solicitacao(request, user_id, event_id, id_solicitation):
+def aceitar_solicitacao(request, user_id, event_id, id_user_solicitation):
     if not request.user.id ==  user_id:
         messages.add_message(request, constants.ERROR, 'Algo deu errado.')
         return redirect('home')
+    
     event = Event.objects.filter(organizer=user_id, id=event_id).first()
-    solicitation = event.solicitation_set.get(id=id_solicitation)
-    solicitation.status = 'a'
-    solicitation.save()
-    messages.add_message(request, constants.SUCCESS, 'Solicitação <b>aceita</b> com sucesso.')
-    return redirect(reverse('organizando', args=[user_id]))
-
+    if event.accept_user(user_id=id_user_solicitation):
+        messages.add_message(request, constants.SUCCESS, 'Solicitação <b>aceita</b> com sucesso.')
+        return redirect(reverse('solicitacoes_evento', args=[user_id, event_id]))
+    else:
+        messages.add_message(request, constants.WARNING, 'Usuário em questão não solicitou participação para este evento')
+        return redirect(reverse('solicitacoes_evento', args=[user_id, event_id]))
+ 
 # viewa de Partipar 
 @login_required
 def participar(request, id_event):

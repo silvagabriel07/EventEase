@@ -101,12 +101,15 @@ h1{
 
 .w{
     color: rgb(171, 160, 3);
+    text-decoration: underline;
 }
 .a{
-    color: rgb(45, 201, 8)
+    color: rgb(45, 201, 8);
+    text-decoration: underline;
 }
 .r{
-    color: rgb(247, 32, 32)
+    color: rgb(247, 32, 32);
+    text-decoration: underline;
 }
 
 .article-w{

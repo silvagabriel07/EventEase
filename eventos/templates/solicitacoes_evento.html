@@ -8,8 +8,44 @@
 {% endblock %}
 
 {% block 'body' %}
+
     <div class="container custom-container ">
-        <h1><u>{{ event.title }}</u> - Solicitações</h1> 
+          {% if messages %}
+          <br>
+          <ul class="messages">
+              {% for message in messages %}
+                <div class="{{ message.tags }}" role="alert">
+                  {{ message|safe }}
+                </div>
+              {% endfor %}
+          </ul>
+        {% endif %}
+          <br>
+        <h1><u>{{ event.title }}</u> - Solicitações</h1>
+        <form action="" method="get"> {% csrf_token %}
+        <div class="row">
+          <div class="col-9">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Pesquisar usuário..." name="search-input">
+              <div class="input-group-append">
+                  <button class="btn btn-primary" type="submit">Pesquisar</button>
+                  <a class="btn btn-secondary" href=".">Limpar</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="col-9 d-flex align-items-center">
+              <label for="filter-select" class="mr-2">Filtre: </label>
+              <select id="filter-select" class="form-control" name="status_select"> 
+                  <option value="w" {% if request.GET.status_select == 'w' %}selected{% endif %}>Aguardando</option>
+                  <option value="a" {% if request.GET.status_select == 'a' %}selected{% endif %}>Aceitas</option>
+                  <option value="r" {% if request.GET.status_select == 'r' %}selected{% endif %}>Rejeitadas</option>
+              </select>
+          </div>
+        </div>
+      </div>
+    </form>
+  
         <hr><br>
         {% for solicitation in solicitations %}
             <div class="row">
@@ -18,24 +54,29 @@
                     <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-2">
-                        <img width="40px" src="{{ solicitation.user.user_img.url }}" alt="Imagem do usuário que solcitou a participação" class="img-fluid">
+                        <a href="{{ solicitation.user.user_img.url }}"><img width="40px" src="{{ solicitation.user.user_img.url }}" alt="Imagem do usuário que solcitou a participação" class="img-fluid"></a>
                       </div>
                       <div class="col-6">
                         <p class="card-text d-inline texts-container" style="margin-right: 2rem; margin-left: 0;">{{ solicitation.user.username }}</p>
-                        <p class="card-text d-inline" >{{ solicitation.get_status_display }}</p>
+                        <p class="card-text d-inline {{ solicitation.status }}" >{{ solicitation.get_status_display }}</p>
                       </div>
                       <div class="col-4 text-right">
-                        <button type="button" class="btn btn-danger">Rejeitar</button>
-                        <button type="button" class="btn btn-success">Aceitar</button>
+                        {% if not solicitation.status == 'r' and not solicitation.status == 'a' %}
+                          <a class="btn btn-danger" href="{% url 'rejeitar_solicitacao' request.user.id solicitation.event.id solicitation.user.id %}">Rejeitar</a>
+                        {% endif %}
+                        {% if not solicitation.status == 'a' %}
+                          <a class="btn btn-success" href="{% url 'aceitar_solicitacao' request.user.id solicitation.event.id solicitation.user.id %}">Aceitar</a>
+                        {% endif %}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-            <br>
           {% empty %}
-
+          <div class="row">
+            <h2>Nenhuma solicitação encontrada.</h2>
+          </div>
           {% endfor %}
     </div>
 {% endblock 'body' %}

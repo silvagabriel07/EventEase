@@ -32,12 +32,23 @@ class Event(models.Model):
     def qtd_participants(self):
         return self.participants.count()
 
-    def accept_user(self, user):
+    def accept_user(self, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+            solicitation = self.solicitation_set.get(user_id=user_id)
+            solicitation.status = 'a'
+            solicitation.save()
+            self.participants.add(user)
+
+            return True
+        except ObjectDoesNotExist:
+            return False
+        
+    def reject_user(self, user):
         try:
             solicitation = self.solicitation_set.get(user=user)
-            solicitation.status = 'a'
-            event = self.participants.add(user)
-            event.save()
+            solicitation.status = 'r'
+            solicitation.save()
             return True
         except ObjectDoesNotExist:
             return False
