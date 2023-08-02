@@ -118,3 +118,8 @@ h1{
 .article-r{
     background-color: rgb(245, 135, 143)
 }
+
+.custom-mini-card{
+    background-color: #e8e7e1;
+    color: black;
+}

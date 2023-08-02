@@ -9,11 +9,33 @@
 
 {% block 'body' %}
     <div class="container custom-container ">
-
+        <h1><u>{{ event.title }}</u> - Solicitações</h1> 
+        <hr><br>
         {% for solicitation in solicitations %}
-            <p>{{ solicitation }}  -----  <a class="link" href="{% url 'rejeitar_solicitacao' request.user.id solicitation.event.id solicitation.id %}">Rejeitar</a> -- <a class="link" href="{% url 'aceitar_solicitacao' request.user.id solicitation.event.id solicitation.id %}">Aceitar</a></p>
+            <div class="row">
+              <div class="col-12">
+                <div class="card custom-mini-card" style="max-width: 100%; margin-bottom: 0.25rem;">
+                    <div class="card-body">
+                    <div class="row align-items-center">
+                      <div class="col-2">
+                        <img width="40px" src="{{ solicitation.user.user_img.url }}" alt="Imagem do usuário que solcitou a participação" class="img-fluid">
+                      </div>
+                      <div class="col-6">
+                        <p class="card-text d-inline texts-container" style="margin-right: 2rem; margin-left: 0;">{{ solicitation.user.username }}</p>
+                        <p class="card-text d-inline" >{{ solicitation.get_status_display }}</p>
+                      </div>
+                      <div class="col-4 text-right">
+                        <button type="button" class="btn btn-danger">Rejeitar</button>
+                        <button type="button" class="btn btn-success">Aceitar</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <br>
+          {% empty %}
 
-        {% endfor %}
-
+          {% endfor %}
     </div>
 {% endblock 'body' %}

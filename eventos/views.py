@@ -68,7 +68,7 @@ def solicitacoes_evento(request, user_id, event_id):
     
     event = Event.objects.filter(organizer=user_id, id=event_id).first()
     solicitations = event.solicitation_set.all()    
-    return render(request, 'solicitacoes_evento.html', {'solicitations': solicitations})
+    return render(request, 'solicitacoes_evento.html', {'solicitations': solicitations, 'event': event})
 
 
 def ver_mais(request, id_event):
@@ -91,7 +91,7 @@ def rejeitar_solicitacao(request, user_id, event_id, id_solicitation):
     solicitation = event.solicitation_set.get(id=id_solicitation)
     solicitation.status = 'r'
     solicitation.save()
-    messages.add_message(request, constants.SUCCESS, 'Solicitação <b>rejeitada</b> com sucesso')
+    messages.add_message(request, constants.SUCCESS, 'Solicitação <b>rejeitada</b> com sucesso.')
     return redirect(reverse('organizando', args=[user_id]))
 
 @login_required
@@ -103,9 +103,10 @@ def aceitar_solicitacao(request, user_id, event_id, id_solicitation):
     solicitation = event.solicitation_set.get(id=id_solicitation)
     solicitation.status = 'a'
     solicitation.save()
-    messages.add_message(request, constants.SUCCESS, 'Solicitação <b>aceita</b> com sucesso')
+    messages.add_message(request, constants.SUCCESS, 'Solicitação <b>aceita</b> com sucesso.')
     return redirect(reverse('organizando', args=[user_id]))
 
+# viewa de Partipar 
 @login_required
 def participar(request, id_event):
     user = request.user
