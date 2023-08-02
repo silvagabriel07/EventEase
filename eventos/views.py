@@ -20,6 +20,7 @@ def organizando(request, user_id):
     my_events = Event.objects.filter(organizer=user_id)
     return render(request, 'organizando.html', {'my_events': my_events})
 
+
 @login_required
 def criar_evento(request):
     if request.method == "POST":
@@ -36,15 +37,16 @@ def criar_evento(request):
 
     return render(request, 'criar_evento.html', {'form': form})
 
+
 @login_required
 def editar_evento(request, user_id, event_id):
     redirect_url = reverse('organizando', args=[request.user.id])
     
-    if not user_id == request.user.id:
+    if not user_id == request.user.id: 
         messages.add_message(request, constants.ERROR, 'Algo deu errado.')
         return redirect(redirect_url)
     
-    event = Event.objects.get(id=event_id)
+    event = Event.objects.filter(organizer=user_id, id=event_id).first()
     event_banner = event.event_banner
     if request.method == 'POST':    
         form = EventForm(request.POST, request.FILES, instance=event)
@@ -58,6 +60,17 @@ def editar_evento(request, user_id, event_id):
     return render(request, 'editar_evento.html', {'form': form, 'event_banner': event_banner, 'event_id': event.id})
     
 
+@login_required
+def solicitacoes_evento(request, user_id, event_id):
+    if not request.user.id == user_id:
+        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
+        return render(reverse('organizando', args=[request.user.id]))
+    
+    event = Event.objects.filter(organizer=user_id, id=event_id).first()
+    solicitations = event.solicitation_set.all()    
+    return render(request, 'solicitacoes_evento.html', {'solicitations': solicitations})
+
+
 def ver_mais(request, id_event):
     event = Event.objects.get(id=id_event)
     is_user_participant = False
@@ -68,6 +81,30 @@ def ver_mais(request, id_event):
         
     return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated})
 
+
+@login_required
+def rejeitar_solicitacao(request, user_id, event_id, id_solicitation):
+    if not request.user.id ==  user_id:
+        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
+        return redirect('home')
+    event = Event.objects.filter(organizer=user_id, id=event_id).first()
+    solicitation = event.solicitation_set.get(id=id_solicitation)
+    solicitation.status = 'r'
+    solicitation.save()
+    messages.add_message(request, constants.SUCCESS, 'Solicitação <b>rejeitada</b> com sucesso')
+    return redirect(reverse('organizando', args=[user_id]))
+
+@login_required
+def aceitar_solicitacao(request, user_id, event_id, id_solicitation):
+    if not request.user.id ==  user_id:
+        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
+        return redirect('home')
+    event = Event.objects.filter(organizer=user_id, id=event_id).first()
+    solicitation = event.solicitation_set.get(id=id_solicitation)
+    solicitation.status = 'a'
+    solicitation.save()
+    messages.add_message(request, constants.SUCCESS, 'Solicitação <b>aceita</b> com sucesso')
+    return redirect(reverse('organizando', args=[user_id]))
 
 @login_required
 def participar(request, id_event):

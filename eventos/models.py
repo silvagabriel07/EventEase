@@ -27,7 +27,7 @@ class Event(models.Model):
     event_banner = models.FileField(upload_to='event_banners', default='/default_event_banner.png')
     
     def qtd_solicitations(self):
-        return self.solicitation_set.count()
+        return self.solicitation_set.filter(status='w').count()
     
     def qtd_participants(self):
         return self.participants.count()
