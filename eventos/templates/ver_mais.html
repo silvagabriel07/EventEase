@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
 {% endblock %}
 
-{% block 'title' %}Ver mais{% endblock %}
+{% block 'title' %}Ver mais - {{ event.title }}{% endblock %}
 
 {% block 'body' %}
 <div class="container custom-container">
@@ -41,13 +41,12 @@
 
     <div class="mb-3">
         <a class="link" style="text-decoration: none;" href="{% url 'participantes' event.id %}">
-            <label class="label-event"><i class="bi bi-person-fill"> Participantes:</i></label> 
+            <label class="label-event"><i class="bi bi-person-fill"></i> Participantes:</label> 
             <div class="value-event">
                 <p>{{ event.qtd_participants }}</p>
             </div>
         </a>
     </div>
-
 
     <div class="mb-3">
         <label class="label-event">Data e Hora de Início:</label> 

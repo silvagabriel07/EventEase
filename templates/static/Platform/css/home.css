@@ -46,6 +46,11 @@ p {
     text-align: center;
   }
 
+.btn-uniq{
+    width: 100%;
+    text-align: center;
+}
+
 .custom-img-fluid{
     height: 250px;
     width: 100%;

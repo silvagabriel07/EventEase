@@ -72,7 +72,7 @@ def explorar_eventos(request):
             events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lt=100)
         
     page_num = request.GET.get('page', '1')
-    event_paginator = Paginator(events, 4)
+    event_paginator = Paginator(events, 24)
     try:
         page = event_paginator.page(page_num)
     except(EmptyPage, PageNotAnInteger):

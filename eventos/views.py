@@ -82,14 +82,25 @@ def ver_mais(request, id_event):
     return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated})
 
 
-def participantes(request, id_event):
-    event = Event.objects.get(id=id_event)
+def participantes(request, event_id):
+    event = Event.objects.get(id=event_id)
     participants = event.participants.all()
     qtd_participants = event.qtd_participants
-    is_organizer = False
-    if user_is_organizer(request, event, message=False):
-        is_organizer = True
-    return render(request, 'participantes.html', {'participants': participants, 'event_title': event.title, 'user_is_organizer': is_organizer, 'qtd_participants': qtd_participants})
+    is_organizer = user_is_organizer(request, event, message=False)
+    return render(request, 'participantes.html', {'participants': participants, 'event_title': event.title, 'event_id': event.id,'user_is_organizer': is_organizer, 'qtd_participants': qtd_participants})
+
+@login_required
+def remover_participante(request, event_id, participant_id):
+    event = Event.objects.get(id=event_id)
+
+    if not user_is_organizer(request, event):
+        return redirect('participantes', args=[event_id])
+    else:
+        if event.remove_user(participant_id):
+            messages.add_message(request, constants.SUCCESS, 'Usuário removido com sucesso.')
+        else:
+            messages.add_message(request, constants.SUCCESS, f'Algo deu errado ao tentar remover esse usuário do evento {event.title}.')
+        return redirect(reverse('participantes', args=[event_id]))
 
 
 @login_required

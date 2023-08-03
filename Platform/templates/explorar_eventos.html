@@ -97,7 +97,7 @@
           </h2>
           <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
           <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>
-
+          <p class="n-participants"><a class="link" style="text-decoration: none;" href="{% url 'participantes' event.id %}"><i class="bi bi-person-fill"></i> {{ event.qtd_participants }}</a></p>
           <div class="d-flex align-items-center">
             <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
             <div class="post-meta">
@@ -107,7 +107,7 @@
               </p>
             </div>
           </div>
-          <a href="{% url 'ver_mais' event.id %}" class="cta-button btn-edit">Ver mais</a>
+          <a href="{% url 'ver_mais' event.id %}" class="cta-button btn-uniq">Ver mais</a>
         </article>
       </div>
 

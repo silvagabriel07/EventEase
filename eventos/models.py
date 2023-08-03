@@ -26,9 +26,11 @@ class Event(models.Model):
     final_date_time = models.DateTimeField()
     event_banner = models.FileField(upload_to='event_banners', default='/default_event_banner.png')
     
+    @property
     def qtd_solicitations(self):
         return self.solicitation_set.filter(status='w').count()
     
+    @property
     def qtd_participants(self):
         return self.participants.count()
 
@@ -52,9 +54,21 @@ class Event(models.Model):
 
             return True
         except ObjectDoesNotExist:
-            return False        
+            return False
+    
+    def remove_user(self, participant_id):
+        try:
+            user = User.objects.get(id=participant_id)
+            self.participants.remove(user)
+            
+            return True
+        except ObjectDoesNotExist:
+            return False
+                    
     def __str__(self):
         return self.title
+    
+    
 
 
 class Solicitation(models.Model):
