@@ -103,3 +103,8 @@ p {
     color: #481194;
     font-weight: 800;
 }
+
+.n-participants{
+    float: right;
+    font-size: 17px;
+}

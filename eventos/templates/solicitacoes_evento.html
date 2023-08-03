@@ -62,10 +62,10 @@
                       </div>
                       <div class="col-4 text-right">
                         {% if not solicitation.status == 'r' and not solicitation.status == 'a' %}
-                          <a class="btn btn-danger" href="{% url 'rejeitar_solicitacao' request.user.id solicitation.event.id solicitation.user.id %}">Rejeitar</a>
+                          <a class="btn btn-danger" href="{% url 'rejeitar_solicitacao' solicitation.event.id solicitation.user.id %}">Rejeitar</a>
                         {% endif %}
                         {% if not solicitation.status == 'a' %}
-                          <a class="btn btn-success" href="{% url 'aceitar_solicitacao' request.user.id solicitation.event.id solicitation.user.id %}">Aceitar</a>
+                          <a class="btn btn-success" href="{% url 'aceitar_solicitacao' solicitation.event.id solicitation.user.id %}">Aceitar</a>
                         {% endif %}
                       </div>
                     </div>

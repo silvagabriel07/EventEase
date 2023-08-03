@@ -9,15 +9,12 @@ from django.contrib.messages import constants
 from .models import Solicitation
 from account_manager.utils import need_set_age
 from account_manager.models import User
+from .utils import user_is_organizer
 
 # Create your views here.
 @login_required
-def organizando(request, user_id):
-    if not request.user.id == user_id:
-        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
-        return redirect('home')
-    
-    my_events = Event.objects.filter(organizer=user_id)
+def organizando(request):    
+    my_events = Event.objects.filter(organizer=request.user)
     return render(request, 'organizando.html', {'my_events': my_events})
 
 
@@ -30,8 +27,7 @@ def criar_evento(request):
             event.organizer = request.user  
             event.save() 
             messages.success(request, 'Evento criado com sucesso.')
-            redirect_url = reverse('organizando', args=[event.organizer.id])
-            return redirect(redirect_url)
+            return redirect('organizando')
     else:
         form = EventForm()
 
@@ -39,43 +35,40 @@ def criar_evento(request):
 
 
 @login_required
-def editar_evento(request, user_id, event_id):
-    redirect_url = reverse('organizando', args=[request.user.id])
-    
-    if not user_id == request.user.id: 
-        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
-        return redirect(redirect_url)
-    
-    event = Event.objects.filter(organizer=user_id, id=event_id).first()
-    event_banner = event.event_banner
-    if request.method == 'POST':    
-        form = EventForm(request.POST, request.FILES, instance=event)
-        if form.is_valid():
-            form.save()
-            messages.add_message(request, constants.SUCCESS, 'Evento editado com sucesso.')
-            return redirect(redirect_url)
+def editar_evento(request, event_id):        
+    event = Event.objects.filter(id=event_id).first()
+    if not user_is_organizer(request, event, request.user): 
+        return redirect('organizando')
     else:
-        form = EventForm(instance=event)
-                
-    return render(request, 'editar_evento.html', {'form': form, 'event_banner': event_banner, 'event_id': event.id})
+        event_banner = event.event_banner
+        if request.method == 'POST':    
+            form = EventForm(request.POST, request.FILES, instance=event)
+            if form.is_valid():
+                form.save()
+                messages.add_message(request, constants.SUCCESS, 'Evento editado com sucesso.')
+                return redirect('organizando')
+        else:
+            form = EventForm(instance=event)
+                    
+        return render(request, 'editar_evento.html', {'form': form, 'event_banner': event_banner, 'event_id': event.id})
     
 
 @login_required
-def solicitacoes_evento(request, user_id, event_id):
-    if not request.user.id == user_id:
-        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
-        return render(reverse('organizando', args=[request.user.id]))
-    
-    search = request.GET.get('search-input')
-    status_select = request.GET.get('status_select', 'w')
-    event = Event.objects.filter(organizer=user_id, id=event_id).first()
-    
-    solicitations = event.solicitation_set.all()    
-    if search:
-        solicitations = solicitations.filter(user__username__icontains=search)
-    if status_select:
-        solicitations = solicitations.filter(status=status_select)
-    return render(request, 'solicitacoes_evento.html', {'solicitations': solicitations, 'event': event})
+def solicitacoes_evento(request, event_id):
+    event = Event.objects.filter(id=event_id).first()
+
+    if not user_is_organizer(request, event, request.user): 
+        return redirect('organizando')
+    else:
+        search = request.GET.get('search-input')
+        status_select = request.GET.get('status_select', 'w')
+        
+        solicitations = event.solicitation_set.all()    
+        if search:
+            solicitations = solicitations.filter(user__username__icontains=search)
+        if status_select:
+            solicitations = solicitations.filter(status=status_select)
+        return render(request, 'solicitacoes_evento.html', {'solicitations': solicitations, 'event': event})
 
 
 def ver_mais(request, id_event):
@@ -90,31 +83,34 @@ def ver_mais(request, id_event):
 
 
 @login_required
-def rejeitar_solicitacao(request, user_id, event_id, id_user_solicitation):
-    if not request.user.id ==  user_id:
-        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
-        return redirect('home')
-            
-    event = Event.objects.filter(organizer=user_id, id=event_id).first()
-    solicitation = event.solicitation_set.get(user_id=id_user_solicitation)
-    solicitation.status = 'r'
-    solicitation.save()
-    messages.add_message(request, constants.SUCCESS, 'Solicitação <b>rejeitada</b> com sucesso.')
-    return redirect(reverse('solicitacoes_evento', args=[user_id, event_id]))
+def rejeitar_solicitacao(request, event_id, id_user_solicitation):
+    if not user_is_organizer or not event.private:
+        return redirect('organizando')
+    event = Event.objects.filter(id=event_id).first()
+
+    if not user_is_organizer(request, event, request.user):
+        return redirect('participando')
+    else:
+        if event.reject_user(user_id=id_user_solicitation):
+            messages.add_message(request, constants.SUCCESS, 'Solicitação <b>rejeitada</b> com sucesso.')
+        else:
+            messages.add_message(request, constants.WARNING, 'Usuário em questão não solicitou participação para este evento')
+        return redirect('solicitacoes_evento')
 
 @login_required
-def aceitar_solicitacao(request, user_id, event_id, id_user_solicitation):
-    if not request.user.id ==  user_id:
-        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
-        return redirect('home')
+def aceitar_solicitacao(request, event_id, id_user_solicitation):
+    if not user_is_organizer or not event.private:
+        return redirect('organizando')
+    event = Event.objects.filter(id=event_id).first()
     
-    event = Event.objects.filter(organizer=user_id, id=event_id).first()
-    if event.accept_user(user_id=id_user_solicitation):
-        messages.add_message(request, constants.SUCCESS, 'Solicitação <b>aceita</b> com sucesso.')
-        return redirect(reverse('solicitacoes_evento', args=[user_id, event_id]))
+    if not user_is_organizer(request, event, request.user):
+        return redirect('participando')
     else:
-        messages.add_message(request, constants.WARNING, 'Usuário em questão não solicitou participação para este evento')
-        return redirect(reverse('solicitacoes_evento', args=[user_id, event_id]))
+        if event.accept_user(user_id=id_user_solicitation):
+            messages.add_message(request, constants.SUCCESS, 'Solicitação <b>aceita</b> com sucesso.')
+        else:
+            messages.add_message(request, constants.WARNING, 'Usuário em questão não solicitou participação para este evento')
+        return redirect('solicitacoes_evento') 
  
 # viewa de Partipar 
 @login_required
@@ -136,7 +132,7 @@ def participar(request, id_event):
             messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
             return redirect(redirect_event_details)
                 
-    if not event.private or user.id == event.organizer.id:
+    if not event.private or user_is_organizer(request, event, user):
             event.participants.add(user.id)
             event.save()
             messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')
@@ -155,11 +151,8 @@ def participar(request, id_event):
 
 
 @login_required
-def participando(request, user_id, render_solicitations=0):
+def participando(request, render_solicitations=0):
     user = request.user
-    if not user.id == user_id:
-        messages.add_message(request, constants.ERROR, 'Algo deu errado.')
-        return redirect('home')
 
     if render_solicitations == 1:
         events = Event.objects.filter(solicitation__user=user)
@@ -183,16 +176,16 @@ def participando(request, user_id, render_solicitations=0):
 
 
 @login_required
-def participando_solicitacoes(request, user_id):
+def participando_solicitacoes(request):
     render_solicitations = 1
-    participando_url_redirect = reverse('participando', args=[user_id, render_solicitations])
+    participando_url_redirect = reverse('participando', args=[render_solicitations])
     return redirect(participando_url_redirect)
 
 
 @login_required
 def leave_event(request, event_id, render_solicitations=0):
     event = Event.objects.get(id=event_id)
-
+    participando_url_redirect = reverse('participando', args=[render_solicitations])
     if render_solicitations == 1:
         solicitation_ = event.solicitation_set.get(user=request.user)
         solicitation_.delete()
@@ -201,6 +194,6 @@ def leave_event(request, event_id, render_solicitations=0):
         event.participants.remove(request.user)
         event.save()
         messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')
-    return redirect(reverse('participando', args=[request.user.id, render_solicitations]))
+    return redirect(participando_url_redirect)
 
 

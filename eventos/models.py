@@ -44,15 +44,15 @@ class Event(models.Model):
         except ObjectDoesNotExist:
             return False
         
-    def reject_user(self, user):
+    def reject_user(self, user_id):
         try:
-            solicitation = self.solicitation_set.get(user=user)
+            solicitation = self.solicitation_set.get(user_id=user_id)
             solicitation.status = 'r'
             solicitation.save()
+
             return True
         except ObjectDoesNotExist:
-            return False
-        
+            return False        
     def __str__(self):
         return self.title
 

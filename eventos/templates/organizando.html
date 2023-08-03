@@ -46,7 +46,7 @@
             </h2>
             <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
             <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>
-
+            <p class="n-participants"><a class="link" style="text-decoration: none;" href=""><i class="bi bi-person-fill"></i> {{ event.qtd_participants }}</a></p>
             <div class="d-flex align-items-center">
               <div class="post-meta">
                 <p class="post-date"> 
@@ -55,8 +55,10 @@
               </div>
             </div><br>
 
-            <a href="{% url 'editar_evento' event.organizer.id event.id %}" class="cta-button btn-inline btn-edit">Editar</a>
-            <a href="{% url 'solicitacoes_evento' event.organizer.id event.id %}" class="cta-button btn-inline btn-solicitations"><i style="display: inline;" class="bi bi-envelope-fill"><p style="font-size: small; display: inline;"> {{ event.qtd_solicitations }}</p></i></a>
+            <a href="{% url 'editar_evento' event.id %}" class="cta-button btn-inline btn-edit">Editar</a>
+            {% if event.private %}
+              <a href="{% url 'solicitacoes_evento' event.id %}" class="cta-button btn-inline btn-solicitations"><i style="display: inline;" class="bi bi-envelope-fill"><p style="font-size: small; display: inline;"> {{ event.qtd_solicitations }}</p></i></a>
+            {% endif %}
           </article>
         </div>
 
