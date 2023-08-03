@@ -37,7 +37,7 @@ def criar_evento(request):
 @login_required
 def editar_evento(request, event_id):        
     event = Event.objects.filter(id=event_id).first()
-    if not user_is_organizer(request, event, request.user): 
+    if not user_is_organizer(request, event): 
         return redirect('organizando')
     else:
         event_banner = event.event_banner
@@ -57,7 +57,7 @@ def editar_evento(request, event_id):
 def solicitacoes_evento(request, event_id):
     event = Event.objects.filter(id=event_id).first()
 
-    if not user_is_organizer(request, event, request.user): 
+    if not user_is_organizer(request, event): 
         return redirect('organizando')
     else:
         search = request.GET.get('search-input')
@@ -85,17 +85,18 @@ def ver_mais(request, id_event):
 def participantes(request, id_event):
     event = Event.objects.get(id=id_event)
     participants = event.participants.all()
+    qtd_participants = event.qtd_participants
     is_organizer = False
-    if user_is_organizer(request, event, request.user):
+    if user_is_organizer(request, event, message=False):
         is_organizer = True
-    return render(request, 'participantes.html', {'participants': participants, 'event_title': event.title, 'user_is_organizer': is_organizer})
+    return render(request, 'participantes.html', {'participants': participants, 'event_title': event.title, 'user_is_organizer': is_organizer, 'qtd_participants': qtd_participants})
 
 
 @login_required
 def rejeitar_solicitacao(request, event_id, id_user_solicitation):
     event = Event.objects.filter(id=event_id).first()
 
-    if not user_is_organizer(request, event, request.user) or not event.private:
+    if not user_is_organizer(request, event) or not event.private:
         return redirect('organizando')
     else:
         if event.reject_user(user_id=id_user_solicitation):
@@ -107,7 +108,7 @@ def rejeitar_solicitacao(request, event_id, id_user_solicitation):
 @login_required
 def aceitar_solicitacao(request, event_id, id_user_solicitation):
     event = Event.objects.filter(id=event_id).first()
-    if not user_is_organizer(request, event, request.user) or not event.private:
+    if not user_is_organizer(request, event) or not event.private:
         return redirect('organizando')
     else:
         if event.accept_user(user_id=id_user_solicitation):
@@ -136,7 +137,7 @@ def participar(request, id_event):
             messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
             return redirect(redirect_event_details)
                 
-    if not event.private or user_is_organizer(request, event, user):
+    if not event.private or user_is_organizer(request, event, message=False):
             event.participants.add(user.id)
             event.save()
             messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')

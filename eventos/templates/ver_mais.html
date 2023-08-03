@@ -40,10 +40,12 @@
     </div>
 
     <div class="mb-3">
-        <label class="label-event">Participantes:</label> 
-        <div class="value-event">
-            <p>{{ event.qtd_participants }}</p>
-        </div>
+        <a class="link" style="text-decoration: none;" href="{% url 'participantes' event.id %}">
+            <label class="label-event"><i class="bi bi-person-fill"> Participantes:</i></label> 
+            <div class="value-event">
+                <p>{{ event.qtd_participants }}</p>
+            </div>
+        </a>
     </div>
 
 
