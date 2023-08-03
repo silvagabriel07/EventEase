@@ -46,7 +46,7 @@
             </h2>
             <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
             <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>
-            <p class="n-participants"><a class="link" style="text-decoration: none;" href=""><i class="bi bi-person-fill"></i> {{ event.qtd_participants }}</a></p>
+            <p class="n-participants"><a class="link" style="text-decoration: none;" href="{% url 'participantes' event.id %}"><i class="bi bi-person-fill"></i> {{ event.qtd_participants }}</a></p>
             <div class="d-flex align-items-center">
               <div class="post-meta">
                 <p class="post-date"> 

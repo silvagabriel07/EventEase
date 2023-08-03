@@ -1,0 +1,55 @@
+{% extends 'base/base.html' %}
+
+{% load static %}
+
+{% block 'head' %}
+  <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
+{% endblock %}
+
+{% block 'title' %}Ver mais - Participantes{% endblock 'title' %}
+
+{% block 'body' %}
+    <div class="container custom-container ">
+        {% if messages %}
+        <br>
+        <ul class="messages">
+            {% for message in messages %}
+              <div class="{{ message.tags }}" role="alert">
+                {{ message|safe }}
+              </div>
+            {% endfor %}
+        </ul>
+      {% endif %}
+        <br>
+      <h1><u>{{ event_title }}</u> - Participantes</h1>
+
+      <hr><br>
+      {% for participant in participants %}
+          <div class="row">
+            <div class="col-12">
+              <div class="card custom-mini-card" style="max-width: 100%; margin-bottom: 0.25rem;">
+                  <div class="card-body">
+                  <div class="row align-items-center">
+                    <div class="col-2">
+                      <a href="{{ participant.user_img.url }}"><img width="40px" src="{{ participant.user_img.url }}" alt="Imagem do usuário" class="img-fluid"></a>
+                    </div>
+                    <div class="col-6">
+                      <p class="card-text d-inline texts-container" style="margin-right: 2rem; margin-left: 0;">{{ participant.username }}</p>
+                      <p class="card-text d-inline" ></p>
+                    </div>
+                    <div class="col-4 text-right">
+                        <a class="btn btn-danger" href="#expulsar">Expulsar</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% empty %}
+        <div class="row">
+          <h2>Nenhuma participante encontrado.</h2>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
 {% endblock %}
 
+{% block 'title' %}Organizando - Solcitações{% endblock 'title' %}
+
 {% block 'body' %}
 
     <div class="container custom-container ">
@@ -21,7 +23,7 @@
           </ul>
         {% endif %}
           <br>
-        <h1><u>{{ event.title }}</u> - Solicitações</h1>
+        <h1><u>{{ event_title }}</u> - Solicitações</h1>
         <form action="" method="get"> {% csrf_token %}
         <div class="row">
           <div class="col-9">

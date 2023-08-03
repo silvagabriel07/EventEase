@@ -12,5 +12,6 @@ urlpatterns = [
     path('participando/solicitacoes/', views.participando_solicitacoes, name='participando_solicitacoes'),
     path('participando/sair/<int:event_id>/<int:render_solicitations>/', views.leave_event, name='leave_event'),
     path('ver_mais/<int:id_event>/', views.ver_mais, name='ver_mais'),
+    path('ver_mais/participantes/<int:id_event>/', views.participantes, name='participantes'),
     path('participar/<int:id_event>/', views.participar, name='participar'),
 ] 

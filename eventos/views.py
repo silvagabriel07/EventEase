@@ -68,7 +68,7 @@ def solicitacoes_evento(request, event_id):
             solicitations = solicitations.filter(user__username__icontains=search)
         if status_select:
             solicitations = solicitations.filter(status=status_select)
-        return render(request, 'solicitacoes_evento.html', {'solicitations': solicitations, 'event': event})
+        return render(request, 'solicitacoes_evento.html', {'solicitations': solicitations, 'event_title': event.title})
 
 
 def ver_mais(request, id_event):
@@ -82,35 +82,39 @@ def ver_mais(request, id_event):
     return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated})
 
 
+def participantes(request, id_event):
+    event = Event.objects.get(id=id_event)
+    participants = event.participants.all()
+    is_organizer = False
+    if user_is_organizer(request, event, request.user):
+        is_organizer = True
+    return render(request, 'participantes.html', {'participants': participants, 'event_title': event.title, 'user_is_organizer': is_organizer})
+
+
 @login_required
 def rejeitar_solicitacao(request, event_id, id_user_solicitation):
-    if not user_is_organizer or not event.private:
-        return redirect('organizando')
     event = Event.objects.filter(id=event_id).first()
 
-    if not user_is_organizer(request, event, request.user):
-        return redirect('participando')
+    if not user_is_organizer(request, event, request.user) or not event.private:
+        return redirect('organizando')
     else:
         if event.reject_user(user_id=id_user_solicitation):
             messages.add_message(request, constants.SUCCESS, 'Solicitação <b>rejeitada</b> com sucesso.')
         else:
             messages.add_message(request, constants.WARNING, 'Usuário em questão não solicitou participação para este evento')
-        return redirect('solicitacoes_evento')
+        return redirect(reverse('solicitacoes_evento', args=[event.id])) 
 
 @login_required
 def aceitar_solicitacao(request, event_id, id_user_solicitation):
-    if not user_is_organizer or not event.private:
-        return redirect('organizando')
     event = Event.objects.filter(id=event_id).first()
-    
-    if not user_is_organizer(request, event, request.user):
-        return redirect('participando')
+    if not user_is_organizer(request, event, request.user) or not event.private:
+        return redirect('organizando')
     else:
         if event.accept_user(user_id=id_user_solicitation):
             messages.add_message(request, constants.SUCCESS, 'Solicitação <b>aceita</b> com sucesso.')
         else:
             messages.add_message(request, constants.WARNING, 'Usuário em questão não solicitou participação para este evento')
-        return redirect('solicitacoes_evento') 
+        return redirect(reverse('solicitacoes_evento', args=[event_id])) 
  
 # viewa de Partipar 
 @login_required
