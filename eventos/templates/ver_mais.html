@@ -27,6 +27,7 @@
     </div>
 
     <div class="mb-3">
+        <p style="color: red; font-size: larger;">Evento já passou...</p>
         <label class="label-event">Descrição:</label>
         <div class="value-event value-description">
             <p>{{ event.description }}</p>
@@ -87,9 +88,16 @@
             {% endif %}
         </div>
       <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Se o evento for para todas as idades.</div>
-
-
     </div>
+    <div class="mb-3">
+        <div class="value-event">
+            <a class="link" href="{% url 'view_profile' event.organizer.id %}">
+                <label style="cursor: pointer;" class="label-event">Organizador:</label> 
+                {{ event.organizer.username }}
+            </a>
+        </div>
+    </div>
+
     <hr>
         {% if request.user.is_authenticated and not event.has_passed %}
             {% if is_user_participant %}

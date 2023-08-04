@@ -8,11 +8,10 @@ from django.contrib import messages
 from django.contrib.messages import constants
 from .models import Solicitation
 from account_manager.utils import need_set_age
-from account_manager.models import User
 from .utils import user_is_organizer
 from datetime import datetime, timedelta
 
-# Create your views here.
+# Views de organizando
 @login_required
 def organizando(request):    
     my_events = Event.objects.filter(organizer=request.user)
@@ -76,43 +75,6 @@ def solicitacoes_evento(request, event_id):
         return render(request, 'solicitacoes_evento.html', {'solicitations': solicitations, 'event_title': event.title})
 
 
-def ver_mais(request, id_event):
-    event = Event.objects.get(id=id_event)
-    is_user_participant = False
-    user_already_solicitated = False
-    if request.user.is_authenticated:
-        is_user_participant = request.user.is_user_participant(event)
-        user_already_solicitated = request.user.user_already_solicitated(event)
-        
-    return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated})
-
-
-def participantes(request, event_id):
-    event = Event.objects.get(id=event_id)
-    participants = event.participants.all()
-    qtd_participants = event.qtd_participants
-    is_organizer = user_is_organizer(request, event, message=False)
-    return render(request, 'participantes.html', {'participants': participants, 'event': event ,'user_is_organizer': is_organizer, 'qtd_participants': qtd_participants})
-
-
-@login_required
-def remover_participante(request, event_id, participant_id):
-    event = Event.objects.get(id=event_id)
-    
-    if not user_is_organizer(request, event):
-        return redirect('participantes', args=[event_id])
-    elif event.has_passed():
-        messages.add_message(request, constants.ERROR, f'Não é possível remover usuários do evento "{event.title}", pois ele já passou.')
-        return redirect('organizando')
-
-    else:
-        if event.remove_user(participant_id):
-            messages.add_message(request, constants.SUCCESS, 'Usuário removido com sucesso.')
-        else:
-            messages.add_message(request, constants.SUCCESS, f'Algo deu errado ao tentar remover esse usuário do evento {event.title}, pois ele já passou.')
-        return redirect(reverse('participantes', args=[event_id]))
-
-
 @login_required
 def rejeitar_solicitacao(request, event_id, id_user_solicitation):
     event = Event.objects.filter(id=event_id).first()
@@ -145,8 +107,46 @@ def aceitar_solicitacao(request, event_id, id_user_solicitation):
         else:
             messages.add_message(request, constants.WARNING, 'Usuário em questão não solicitou participação para este evento')
         return redirect(reverse('solicitacoes_evento', args=[event_id])) 
+
+# # # # #
+
+def ver_mais(request, id_event):
+    event = Event.objects.get(id=id_event)
+    is_user_participant = False
+    user_already_solicitated = False
+    if request.user.is_authenticated:
+        is_user_participant = request.user.is_user_participant(event)
+        user_already_solicitated = request.user.user_already_solicitated(event)
+        
+    return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated})
+
+
+def participantes(request, event_id):
+    event = Event.objects.get(id=event_id)
+    participants = event.participants.all()
+    qtd_participants = event.qtd_participants
+    is_organizer = user_is_organizer(request, event, message=False)
+    return render(request, 'participantes.html', {'participants': participants, 'event': event ,'user_is_organizer': is_organizer, 'qtd_participants': qtd_participants})
+
+@login_required
+def remover_participante(request, event_id, participant_id):
+    event = Event.objects.get(id=event_id)
+    
+    if not user_is_organizer(request, event):
+        return redirect('participantes', args=[event_id])
+    elif event.has_passed():
+        messages.add_message(request, constants.ERROR, f'Não é possível remover usuários do evento "{event.title}", pois ele já passou.')
+        return redirect('organizando')
+
+    else:
+        if event.remove_user(participant_id):
+            messages.add_message(request, constants.SUCCESS, 'Usuário removido com sucesso.')
+        else:
+            messages.add_message(request, constants.SUCCESS, f'Algo deu errado ao tentar remover esse usuário do evento {event.title}, pois ele já passou.')
+        return redirect(reverse('participantes', args=[event_id]))
+
  
-# viewa de Partipar 
+# Views de Participando 
 @login_required
 def participar(request, id_event):
     user = request.user

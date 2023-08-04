@@ -109,3 +109,20 @@ def profile(request):
         else:
             return render(request, 'profile.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
         
+def view_profile(request, user_id):
+    user = User.objects.get(id=user_id)
+    qtd_events_organizing = Event.objects.filter(organizer=user).count()
+    qtd_event_participanting = user.event_participants.all().count()
+    return render(request, 'view_profile.html', {'user': user, 'qtd_events_organizing': qtd_events_organizing, 'qtd_event_participanting': qtd_event_participanting})
+
+
+def view_participating_events(request, user_id):
+    user = User.objects.get(id=user_id)
+    event_participanting = user.event_participants.filter(final_date_time__gte=datetime.now() - timedelta(days=1))
+    return render(request, 'view_participating_events.html', {'user': user, 'event_participanting': event_participanting})
+
+
+def view_organizing_events(request, user_id):
+    user = User.objects.get(id=user_id)
+    events_organizing = Event.objects.filter(organizer=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
+    return render(request, 'view_organizing_events.html', {'user': user, 'events_organizing': events_organizing})

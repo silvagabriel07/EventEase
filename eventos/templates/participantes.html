@@ -35,8 +35,9 @@
                       <a href="{{ participant.user_img.url }}"><img width="40px" src="{{ participant.user_img.url }}" alt="Imagem do usuário" class="img-fluid"></a>
                     </div>
                     <div class="col-6">
+                      <a class="link" href="{% url 'view_profile' participant.id %}">
                       <p class="card-text d-inline texts-container" style="margin-right: 2rem; margin-left: 0;">{{ participant.username }}</p>
-                      <p class="card-text d-inline" ></p>
+                      </a>
                     </div>
                     {% if user_is_organizer and not event.has_passed %}
                         <div class="col-4 text-right">

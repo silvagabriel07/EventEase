@@ -1,0 +1,68 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block 'head' %}
+    <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
+    <link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
+{% endblock 'head' %}
+
+{% block 'title' %}Ver Perfil{% endblock 'title' %}
+
+{% block 'body' %}
+    <div class="container custom-container c-auth" >
+        <h1>Ver Perfil - {{ user.username }}</h1>
+        <hr>
+        <div class="mb-3">
+            <label for="id_user_img">Imagem do usuário:</label> <br>
+            <a href="{{ user.user_img.url }}">
+                <img class="value-img" src="{{ user.user_img.url }}">
+            </a> 
+        </div>
+
+        <div class="mb-3">
+            <div class="value-event">
+            <label class="label-event">Nome:</label> 
+                {{ user.username }}
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <div class="value-event">
+            <label class="label-event">idade:</label> 
+                {{ user.idade }} anos
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <a class="link" href="{% url 'view_participating_events' user.id %}">
+                <div class="value-event">
+                <label class="label-event" style="cursor: pointer;">Eventos participando:</label> 
+                    {{ qtd_event_participanting }}
+                </div>
+            </a>
+        </div>
+
+        <div class="mb-3">
+            <a class="link" href="{% url 'view_organizing_events' user.id %}">
+                <div class="value-event">
+                <label class="label-event" style="cursor: pointer;">Eventos Organizando:</label> 
+                    {{ qtd_events_organizing }}
+                </div>
+            </a>
+        </div>
+
+
+        <div class="mb-3">
+            <div class="value-event">
+            <label class="label-event">Números de Telefone:</label> 
+            <ol>
+                {% for num in user.phonenumber_set.all %}
+                    <li>{{ num.phone_number }}</li>
+                {% endfor %}
+            </ol>
+            </div>
+        </div>
+
+        <hr>
+    </div>
+{% endblock 'body' %}
