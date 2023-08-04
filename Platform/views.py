@@ -81,7 +81,7 @@ def explorar_eventos(request):
     return render(request, 'explorar_eventos.html', {'page': page, 'categories':  categories, 'value_select_category': select_category})
 
 @login_required
-def profile(request):
+def perfil(request):
     user_img = request.user.user_img
     if request.method == 'GET':
         phone_numbers = request.user.phonenumber_set.all()
@@ -94,7 +94,7 @@ def profile(request):
 
         form_filho = form_factory(instance=request.user)
         form = ProfileForm(instance=request.user)
-        return render(request, 'profile.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
+        return render(request, 'perfil.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
     elif request.method == 'POST':
         form_factory = forms.inlineformset_factory(User, PhoneNumber, form=PhoneNumberForm)
         form_filho = form_factory(request.POST, instance=request.user)
@@ -105,24 +105,24 @@ def profile(request):
             form_filho.instance = formulario
             form_filho.save()
             messages.add_message(request, constants.SUCCESS, 'Alterações salvas.')
-            return redirect('profile')
+            return redirect('perfil')
         else:
-            return render(request, 'profile.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
+            return render(request, 'perfil.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
         
-def view_profile(request, user_id):
+def ver_perfil(request, user_id):
     user = User.objects.get(id=user_id)
     qtd_events_organizing = Event.objects.filter(organizer=user).count()
     qtd_event_participanting = user.event_participants.all().count()
-    return render(request, 'view_profile.html', {'user': user, 'qtd_events_organizing': qtd_events_organizing, 'qtd_event_participanting': qtd_event_participanting})
+    return render(request, 'ver_perfil.html', {'user': user, 'qtd_events_organizing': qtd_events_organizing, 'qtd_event_participanting': qtd_event_participanting})
 
 
-def view_participating_events(request, user_id):
+def ver_eventos_participando(request, user_id):
     user = User.objects.get(id=user_id)
     event_participanting = user.event_participants.filter(final_date_time__gte=datetime.now() - timedelta(days=1))
-    return render(request, 'view_participating_events.html', {'user': user, 'event_participanting': event_participanting})
+    return render(request, 'ver_eventos_participando.html', {'user': user, 'event_participanting': event_participanting})
 
 
-def view_organizing_events(request, user_id):
+def ver_eventos_organizando(request, user_id):
     user = User.objects.get(id=user_id)
     events_organizing = Event.objects.filter(organizer=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
-    return render(request, 'view_organizing_events.html', {'user': user, 'events_organizing': events_organizing})
+    return render(request, 'ver_eventos_organizando.html', {'user': user, 'events_organizing': events_organizing})

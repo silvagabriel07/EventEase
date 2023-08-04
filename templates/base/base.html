@@ -67,7 +67,7 @@
                 <li class="dropdown"><a style="text-decoration: none;" href="#"><span><img width="30px" src="{% static 'Platform/img/img_perfil.png' %}"></span> <i class="bi bi-chevron-down dropdown-indicator profile-picture"></i></a>
                   {% endif %}
                 <ul>
-                  <li><a style="text-decoration: none;" href="{% url 'profile' %}">Perfil</a></li>
+                  <li><a style="text-decoration: none;" href="{% url 'perfil' %}">Perfil</a></li>
                   {% if user.is_authenticated %}
                     <li><a style="text-decoration: none;" href="{% url 'account_logout' %}">Logout</a></li>
                   {% else %}

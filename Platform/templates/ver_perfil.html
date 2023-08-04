@@ -34,7 +34,7 @@
         </div>
 
         <div class="mb-3">
-            <a class="link" href="{% url 'view_participating_events' user.id %}">
+            <a class="link" href="{% url 'ver_eventos_participando' user.id %}">
                 <div class="value-event">
                 <label class="label-event" style="cursor: pointer;">Eventos participando:</label> 
                     {{ qtd_event_participanting }}
@@ -43,7 +43,7 @@
         </div>
 
         <div class="mb-3">
-            <a class="link" href="{% url 'view_organizing_events' user.id %}">
+            <a class="link" href="{% url 'ver_eventos_organizando' user.id %}">
                 <div class="value-event">
                 <label class="label-event" style="cursor: pointer;">Eventos Organizando:</label> 
                     {{ qtd_events_organizing }}

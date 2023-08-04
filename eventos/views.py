@@ -167,7 +167,7 @@ def participar(request, id_event):
 
     if not event.free:
         if need_set_age(request, user):
-            return redirect('profile')
+            return redirect('perfil')
         
         elif user.is_minor():
             messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
@@ -224,7 +224,7 @@ def participando_solicitacoes(request):
 
 
 @login_required
-def leave_event(request, event_id, render_solicitations=0):
+def deixar_evento(request, event_id, render_solicitations=0):
     event = Event.objects.get(id=event_id)
     participando_url_redirect = reverse('participando', args=[render_solicitations])
 

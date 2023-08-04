@@ -99,7 +99,7 @@
 
             <a href="{% url 'ver_mais' event.id %}" class="cta-button btn-inline btn-edit">Detalhes</a>
             {% if not event.has_passed %}
-              <a href="{% url 'leave_event' event.id render_solicitations %}" class="cta-button btn-inline btn-leave">
+              <a href="{% url 'deixar_evento' event.id render_solicitations %}" class="cta-button btn-inline btn-leave">
                 {% if not render_solicitations %}
                 Sair
                 {% else %}
