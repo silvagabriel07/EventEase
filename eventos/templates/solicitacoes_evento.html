@@ -63,18 +63,20 @@
                         <p class="card-text d-inline {{ solicitation.status }}" >{{ solicitation.get_status_display }}</p>
                       </div>
                       <div class="col-4 text-right">
-                        {% if not solicitation.status == 'r' and not solicitation.status == 'a' %}
-                          <a class="btn btn-danger" href="{% url 'rejeitar_solicitacao' solicitation.event.id solicitation.user.id %}">Rejeitar</a>
-                        {% endif %}
-                        {% if not solicitation.status == 'a' %}
-                          <a class="btn btn-success" href="{% url 'aceitar_solicitacao' solicitation.event.id solicitation.user.id %}">Aceitar</a>
+                        {% if not solicitation.event.has_passed %}
+                          {% if not solicitation.status == 'r' and not solicitation.status == 'a' %}
+                            <a class="btn btn-danger" href="{% url 'rejeitar_solicitacao' solicitation.event.id solicitation.user.id %}">Rejeitar</a>
+                          {% endif %}
+                          {% if not solicitation.status == 'a' %}
+                            <a class="btn btn-success" href="{% url 'aceitar_solicitacao' solicitation.event.id solicitation.user.id %}">Aceitar</a>
+                          {% endif %}
                         {% endif %}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </div>  
           {% empty %}
           <div class="row">
             <h2>Nenhuma solicitação encontrada.</h2>

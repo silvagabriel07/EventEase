@@ -65,7 +65,7 @@
       <div class="row gy-4 posts-list">
         {% for event in events %}
         <div class="col-xl-4 col-md-6 custom-card">
-          <article class="article-{{event.status_solicitation}}">
+          <article class="{% if not event.has_passed %}article-{{event.status_solicitation}} {% else %} has_passed{% endif %}">
             <div class="post-img">
               <img src="{{ event.event_banner.url }}" alt="" class="img-fluid custom-img-fluid">
             </div>
@@ -86,6 +86,8 @@
 
             <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
             <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>
+            {% if event.has_passed %}<p style="color: red;">Evento acabou ontem...</p>{% endif %}
+
             <p class="n-participants"><a class="link" style="text-decoration: none;" href="{% url 'participantes' event.id %}"><i class="bi bi-person-fill"></i> {{ event.qtd_participants }}</a></p>
             <div class="d-flex align-items-center">
               <div class="post-meta">
@@ -96,13 +98,16 @@
             </div><br>
 
             <a href="{% url 'ver_mais' event.id %}" class="cta-button btn-inline btn-edit">Detalhes</a>
-            <a href="{% url 'leave_event' event.id render_solicitations %}" class="cta-button btn-inline btn-leave">
-              {% if not render_solicitations %}
-              Sair
-              {% else %}
-              Remover
-              {% endif %}
-            </a>
+            {% if not event.has_passed %}
+              <a href="{% url 'leave_event' event.id render_solicitations %}" class="cta-button btn-inline btn-leave">
+                {% if not render_solicitations %}
+                Sair
+                {% else %}
+                Remover
+                {% endif %}
+              </a>
+            {% endif %}
+            
           </article>
         </div>
 

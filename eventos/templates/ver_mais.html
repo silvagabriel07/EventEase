@@ -33,61 +33,65 @@
         </div>
     </div>
     <div class="mb-3">
-        <label class="label-event">Categoria:</label> 
         <div class="value-event">
-            <p>{{ event.category }}</p>
+        <label class="label-event">Categoria:</label> 
+            {{ event.category }}
         </div>
     </div>
 
-    <div class="mb-3">
+    <div class="mb-3" >
         <a class="link" style="text-decoration: none;" href="{% url 'participantes' event.id %}">
-            <label class="label-event"><i class="bi bi-person-fill"></i> Participantes:</label> 
             <div class="value-event">
-                <p>{{ event.qtd_participants }}</p>
+                <label class="label-event" style="cursor: pointer;"><i class="bi bi-person-fill"></i> Participantes: {{ event.qtd_participants }}</label> 
             </div>
         </a>
     </div>
 
     <div class="mb-3">
-        <label class="label-event">Data e Hora de Início:</label> 
         <div style="margin-right: 10px;" class="value-event">
+        <label class="label-event">Data e Hora de Início:</label> 
+
             <p>{{ event.start_date_time }}</p>
         </div>
-        <label class="label-event">Fim do Evento:</label> 
-        <div class="value-event">
-            <p>{{ event.final_date_time }}</p>
+        <div style="margin-right: 10px;" class="value-event">
+            <label class="label-event">Fim do Evento:</label> 
+                <p>{{ event.final_date_time }}</p>
         </div>
     </div>
     <div class="mb-3">
-        <label class="label-event">Privado:</label>
-        {% if event.private == True %}
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-        </svg>
-        {% else %}
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
-            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
-          </svg>
-        {% endif %}
+        <div style="margin-right: 10px;" class="value-event">
+            <label class="label-event">Privado:</label>
+            {% if event.private == True %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </svg>
+            {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+            </svg>
+            {% endif %}
+        </div>
         <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Se é necessário solicitar um pedido para participar do evento.</div>
     </div>
     <div class="mb-3">
-        <label class="label-event">Livre:</label>
-        {% if event.free == True %}
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-        </svg>
-        {% else %}
-        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
-            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
-          </svg>          
-      {% endif %}
+        <div style="margin-right: 10px;" class="value-event">
+            <label class="label-event">Livre:</label>
+            {% if event.free == True %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </svg>
+            {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="37" fill="currentColor" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+            </svg>          
+            {% endif %}
+        </div>
       <div style="color: rgb(159, 159, 159);" id="titlehelp" class="form-text">Se o evento for para todas as idades.</div>
 
 
     </div>
     <hr>
-        {% if request.user.is_authenticated %}
+        {% if request.user.is_authenticated and not event.has_passed %}
             {% if is_user_participant %}
                 <button disabled style="padding-left: 50px; padding-right: 50px; background-color: #f47d6a;" class="btn" href="#">Já participa</button>
             {% else %}
@@ -114,12 +118,13 @@
                 {% endif %}
             {% endif %}
         {% else %}
-
-            {% if event.private %}
-                <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'account_login' %}">Solicitar Participação</a>
-            {% else %}
-                <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'account_login' %}">Participação</a>
-            {% endif %} 
+            {% if not event.has_passed %}
+                {% if event.private %}
+                    <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'account_login' %}">Solicitar Participação</a>
+                {% else %}
+                    <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'account_login' %}">Participar</a>
+                {% endif %} 
+            {% endif %}
         {% endif %}
 
 </div>

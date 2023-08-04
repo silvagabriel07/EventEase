@@ -22,7 +22,7 @@
         </ul>
       {% endif %}
         <br>
-      <h1><u>{{ event_title }}</u> - Participantes</h1>
+      <h1><u>{{ event.title }}</u> - Participantes</h1>
       <p style="float: right;"><i title="Quantidade total de participantes deste evento" style=" font-size: 26px; text-decoration: none;" class="bi bi-person-fill"></i> {{ qtd_participants }}</p> <br>
       <hr><br>
       {% for participant in participants %}
@@ -38,9 +38,9 @@
                       <p class="card-text d-inline texts-container" style="margin-right: 2rem; margin-left: 0;">{{ participant.username }}</p>
                       <p class="card-text d-inline" ></p>
                     </div>
-                    {% if user_is_organizer %}
+                    {% if user_is_organizer and not event.has_passed %}
                         <div class="col-4 text-right">
-                            <a class="btn btn-danger" href="{% url 'remover_participante' event_id participant.id %}">Expulsar</a>
+                            <a class="btn btn-danger" href="{% url 'remover_participante' event.id participant.id %}">Expulsar</a>
                         </div>
                     {% endif %}
                   </div>

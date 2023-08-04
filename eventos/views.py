@@ -10,6 +10,7 @@ from .models import Solicitation
 from account_manager.utils import need_set_age
 from account_manager.models import User
 from .utils import user_is_organizer
+from datetime import datetime, timedelta
 
 # Create your views here.
 @login_required
@@ -39,9 +40,12 @@ def editar_evento(request, event_id):
     event = Event.objects.filter(id=event_id).first()
     if not user_is_organizer(request, event): 
         return redirect('organizando')
+    if event.has_passed():
+        messages.add_message(request, constants.ERROR, f'Não é possível editar o evento "{event.title}", pois ele já passou.')
+        return redirect('organizando')
     else:
         event_banner = event.event_banner
-        if request.method == 'POST':    
+        if request.method == 'POST':
             form = EventForm(request.POST, request.FILES, instance=event)
             if form.is_valid():
                 form.save()
@@ -59,6 +63,7 @@ def solicitacoes_evento(request, event_id):
 
     if not user_is_organizer(request, event): 
         return redirect('organizando')
+
     else:
         search = request.GET.get('search-input')
         status_select = request.GET.get('status_select', 'w')
@@ -87,28 +92,37 @@ def participantes(request, event_id):
     participants = event.participants.all()
     qtd_participants = event.qtd_participants
     is_organizer = user_is_organizer(request, event, message=False)
-    return render(request, 'participantes.html', {'participants': participants, 'event_title': event.title, 'event_id': event.id,'user_is_organizer': is_organizer, 'qtd_participants': qtd_participants})
+    return render(request, 'participantes.html', {'participants': participants, 'event': event ,'user_is_organizer': is_organizer, 'qtd_participants': qtd_participants})
+
 
 @login_required
 def remover_participante(request, event_id, participant_id):
     event = Event.objects.get(id=event_id)
-
+    
     if not user_is_organizer(request, event):
         return redirect('participantes', args=[event_id])
+    elif event.has_passed():
+        messages.add_message(request, constants.ERROR, f'Não é possível remover usuários do evento "{event.title}", pois ele já passou.')
+        return redirect('organizando')
+
     else:
         if event.remove_user(participant_id):
             messages.add_message(request, constants.SUCCESS, 'Usuário removido com sucesso.')
         else:
-            messages.add_message(request, constants.SUCCESS, f'Algo deu errado ao tentar remover esse usuário do evento {event.title}.')
+            messages.add_message(request, constants.SUCCESS, f'Algo deu errado ao tentar remover esse usuário do evento {event.title}, pois ele já passou.')
         return redirect(reverse('participantes', args=[event_id]))
 
 
 @login_required
 def rejeitar_solicitacao(request, event_id, id_user_solicitation):
     event = Event.objects.filter(id=event_id).first()
-
+    
     if not user_is_organizer(request, event) or not event.private:
         return redirect('organizando')
+    elif event.has_passed():
+        messages.add_message(request, constants.ERROR, f'Não é possível rejeitar solicitações de usuários do evento "{event.title}", pois ele já passou.')
+        return redirect('organizando')
+
     else:
         if event.reject_user(user_id=id_user_solicitation):
             messages.add_message(request, constants.SUCCESS, 'Solicitação <b>rejeitada</b> com sucesso.')
@@ -121,6 +135,10 @@ def aceitar_solicitacao(request, event_id, id_user_solicitation):
     event = Event.objects.filter(id=event_id).first()
     if not user_is_organizer(request, event) or not event.private:
         return redirect('organizando')
+    elif event.has_passed():
+        messages.add_message(request, constants.ERROR, f'Não é possível aceitar solicitações de usuários do evento "{event.title}", pois ele já passou.')
+        return redirect('organizando')
+
     else:
         if event.accept_user(user_id=id_user_solicitation):
             messages.add_message(request, constants.SUCCESS, 'Solicitação <b>aceita</b> com sucesso.')
@@ -135,6 +153,13 @@ def participar(request, id_event):
 
     event = Event.objects.get(id=id_event)
     redirect_event_details = reverse('ver_mais', args=[id_event])
+    
+    if event.has_passed():
+        if event.private:
+            messages.add_message(request, constants.ERROR, f'Não é possível solicitar partipação do evento "{event.title}", pois ele já passou.')
+        else:
+            messages.add_message(request, constants.ERROR, f'Não é possível participar do evento "{event.title}", pois ele já passou.')
+        return redirect(redirect_event_details)
 
     if user.is_user_participant(event):
         messages.add_message(request, constants.ERROR, 'Você já participa deste evento.')
@@ -171,10 +196,10 @@ def participando(request, render_solicitations=0):
     user = request.user
 
     if render_solicitations == 1:
-        events = Event.objects.filter(solicitation__user=user)
+        events = Event.objects.filter(solicitation__user=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
         events = events.annotate(status_solicitation=F('solicitation__status'))
     else:
-        events = Event.objects.filter(participants=user)
+        events = Event.objects.filter(participants=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
     order = request.GET.get('select_order', 'title')
     dec_or_cres = request.GET.get('select_dec_cre', 'crescent')
     
@@ -184,7 +209,7 @@ def participando(request, render_solicitations=0):
         dec_or_cres = '-'
 
     if order == 'num_participants':
-        events = Event.objects.annotate(num_participants=Count('participants')).filter(participants=user) 
+        events = Event.objects.annotate(num_participants=Count('participants')).filter(participants=user)
     
     order = f'{dec_or_cres}{order}'    
     events_sorted = events.order_by(order)
@@ -202,14 +227,22 @@ def participando_solicitacoes(request):
 def leave_event(request, event_id, render_solicitations=0):
     event = Event.objects.get(id=event_id)
     participando_url_redirect = reverse('participando', args=[render_solicitations])
+
     if render_solicitations == 1:
-        solicitation_ = event.solicitation_set.get(user=request.user)
-        solicitation_.delete()
-        messages.add_message(request, constants.SUCCESS, f'Solicitação de participação para o evento <b>{event.title} removida com sucessa</b>')  
+        if event.has_passed():
+            messages.add_message(request, constants.ERROR, f'Não é possível remover a solicitação de um evento que já passou.')
+        else:
+            solicitation_ = event.solicitation_set.get(user=request.user)
+            solicitation_.delete()
+            messages.add_message(request, constants.SUCCESS, f'Solicitação de participação para o evento <b>{event.title} removida com sucessa</b>')  
     else:
-        event.participants.remove(request.user)
-        event.save()
-        messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')
+        if event.has_passed():
+            messages.add_message(request, constants.ERROR, f'Não é possível deixar de participar de um evento que já passou.')
+        else:
+            event.participants.remove(request.user)
+            event.save()
+            messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')
+            
     return redirect(participando_url_redirect)
 
 

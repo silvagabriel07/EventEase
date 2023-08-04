@@ -84,7 +84,7 @@
     <div class="row gy-4 posts-list">
       {% for event in page %}
       <div class="col-xl-4 col-md-6 custom-card">
-        <article>
+        <article class=" {% if event.has_passed %}has_passed{% endif %}">
           <div class="post-img">  
             <img src="{{ event.event_banner.url }}" alt="" class="img-fluid custom-img-fluid">
           </div>
@@ -97,6 +97,8 @@
           </h2>
           <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
           <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>
+          {% if event.has_passed %}<p style="color: red;">Evento acabou ontem...</p>{% endif %}
+
           <p class="n-participants"><a class="link" style="text-decoration: none;" href="{% url 'participantes' event.id %}"><i class="bi bi-person-fill"></i> {{ event.qtd_participants }}</a></p>
           <div class="d-flex align-items-center">
             <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">

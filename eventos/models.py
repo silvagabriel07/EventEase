@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import Count
 from account_manager.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime, timezone
 
 # Create your models here.
 
@@ -33,6 +34,9 @@ class Event(models.Model):
     @property
     def qtd_participants(self):
         return self.participants.count()
+
+    def has_passed(self): 
+        return self.final_date_time < datetime.now().replace(tzinfo=timezone.utc)
 
     def accept_user(self, user_id):
         try:

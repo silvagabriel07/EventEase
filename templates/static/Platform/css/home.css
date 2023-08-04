@@ -101,7 +101,7 @@ p {
 
 .status{
     text-decoration: underline;
-}
+}   
 
 .status label{
     text-decoration: undeline;
@@ -112,4 +112,8 @@ p {
 .n-participants{
     float: right;
     font-size: 17px;
+}
+
+.has_passed{
+    background-color: #E6E6E6;
 }

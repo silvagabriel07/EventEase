@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from eventos.models import Event, Category
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import ProfileForm, PhoneNumberForm
@@ -20,8 +20,9 @@ def explorar_eventos(request):
     select_start_date_time = request.GET.get('select_start_date_time')
     select_private = request.GET.get('select_private')
     select_free = request.GET.get('select_free')
-
-    events = Event.objects.all()
+    data_atual = datetime.now()
+    # para pegar os eventos que já acabaram, com excessão se só se passou um dia depois de sua finalização
+    events = Event.objects.filter(final_date_time__gte=data_atual - timedelta(days=1))
     categories = Category.objects.all()
     
     if search:
@@ -31,7 +32,6 @@ def explorar_eventos(request):
         events = events.filter(category_id=select_category)
 
     if select_start_date_time:
-        data_atual = datetime.now()
         if select_start_date_time == 'today':
             events = events.filter(start_date_time__year=data_atual.year).filter(start_date_time__month=data_atual.month).filter(start_date_time__day=data_atual.day)
         elif select_start_date_time == 'this_month':
