@@ -9,12 +9,21 @@ from account_manager.models import User, PhoneNumber
 from django.contrib.messages import constants
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from notifications.models import Notification
+from django.conf import settings
+
 # Create your views here.
 def home(request):
     num_featured_events = 6
     featured_events = Event.objects.all().annotate(qtd_part=Count('participants')).order_by('-qtd_part')[:num_featured_events]
     for event in featured_events: print(event.qtd_participants)
     return render(request, 'home.html', {'events': featured_events})
+
+
+@login_required
+def notificacoes(request):
+    notifications = Notification.objects.filter(recipient=request.user, unread=True)
+    return render(request, 'notificacoes.html', {'notifications': notifications})
 
 
 def explorar_eventos(request):
@@ -132,3 +141,5 @@ def ver_eventos_organizando(request, user_id):
     user = User.objects.get(id=user_id)
     events_organizing = Event.objects.filter(organizer=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
     return render(request, 'ver_eventos_organizando.html', {'user': user, 'events_organizing': events_organizing})
+
+

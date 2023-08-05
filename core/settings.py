@@ -39,17 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'Platform',
+    'Platform.apps.PlatformConfig',
     'eventos',
     'account_manager',
-
 # apps django-allauth
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # providers
     'allauth.socialaccount.providers.google',
-
+    # # #
+    'notifications',
     
 ]
 
@@ -78,6 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Platform.context_processors.notifications_count',
                 # allauth processor
                 'django.template.context_processors.request',
             ],

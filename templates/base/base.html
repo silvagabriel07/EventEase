@@ -59,7 +59,10 @@
                 </ul>
               </li>
               {% if request.user.is_authenticated %}
-                <li><a style="text-decoration: none;" href="#">Notificações</a></li>
+                <li><a style="text-decoration: none;" href="{% url 'notificacoes' %}">
+                  
+                    <i class="bi bi-bell-fill" style="font-size: 20px;">{% if notifications_count > 0 %}{{ notifications_count }}{% endif %}</i></a></li>
+                  
               {% endif %}
               {% if request.user.is_authenticated %}
                   <li class="dropdown"><a style="text-decoration: none;" href="#"><span><img width="30px" src="{{ request.user.user_img.url }}"></span> <i class="bi bi-chevron-down dropdown-indicator profile-picture"></i></a>
