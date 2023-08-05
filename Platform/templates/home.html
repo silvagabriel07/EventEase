@@ -18,6 +18,8 @@
         {% if not request.user.is_authenticated %}
           <a href="{% url 'account_signup' %}" class="cta-button">Registre-se Agora</a>
           <a href="{% url 'account_login' %}" class="cta-button">Entrar</a>
+        {% else %}
+          <a href="{% url 'explorar_eventos' %}" class="cta-button">Explorar eventos</a>
         {% endif %}
     </div>
   </header>
@@ -33,103 +35,74 @@
   </ul>
 {% endif %}
 
-  <div class="container">
-    <h2 style="color: #f85a40;">Eventos em Destaque</h2>
-    <p>Confira os eventos mais populares e próximos. Para mais, acesse <a href="#">Explorar</a></p>
-  </div>
+<section id="blog" class="blog">
+  <div class="container" data-aos="fade-up">
+    <h2 style="color: #f85a40;"><b>Eventos em Destaque</b></h2>
+    <p>Confira os eventos mais populares. Para mais, acesse <a href="{% url 'explorar_eventos' %}">Explorar</a></p>
 
+    <div class="row gy-4 posts-list">
+      {% for event in events %}
+      <div class="col-xl-4 col-md-6 custom-card">
+        <article class=" {% if event.has_passed %}has_passed{% endif %}">
+          <div class="post-img">  
+            <img src="{{ event.event_banner.url }}" alt="" class="img-fluid custom-img-fluid">
+          </div>
+          <p class="post-category">
+            {{ event.category }}
+          </p>
 
-  <section id="blog" class="blog">
-    <div class="container" data-aos="fade-up">
+          <h2 class="title">
+            <a href="{% url 'ver_mais' event.id %}">{{ event.title }}</a>
+          </h2>
+          <p class="caracteristica-evento">{% if event.free %}Livre{% else %}+18{% endif %}</p>
+          <p class="caracteristica-evento">{% if event.private %}Privado{% else %}Público{% endif %}</p>
+          {% if event.has_passed %}<p style="color: red;">Evento acabou ontem...</p>{% endif %}
 
-      <div class="row gy-4 posts-list">
-
-        <div class="col-xl-4 col-md-6">
-          <article>
-
-            <div class="post-img">
-              <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
+          <p class="n-participants"><a class="link" style="text-decoration: none;" href="{% url 'participantes' event.id %}"><i class="bi bi-person-fill"></i> {{ event.qtd_participants }}</a></p>
+          <div class="d-flex align-items-center">
+            <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
+            <div class="post-meta">
+              <p class="post-author-list">{{ event.organizer }}</p>
+              <p class="post-date"> 
+                <time datetime="{{ event.start_date_time }}">{{ event.start_date_time|date:"d/m/Y" }}</time>
+              </p>
             </div>
+          </div>
+          <a href="{% url 'ver_mais' event.id %}" class="cta-button btn-uniq">Ver mais</a>
+        </article>
+      </div>
 
-            <p class="post-category">Categoria A</p>
+ {% empty %}
+      <h1>Nenhum evento encontrado.</h1>
 
-            <h2 class="title">
-              <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
-            </h2>
-            <p class="caracteristica-evento">Privado</p>
-            <p class="caracteristica-evento">+18</p>
+ {% endfor %}
 
+ <div class="blog-pagination">
+  <ul class="justify-content-center">
 
-            <div class="d-flex align-items-center">
-              <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
-              <div class="post-meta">
-                <p class="post-author-list">Nome Organizador</p>
-                <p class="post-date">
-                  <time datetime="2022-01-01">Jan 1, 2022</time>
-                </p>
-              </div>
-            </div>
+    {% if page.has_previous %}
+      <li><a href="{% url 'explorar_eventos' %}?page={{ page.previous_page_number }}&search={{ request.GET.search }}&select_category={{ request.GET.select_category }}&select_num_participants={{ request.GET.select_num_participants }}&select_start_date_time={{ request.GET.select_start_date_time }}&select_private={{ request.GET.select_private }}&select_free={{ request.GET.select_free }}">Anterior</a></li>
+    {% endif %}
 
-          </article>
-        </div><!-- End post list item -->
+    {% for num in page.paginator.page_range %}
+      {% if num == page.number %}
+        <li class="active"><a href="">{{ page.number }}</a></li>
+      {% else %}
+      <li><a href="{% url 'explorar_eventos' %}?page={{ num }}&search={{ request.GET.search }}&select_category={{ request.GET.select_category }}&select_num_participants={{ request.GET.select_num_participants }}&select_start_date_time={{ request.GET.select_start_date_time }}&select_private={{ request.GET.select_private }}&select_free={{ request.GET.select_free }}">{{ num }}</a></li>
+      {% endif %}
+    {% endfor %}
 
-        <div class="col-xl-4 col-md-6">
-          <article>
+    {% if page.has_next %}
+      <li><a href="{% url 'explorar_eventos' %}?page={{ page.next_page_number }}&search={{ request.GET.search }}&select_category={{ request.GET.select_category }}&select_num_participants={{ request.GET.select_num_participants }}&select_start_date_time={{ request.GET.select_start_date_time }}&select_private={{ request.GET.select_private }}&select_free={{ request.GET.select_free }}">Próxima</a></li>
+    {% endif %}
 
-            <div class="post-img">
-              <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
-            </div>
+  </ul>
+</div><!-- End blog pagination -->
 
-            <p class="post-category">Categoria A</p>
+</div>
+</section><!-- End Blog Section -->
 
-            <h2 class="title">
-              <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
-            </h2>
-            <p class="caracteristica-evento">Privado</p>
-            <p class="caracteristica-evento">+18</p>
+</div>
+</section><!-- End Blog Section -->
 
-
-            <div class="d-flex align-items-center">
-              <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
-              <div class="post-meta">
-                <p class="post-author-list">Nome Organizador</p>
-                <p class="post-date">
-                  <time datetime="2022-01-01">Jan 1, 2022</time>
-                </p>
-              </div>
-            </div>
-
-          </article>
-        </div><!-- End post list item -->
-
-        <div class="col-xl-4 col-md-6">
-          <article>
-
-            <div class="post-img">
-              <img src="assets/img/blog/blog-1.jpg" alt="" class="img-fluid">
-            </div>
-
-            <p class="post-category">Categoria A</p>
-
-            <h2 class="title">
-              <a href="blog-details.html">Dolorum optio tempore voluptas dignissimos</a>
-            </h2>
-            <p class="caracteristica-evento">Privado</p>
-            <p class="caracteristica-evento">+18</p>
-            
-
-
-            <div class="d-flex align-items-center">
-              <img src="assets/img/blog/blog-author.jpg" alt="" class="img-fluid post-author-img flex-shrink-0">
-              <div class="post-meta">
-                <p class="post-author-list">Nome Organizador</p>
-                <p class="post-date">
-                  <time datetime="2022-01-01">Jan 1, 2022</time>
-                </p>
-              </div>
-            </div>
-
-          </article>
-        </div><!-- End post list item -->
-  </section><!-- End Blog Section -->
 {% endblock %}

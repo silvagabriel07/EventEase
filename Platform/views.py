@@ -11,7 +11,11 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+    num_featured_events = 6
+    featured_events = Event.objects.all().annotate(qtd_part=Count('participants')).order_by('-qtd_part')[:num_featured_events]
+    for event in featured_events: print(event.qtd_participants)
+    return render(request, 'home.html', {'events': featured_events})
+
 
 def explorar_eventos(request):
     search = request.GET.get('search', '')
@@ -80,6 +84,7 @@ def explorar_eventos(request):
     
     return render(request, 'explorar_eventos.html', {'page': page, 'categories':  categories, 'value_select_category': select_category})
 
+
 @login_required
 def perfil(request):
     user_img = request.user.user_img
@@ -108,6 +113,7 @@ def perfil(request):
             return redirect('perfil')
         else:
             return render(request, 'perfil.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
+
         
 def ver_perfil(request, user_id):
     user = User.objects.get(id=user_id)
