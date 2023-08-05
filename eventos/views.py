@@ -56,6 +56,14 @@ def editar_evento(request, event_id):
         return render(request, 'editar_evento.html', {'form': form, 'event_banner': event_banner, 'event_id': event.id})
     
 
+def excluir_evento(request, event_id):
+    event = Event.objects.get(id=event_id)
+    if user_is_organizer(request, event=event):
+        event.delete()
+        messages.add_message(request, constants.SUCCESS, f'Evento {event.title} excluído com sucesso.') 
+    return redirect('organizando')
+
+
 @login_required
 def solicitacoes_evento(request, event_id):
     event = Event.objects.filter(id=event_id).first()

@@ -145,11 +145,12 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
-        
             </div>
-            <hr>            
+            <hr>
             <button type="submit" class="btn cta-button">Atualizar</button>
-          </form>
+            {% comment %} O ideal seria fazer um modal com uma mensagem push para confirmação se o usuário tem reqalmente certeza qde que quer excluir o evento {% endcomment %}
+            <a style="float: right;" class="btn btn-danger" href="{% url 'excluir_evento' event_id %}">Excluir evento</a> <br>  
+        </form>
           
     </div>
     
