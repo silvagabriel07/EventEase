@@ -32,7 +32,18 @@
                   <option value="crescent" {% if not request.GET.select_dec_cre or request.GET.select_dec_cre == 'crescent' %}selected{% endif %}>Crescente</option>
                   <option value="decrescent" {% if request.GET.select_dec_cre == 'decrescent' %}selected{% endif %}>Decrescente</option>
               </select> 
-  
+          </div>
+          
+          {% if render_solicitations %}
+            <div class="div-select-filters">
+              <select style="width: 57px;" name="select_status_solicitation" class="filter-select">
+                    <option value="w" {% if not request.GET.select_status_solicitation or request.GET.select_status_solicitation == 'w' %}selected{% endif %}>Aguardando</option>
+                    <option value="a" {% if request.GET.select_status_solicitation == 'a' %}selected{% endif %}>Aceita</option>
+                    <option value="r" {% if request.GET.select_status_solicitation == 'r' %}selected{% endif %}>Rejeitada</option>
+                </select>
+            </div>
+          {% endif %}
+
             <button style="padding: 4px; width: 50px;" class="cta-button" type="submit">ir »</button>
             
             <div class="div-btns-solicitations" >

@@ -1,8 +1,8 @@
 from django.db import models
-from django.db.models import Count
 from account_manager.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime, timezone
+from django.utils import timezone as zone
 
 # Create your models here.
 
@@ -23,8 +23,8 @@ class Event(models.Model):
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)  
     private = models.BooleanField(help_text='definir como True torna preciso a aceitação da requisição de participação')
     free = models.BooleanField(help_text='definir como True significa que é um evento livre, sem restrição de idade')
-    start_date_time = models.DateTimeField()
-    final_date_time = models.DateTimeField()
+    start_date_time = models.DateTimeField(default=zone.now)
+    final_date_time = models.DateTimeField(default=zone.now)
     event_banner = models.FileField(upload_to='event_banners', default='/default_event_banner.png')
     
     @property
@@ -35,7 +35,7 @@ class Event(models.Model):
     def qtd_participants(self):
         return self.participants.count()
 
-    def has_passed(self): 
+    def has_passed(self):
         return self.final_date_time < datetime.now().replace(tzinfo=timezone.utc)
 
     def accept_user(self, user_id):

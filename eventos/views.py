@@ -196,13 +196,15 @@ def participando(request, render_solicitations=0):
     user = request.user
 
     if render_solicitations == 1:
+        solicitation_filter = request.GET.get('select_status_solicitation', 'w')
         events = Event.objects.filter(solicitation__user=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
-        events = events.annotate(status_solicitation=F('solicitation__status'))
+        events = events.annotate(status_solicitation=F('solicitation__status')).filter(status_solicitation=solicitation_filter)
+
     else:
         events = Event.objects.filter(participants=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
     order = request.GET.get('select_order', 'title')
     dec_or_cres = request.GET.get('select_dec_cre', 'crescent')
-    
+
     if dec_or_cres == 'crescent':   
         dec_or_cres = ''
     else:
@@ -210,6 +212,7 @@ def participando(request, render_solicitations=0):
 
     if order == 'num_participants':
         events = Event.objects.annotate(num_participants=Count('participants')).filter(participants=user)
+        
     
     order = f'{dec_or_cres}{order}'    
     events_sorted = events.order_by(order)

@@ -27,7 +27,10 @@
     </div>
 
     <div class="mb-3">
+        {% if event.has_passed == True %}
         <p style="color: red; font-size: larger;">Evento já passou...</p>
+        {% endif %}
+
         <label class="label-event">Descrição:</label>
         <div class="value-event value-description">
             <p>{{ event.description }}</p>
@@ -97,8 +100,8 @@
             </a>
         </div>
     </div>
-
     <hr>
+    
         {% if request.user.is_authenticated and not event.has_passed %}
             {% if is_user_participant %}
                 <button disabled style="padding-left: 50px; padding-right: 50px; background-color: #f47d6a;" class="btn" href="#">Já participa</button>
