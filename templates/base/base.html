@@ -59,7 +59,7 @@
                 </ul>
               </li>
               {% if request.user.is_authenticated %}
-                <li><a style="text-decoration: none;" href="{% url 'notificacoes' %}">
+                <li><a style="text-decoration: none;" href="{% url 'notifications:unread' %}">
                   
                     <i class="bi bi-bell-fill" style="font-size: 20px;">{% if notifications_count > 0 %}{{ notifications_count }}{% endif %}</i></a></li>
                   

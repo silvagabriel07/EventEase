@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from eventos.models import Event, Category
 from datetime import datetime, timedelta
 from django.db.models import Count
@@ -18,12 +18,6 @@ def home(request):
     featured_events = Event.objects.all().annotate(qtd_part=Count('participants')).order_by('-qtd_part')[:num_featured_events]
     for event in featured_events: print(event.qtd_participants)
     return render(request, 'home.html', {'events': featured_events})
-
-
-@login_required
-def notificacoes(request):
-    notifications = Notification.objects.filter(recipient=request.user, unread=True)
-    return render(request, 'notificacoes.html', {'notifications': notifications})
 
 
 def explorar_eventos(request):

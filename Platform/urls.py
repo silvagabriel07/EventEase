@@ -1,5 +1,6 @@
-from django.urls import path, re_path, include
+from django.urls import path, include, re_path
 from . import views
+from notifications.views import mark_as_read
 
 urlpatterns = [
     path('home/', views.home, name='home'),
@@ -8,7 +9,6 @@ urlpatterns = [
     path('ver_perfil/<int:user_id>/', views.ver_perfil, name='ver_perfil'),
     path('ver_eventos_participando/<int:user_id>/', views.ver_eventos_participando, name='ver_eventos_participando'),
     path('ver_eventos_organizando/<int:user_id>/', views.ver_eventos_organizando, name='ver_eventos_organizando'),
-    re_path(r'^inbox/notifications/', include('notifications.urls', namespace='notifications')),
-    path('notificacoes/', views.notificacoes, name='notificacoes'),
+    re_path('notificacoes/', include('notifications.urls', namespace='notifications')),
 
 ]

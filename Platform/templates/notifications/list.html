@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block 'head' %}
+  <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
+  <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
+{% endblock 'head' %}
+
+{% block 'title' %}EventEase - Notificações{% endblock %}
+
+{% block 'body' %}
+
+<div class="container custom-container">
+    
+    <h1 style="font-size: 30px;"><b>Notificações</b></h1>
+
+    <hr>
+    <ul class="notifications">
+      {% for notice in notifications %}
+          {% include 'notifications/notice.html' %}
+      {% empty %}
+          <h2>Nenhuma notificação não lida.</h2>
+      {% endfor %}
+    </ul>
+  </div>
+  <br>
+{% endblock 'body' %}
