@@ -27,6 +27,27 @@ class Event(models.Model):
     final_date_time = models.DateTimeField(default=zone.now)
     event_banner = models.FileField(upload_to='event_banners', default='/default_event_banner.png')
     
+    banned_users = models.ManyToManyField(User, related_name='banned_events', blank=True)
+    
+    def ban_user(self, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+            self.banned_users.add(user)
+            return True
+        except ObjectDoesNotExist:
+            return False        
+        
+    def unban_user(self, user_id):
+        try:
+            user = User.objects.get(id=user_id)
+            self.banned_users.remove(user)
+            return True
+        except ObjectDoesNotExist:
+            return False        
+    
+    def is_banned_user(self, user_id):
+        return self.banned_users.filter(id=user_id).exists()
+    
     @property
     def qtd_solicitations(self):
         return self.solicitation_set.filter(status='w').count()
@@ -45,7 +66,6 @@ class Event(models.Model):
             solicitation.status = 'a'
             solicitation.save()
             self.participants.add(user)
-
             return True
         except ObjectDoesNotExist:
             return False
@@ -72,8 +92,6 @@ class Event(models.Model):
     def __str__(self):
         return self.title
     
-    
-
 
 class Solicitation(models.Model):
     STATUS = (

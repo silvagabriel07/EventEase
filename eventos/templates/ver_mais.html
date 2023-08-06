@@ -119,7 +119,7 @@
                         {% if request.user.id == event.organizer.id %}
                             <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'participar' event.id %}">Participar</a>
                         {% else %}
-                            {% if event.private %}
+                            {% if event.private or is_banned_user %}
                                 <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'participar' event.id %}">Solicitar Participação</a>
                             {% else %}
                                 <a style="padding-left: 50px; padding-right: 50px;" class="btn cta-button" href="{% url 'participar' event.id %}">Participar</a>

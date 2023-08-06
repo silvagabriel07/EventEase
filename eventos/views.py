@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .models import Event
+from .models import Event, Solicitation
 from django.db.models import Count, F
 from .forms import EventForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.messages import constants
-from .models import Solicitation
 from account_manager.utils import need_set_age
+from account_manager.models import User
 from .utils import user_is_organizer
 from datetime import datetime, timedelta
 
@@ -103,7 +103,7 @@ def rejeitar_solicitacao(request, event_id, id_user_solicitation):
 @login_required
 def aceitar_solicitacao(request, event_id, id_user_solicitation):
     event = Event.objects.filter(id=event_id).first()
-    if not user_is_organizer(request, event) or not event.private:
+    if not user_is_organizer(request, event):
         return redirect('organizando')
     elif event.has_passed():
         messages.add_message(request, constants.ERROR, f'Não é possível aceitar solicitações de usuários do evento "{event.title}", pois ele já passou.')
@@ -111,6 +111,7 @@ def aceitar_solicitacao(request, event_id, id_user_solicitation):
 
     else:
         if event.accept_user(user_id=id_user_solicitation):
+            event.unban_user(id_user_solicitation)
             messages.add_message(request, constants.SUCCESS, 'Solicitação <b>aceita</b> com sucesso.')
         else:
             messages.add_message(request, constants.WARNING, 'Usuário em questão não solicitou participação para este evento')
@@ -125,8 +126,9 @@ def ver_mais(request, id_event):
     if request.user.is_authenticated:
         is_user_participant = request.user.is_user_participant(event)
         user_already_solicitated = request.user.user_already_solicitated(event)
-        
-    return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated})
+        is_banned_user = event.is_banned_user(request.user.id)
+
+    return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated,  'is_banned_user': is_banned_user})
 
 
 def participantes(request, event_id):
@@ -148,6 +150,10 @@ def remover_participante(request, event_id, participant_id):
 
     else:
         if event.remove_user(participant_id):
+            event.ban_user(participant_id)
+            participant_user = User.objects.get(id=participant_id)
+            if Solicitation.objects.filter(user=participant_user, event=event).exists():
+                Solicitation.objects.get(user=participant_user, event=event).delete()
             messages.add_message(request, constants.SUCCESS, 'Usuário removido com sucesso.')
         else:
             messages.add_message(request, constants.SUCCESS, f'Algo deu errado ao tentar remover esse usuário do evento {event.title}, pois ele já passou.')
@@ -158,7 +164,7 @@ def remover_participante(request, event_id, participant_id):
 @login_required
 def participar(request, id_event):
     user = request.user
-
+    
     event = Event.objects.get(id=id_event)
     redirect_event_details = reverse('ver_mais', args=[id_event])
     
@@ -176,16 +182,18 @@ def participar(request, id_event):
     if not event.free:
         if need_set_age(request, user):
             return redirect('perfil')
-        
+
         elif user.is_minor():
             messages.add_message(request, constants.ERROR, 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
             return redirect(redirect_event_details)
-                
+
     if not event.private or user_is_organizer(request, event, message=False):
+        if not event.is_banned_user(user.id):
             event.participants.add(user.id)
             event.save()
             messages.add_message(request, constants.SUCCESS, f'Você está participando do evento <b>{event.title}</b>')
-    else:
+            
+    if event.private or event.is_banned_user(user.id):
         # solicitar a participação do evento privado 
         try:
             solicitation = Solicitation(

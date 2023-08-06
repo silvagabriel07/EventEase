@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from eventos.models import Event, Category
 from datetime import datetime, timedelta
 from django.db.models import Count
@@ -16,7 +16,6 @@ from django.conf import settings
 def home(request):
     num_featured_events = 6
     featured_events = Event.objects.all().annotate(qtd_part=Count('participants')).order_by('-qtd_part')[:num_featured_events]
-    for event in featured_events: print(event.qtd_participants)
     return render(request, 'home.html', {'events': featured_events})
 
 
