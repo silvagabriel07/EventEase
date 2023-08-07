@@ -61,4 +61,9 @@ def send_participant_notification(sender, instance, action, pk_set, **kwargs):
         extra_data = {'style': 'removed'}
         for user_id in pk_set:
             user = User.objects.get(id=user_id)
-            notify.send(instance.organizer, recipient=user, verb=f'Você foi removido do evento <a class="link" href="{ver_mais_url}">'+instance.title+'</a>.', target=instance, extra_data=extra_data)
+            notify.send(instance.organizer, recipient=user, verb=f'<u>Você foi removido</u> do evento <a class="link" href="{ver_mais_url}">'+instance.title+'</a>.', target=instance, extra_data=extra_data)
+    if action == 'post_add':
+        extra_data = {'style': 'added'}
+        for user_id in pk_set:
+            user = User.objects.get(id=user_id)
+            notify.send(user, recipient=instance.organizer, verb=f'O usuário <u>{user.username} entrou</u> no seu evento <a class="link" href="{ver_mais_url}">'+instance.title+'</a>.', extra_data=extra_data)

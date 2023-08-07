@@ -128,7 +128,7 @@ h1{
 }
 
 .ntf-a{
-    background: #63d45b;
+    background: #65f55b;
 }
 
 .ntf-r{
@@ -137,4 +137,8 @@ h1{
 
 .ntf-removed{
     background: #e81313;
+}
+
+.ntf-added{
+    background: #4eed93;
 }
