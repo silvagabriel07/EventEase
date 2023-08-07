@@ -12,10 +12,11 @@
 
 <div class="container custom-container">
     
-    <h1 style="font-size: 30px;"><b>Notificações</b></h1>
-
+    <h1 style="font-size: 30px; float: ;"><b>Notificações</b></h1>
     <hr>
     <ul class="notifications">
+      <a href="{% url 'notifications:mark_all_as_read' %}" class="cta-button"><i class="bi bi-eye-fill"></i> Marcar todas como lidas</a>
+      <br><br>
       {% for notice in notifications %}
           {% include 'notifications/notice.html' %}
       {% empty %}

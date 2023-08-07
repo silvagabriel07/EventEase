@@ -127,11 +127,14 @@ h1{
     color: black;
 }
 
-.solicitation-a{
+.ntf-a{
     background: #63d45b;
 }
 
-.solicitation-r{
-    background: #e81313;
+.ntf-r{
+    background: #f70a4d;
 }
 
+.ntf-removed{
+    background: #e81313;
+}

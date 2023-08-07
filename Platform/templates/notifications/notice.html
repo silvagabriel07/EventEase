@@ -1,8 +1,8 @@
-<div class="alert alert-block {% if notice.data.extra_data.solicitation %}solicitation-{{ notice.data.extra_data.solicitation }}{% else %}alert-{{ notice.level }} {% endif %}">
+<div class="alert alert-block {% if notice.data.extra_data.style %}ntf-{{ notice.data.extra_data.style }}{% else %}alert-{{ notice.level }} {% endif %}">
   <a class="close pull-right" href="{% url 'notifications:mark_as_read' notice.slug %}">
     <i class="icon-close"></i>
   </a>
-    <div class="card-body">
+    <div class="card-body"> 
       <h5 class="card-title"><a class="" href="{% url 'ver_perfil' notice.actor.id %}">{{ notice.actor }}</a></h5>   
       <a style="float: right; padding-bottom: 3px; padding-right: 14px; padding-left: 14px;" title="Marcar como lida" type="btn cta-button" href="{% url 'notifications:mark_as_read' notice.slug %}" class="btn cta-button"><i class="bi bi-eye-fill"></i> </a>
       
