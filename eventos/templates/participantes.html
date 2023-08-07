@@ -23,6 +23,19 @@
       {% endif %}
         <br>
       <h1><u>{{ event.title }}</u> - Participantes</h1>
+      <form action="" method="get"> {% csrf_token %}
+        <div class="row">
+          <div class="col-9">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Pesquisar usuário..." name="search-input">
+              <div class="input-group-append">
+                  <button class="btn btn-primary" type="submit">Pesquisar</button>
+                  <a class="btn btn-secondary" href=".">Limpar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
       <p style="float: right;"><i title="Quantidade total de participantes deste evento" style=" font-size: 26px; text-decoration: none;" class="bi bi-person-fill"></i> {{ qtd_participants }}</p> <br>
       <hr><br>
       {% for participant in participants %}

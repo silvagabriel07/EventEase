@@ -71,7 +71,7 @@ def solicitacoes_evento(request, event_id):
     if not user_is_organizer(request, event): 
         return redirect('organizando')
 
-    else:
+    else:        
         search = request.GET.get('search-input')
         status_select = request.GET.get('status_select', 'w')
         
@@ -132,11 +132,16 @@ def ver_mais(request, id_event):
 
 
 def participantes(request, event_id):
+    search = request.GET.get('search-input')
     event = Event.objects.get(id=event_id)
     participants = event.participants.all()
+    if search:
+        participants = participants.filter(username__icontains=search)
+    
     qtd_participants = event.qtd_participants
     is_organizer = user_is_organizer(request, event, message=False)
     return render(request, 'participantes.html', {'participants': participants, 'event': event ,'user_is_organizer': is_organizer, 'qtd_participants': qtd_participants})
+
 
 @login_required
 def remover_participante(request, event_id, participant_id):

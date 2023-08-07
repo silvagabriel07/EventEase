@@ -43,11 +43,11 @@
                   <option value="a" {% if request.GET.status_select == 'a' %}selected{% endif %}>Aceitas</option>
                   <option value="r" {% if request.GET.status_select == 'r' %}selected{% endif %}>Rejeitadas</option>
               </select>
+            </div>
           </div>
         </div>
-      </div>
     </form>
-  
+    <p style="float: right;"><i title="Quantidade total de solicitações aguardando por resposta deste evento" style=" font-size: 26px; text-decoration: none;" class="bi bi-person-fill"></i> {{ solicitations.count }}</p> <br>
         <hr><br>
         {% for solicitation in solicitations %}
             <div class="row">
