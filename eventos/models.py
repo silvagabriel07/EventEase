@@ -46,7 +46,10 @@ class Event(models.Model):
             return False        
     
     def is_banned_user(self, user_id):
-        return self.banned_users.filter(id=user_id).exists()
+        try:
+            return self.banned_users.filter(id=user_id).exists()
+        except ObjectDoesNotExist:
+            return False
     
     @property
     def qtd_solicitations(self):
@@ -54,7 +57,7 @@ class Event(models.Model):
     
     @property
     def qtd_participants(self):
-        return self.participants.count()
+        return self.participants.all().count()
 
     def has_passed(self):
         return self.final_date_time < datetime.now().replace(tzinfo=timezone.utc)

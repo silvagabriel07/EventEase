@@ -9,8 +9,6 @@ from account_manager.models import User, PhoneNumber
 from django.contrib.messages import constants
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from notifications.models import Notification
-from django.conf import settings
 
 # Create your views here.
 def home(request):
@@ -27,7 +25,7 @@ def explorar_eventos(request):
     select_private = request.GET.get('select_private')
     select_free = request.GET.get('select_free')
     data_atual = datetime.now()
-    # para pegar os eventos que já acabaram, com excessão se só se passou um dia depois de sua finalização
+    # para pegar os eventos que já acabaram, com excessão se passou um dia depois de sua finalização
     events = Event.objects.filter(final_date_time__gte=data_atual - timedelta(days=1))
     categories = Category.objects.all()
     

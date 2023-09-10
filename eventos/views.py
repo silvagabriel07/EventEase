@@ -121,8 +121,7 @@ def aceitar_solicitacao(request, event_id, id_user_solicitation):
 
 def ver_mais(request, id_event):
     event = Event.objects.get(id=id_event)
-    is_user_participant = False
-    user_already_solicitated = False
+    user_already_solicitated = is_user_participant = is_banned_user = False
     if request.user.is_authenticated:
         is_user_participant = request.user.is_user_participant(event)
         user_already_solicitated = request.user.user_already_solicitated(event)
