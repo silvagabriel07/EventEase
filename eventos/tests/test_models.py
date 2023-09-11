@@ -1,8 +1,10 @@
 from django.test import TestCase
 from ..models import Event, Category, User, Solicitation
 from datetime import datetime, timedelta, timezone
+from django.db.utils import IntegrityError
 
 class TestModelEvent(TestCase):
+    
     def setUp(self) -> None:
         self.any_user = User.objects.create_user(
             username='user 2', 
@@ -18,7 +20,7 @@ class TestModelEvent(TestCase):
             idade=17, 
         )
         
-        self.any_category = Category.objects.create(
+        any_category = Category.objects.create(
             name='Categoria 1'
             )
         
@@ -137,4 +139,42 @@ class TestModelEvent(TestCase):
         self.assertEqual(self.any_event.qtd_participants, 0)
     
     
+
+class TestModelSolicitation(TestCase):
     
+    def setUp(self) -> None:
+        self.any_user = User.objects.create(
+            username='user qualquer',
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=19, 
+        )
+        organizer = User.objects.create(
+            username='user qualquer',
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=19, 
+        )
+        any_category = Category.objects.create(
+            name='Categoria 1'
+            )
+        
+        start_date_time = datetime.now().replace(tzinfo=timezone.utc) + timedelta(days=1) 
+        final_date_time = start_date_time + timedelta(days=20)
+
+        self.any_event = Event.objects.create(
+            title='Titulo 1', 
+            description='descrition etc', 
+            organizer=organizer, 
+            category=any_category, 
+            private=False, 
+            free=False,             
+            start_date_time=start_date_time, 
+            final_date_time=final_date_time, 
+        )
+    
+    def test_user_and_event_is_unique_toguether(self):
+        Solicitation.objects.create(user=self.any_user, event=self.any_event)
+        with self.assertRaises(IntegrityError):
+            Solicitation.objects.create(user=self.any_user, event=self.any_event)
+
