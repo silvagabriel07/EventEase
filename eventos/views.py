@@ -69,13 +69,14 @@ def excluir_evento(request, event_id):
 def solicitacoes_evento(request, event_id):
     event = Event.objects.filter(id=event_id).first()
 
-    if not user_is_organizer(request, event): 
+    if not user_is_organizer(request, event):
         return redirect('organizando')
 
     else:        
         search = request.GET.get('search-input')
         status_select = request.GET.get('status_select', 'w')
-        
+        if status_select not in ('w', 'a', 'r'):
+            status_select = 'w'
         solicitations = event.solicitation_set.all()    
         if search:
             solicitations = solicitations.filter(user__username__icontains=search)

@@ -1,7 +1,7 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from ..views import User
-from ..models import Event, Category
+from ..models import Event, Category, Solicitation
 from django.urls import reverse
 from datetime import datetime, timezone, timedelta
 from django.contrib import messages
@@ -189,7 +189,7 @@ class TestViewEditarEvento(TestCase):
         self.assertEqual(len(msgs), 1)
         self.assertEqual(str(msgs[0]), f'Não é possível editar o evento "{self.any_event.title}", pois ele já passou.')
     
-    def test_editar_evento_successful_get(self):
+    def test_editar_evento_ok_get(self):
         response = self.client.get(reverse('editar_evento', args=[self.any_event.id]))
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'editar_evento.html')
@@ -263,7 +263,7 @@ class TestViewExcluirEvento(TestCase):
         response = self.client.get(reverse('excluir_evento', args=[self.any_event.id]))
         self.assertTrue(Event.objects.filter(id=self.any_event.id).exists())
 
-    def test_excluir_evento_successful_get(self):
+    def test_excluir_evento_ok_get(self):
         self.any_user.is_active = True
         self.any_user.save()
         self.client.login(email='email@gmail.com', password='senhaqualquer12')
@@ -273,4 +273,171 @@ class TestViewExcluirEvento(TestCase):
         self.assertEqual(len(msgs), 1)
         self.assertEqual(str(msgs[0]), f'Evento {self.any_event.title} excluído com sucesso.')
 
+
+class TestViewSolicitacoesEvento(TestCase):
+    
+    def setUp(self) -> None:
+        self.start_date_time = datetime.now() + timedelta(days=2)
+        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+        )
+        Category.objects.create(name='Categoria A')
+        self.any_event = Event.objects.create(
+            title='Titulo 1', 
+            description='descrition etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=self.start_date_time, 
+            final_date_time=self.final_date_time, 
+        )
+
+    
+    def test_user_is_not_the_event_organizer(self):
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=18, 
+        )
+        another_user.is_active = True
+        another_user.save()
+
+        self.client.login(email='email2@gmail.com', password='senhaqualquer12')
+        response = self.client.get(reverse('solicitacoes_evento', args=[self.any_event.id]))
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('organizando'))
+    
+    def test_solicitacoes_event_ok_get(self):
+        self.any_user.is_active = True
+        self.any_user.save()
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        response = self.client.get(reverse('solicitacoes_evento', args=[self.any_event.id]))
+        self.assertEqual(response.status_code, 200)        
+    
+    def test_solicitacoes_event_ok_rendered_solicitations(self):
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=34, 
+        )
+        another_user_2 = User.objects.create_user(
+            username='user 3', 
+            password='senhaqualquer12', 
+            email='email3@gmail.com', 
+            idade=18, 
+        )
+        Solicitation.objects.create(user=another_user_2, event=self.any_event)
+        Solicitation.objects.create(user=another_user, event=self.any_event)
+        
+        self.any_user.is_active = True
+        self.any_user.save()
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('solicitacoes_evento', args=[self.any_event.id]))
+        any_event_solicitations = Solicitation.objects.filter(event=self.any_event)
+        rendered_solicitations = response.context['solicitations']
+        self.assertEqual(list(rendered_solicitations), list(any_event_solicitations))
+        
+    def test_search_input_solicitacoes_event_ok(self):
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=34, 
+        )
+        another_user_2 = User.objects.create_user(
+            username='user 3', 
+            password='senhaqualquer12', 
+            email='email3@gmail.com', 
+            idade=18, 
+        )
+        Solicitation.objects.create(user=another_user_2, event=self.any_event)
+        Solicitation.objects.create(user=another_user, event=self.any_event)
+        
+        self.any_user.is_active = True
+        self.any_user.save()
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(path=reverse('solicitacoes_evento', args=[self.any_event.id]), data={'search-input': 'user 2'})
+        any_event_solicitations = Solicitation.objects.filter(event=self.any_event, user=another_user, status='w')
+        rendered_solicitations = response.context['solicitations']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(rendered_solicitations), list(any_event_solicitations))
+
+    def test_search_select_status_solicitacoes_event_ok(self):
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=34, 
+        )
+        another_user_2 = User.objects.create_user(
+            username='user 3', 
+            password='senhaqualquer12', 
+            email='email3@gmail.com', 
+            idade=18, 
+        )
+        Solicitation.objects.create(user=another_user_2, event=self.any_event, status='a')
+        Solicitation.objects.create(user=another_user, event=self.any_event, status='r')
+        
+        self.any_user.is_active = True
+        self.any_user.save()
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(path=reverse('solicitacoes_evento', args=[self.any_event.id]), data={'status_select': 'a'})
+        any_event_solicitations = Solicitation.objects.filter(event=self.any_event, status='a')
+        rendered_solicitations = response.context['solicitations']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(rendered_solicitations), list(any_event_solicitations))
+
+    def test_search_input_and_search_select_status_solicitacoes_event_ok(self):
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=34, 
+        )
+        another_user_2 = User.objects.create_user(
+            username='user 3', 
+            password='senhaqualquer12', 
+            email='email3@gmail.com', 
+            idade=18, 
+        )
+        Solicitation.objects.create(user=another_user_2, event=self.any_event, status='r')
+        Solicitation.objects.create(user=another_user, event=self.any_event, status='r')
+        
+        self.any_user.is_active = True
+        self.any_user.save()
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(path=reverse('solicitacoes_evento', args=[self.any_event.id]), data={'search-input': 'user 3', 'status_select': 'r'})
+        any_event_solicitations = Solicitation.objects.filter(event=self.any_event, user=another_user_2, status='r')
+        rendered_solicitations = response.context['solicitations']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(rendered_solicitations), list(any_event_solicitations))
+
+    def test_status_select_empty_found_solicitation_with_w_status(self):
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=34, 
+        )
+        Solicitation.objects.create(user=another_user, event=self.any_event, status='a')
+        
+        self.any_user.is_active = True
+        self.any_user.save()
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        response = self.client.get(path=reverse('solicitacoes_evento', args=[self.any_event.id]))
+        any_event_solicitations = Solicitation.objects.filter(event=self.any_event, status='w')
+        rendered_solicitations = response.context['solicitations']
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(list(rendered_solicitations), list(any_event_solicitations))
 
