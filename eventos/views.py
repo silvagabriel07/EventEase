@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 
 # Views de organizando
 @login_required
-def organizando(request):    
+def organizando(request):
     my_events = Event.objects.filter(organizer=request.user)
     return render(request, 'organizando.html', {'my_events': my_events})
 
@@ -39,7 +39,7 @@ def editar_evento(request, event_id):
     event = Event.objects.filter(id=event_id).first()
     if not user_is_organizer(request, event): 
         return redirect('organizando')
-    if event.has_passed():
+    elif event.has_passed():
         messages.add_message(request, constants.ERROR, f'Não é possível editar o evento "{event.title}", pois ele já passou.')
         return redirect('organizando')
     else:
@@ -55,7 +55,8 @@ def editar_evento(request, event_id):
                     
         return render(request, 'editar_evento.html', {'form': form, 'event_banner': event_banner, 'event_id': event.id})
     
-
+    
+@login_required
 def excluir_evento(request, event_id):
     event = Event.objects.get(id=event_id)
     if user_is_organizer(request, event=event):

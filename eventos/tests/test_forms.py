@@ -3,6 +3,8 @@ from ..forms import EventForm, Category, Event
 from django.core.files.uploadedfile import SimpleUploadedFile
 from datetime import datetime, timedelta
 
+# PRECISO FAZER MUITO MAIS TESTES PARA ESSE FORM
+# PRECISO CUBRIR TODAS AS POSSIVILIDADES DE ERRO COM ESSE FORM.
 class TestFormEventForm(TestCase):
     
     def setUp(self) -> None:
