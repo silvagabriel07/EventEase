@@ -273,3 +273,4 @@ class TestViewExcluirEvento(TestCase):
         self.assertEqual(len(msgs), 1)
         self.assertEqual(str(msgs[0]), f'Evento {self.any_event.title} excluído com sucesso.')
 
+

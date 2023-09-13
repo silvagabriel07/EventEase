@@ -4,7 +4,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from datetime import datetime, timedelta
 
 # PRECISO FAZER MUITO MAIS TESTES PARA ESSE FORM
-# PRECISO CUBRIR TODAS AS POSSIVILIDADES DE ERRO COM ESSE FORM.
+# PRECISO COBRIR TODAS AS POSSIVILIDADES DE ERRO COM ESSE FORM.
 class TestFormEventForm(TestCase):
     
     def setUp(self) -> None:
@@ -44,15 +44,15 @@ class TestFormEventForm(TestCase):
         # Verifique se o formulário é válido
         self.assertTrue(form.is_valid())
         # Verifique se o campo event_banner não é substituído pela imagem padrão
-        self.assertEqual(form.cleaned_data['event_banner'], self.uploaded_file)
+        self.assertEqual(form.cleaned_data['event_banner'], self.uploaded_file)    
     
-    def test_DateTimeField_invalid_formats(self):
+    def test_DateTimeField_invalid_formats_1(self):
         data = {
             'title': 'Título Qualquer',
             'description': 'Descrição qualquer',
             'category': self.category,  
-            'start_date_time': '16-10-2023 20:10',
-            'final_date_time': '22-10-2023 20:10',
+            'start_date_time': '10-09-2023 20:20',
+            'final_date_time': '10-09-2023 20:20'
         }
         # Crie uma instância do formulário com o arquivo simulado
         form = EventForm(data, {'event_banner': self.uploaded_file})
@@ -60,14 +60,30 @@ class TestFormEventForm(TestCase):
         self.assertEqual(len(form.errors['start_date_time']), 1)
         self.assertEqual(len(form.errors['final_date_time']), 1)
         
-        data['start_date_time'] = '2023/10/20 20:10'
-        data['final_date_time'] = '2023/11/01 19:05'
+    def test_DateTimeField_invalid_formats_2(self):
+        data = {
+            'title': 'Título Qualquer',
+            'description': 'Descrição qualquer',
+            'category': self.category,  
+            'start_date_time': '2023/09/20 20:10',
+            'final_date_time': '2023/10/01 19:05'
+        }
+        # Crie uma instância do formulário com o arquivo simulado
+        form = EventForm(data, {'event_banner': self.uploaded_file})
         self.assertFalse(form.is_valid())
         self.assertEqual(len(form.errors['start_date_time']), 1)
         self.assertEqual(len(form.errors['final_date_time']), 1)
-
-        data['start_date_time'] = '16/10/2023 20-10'
-        data['final_date_time'] = '16/10/2023 20-10'
+        
+    def test_DateTimeField_invalid_formats_3(self):
+        data = {
+            'title': 'Título Qualquer',
+            'description': 'Descrição qualquer',
+            'category': self.category,  
+            'start_date_time': '16/10/2023 20-10',
+            'final_date_time': '16/10/2023 20-10'
+        }
+        # Crie uma instância do formulário com o arquivo simulado
+        form = EventForm(data, {'event_banner': self.uploaded_file})
         self.assertFalse(form.is_valid())
         self.assertEqual(len(form.errors['start_date_time']), 1)
         self.assertEqual(len(form.errors['final_date_time']), 1)
@@ -113,4 +129,74 @@ class TestFormEventForm(TestCase):
         form = EventForm(data=data)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['__all__'][0], 'O evento termina e começa no mesmo momento.')
+
+    def test_missing_title_field(self):
+        data = {
+            'title': '',
+            'description': 'Descrição qualquer',
+            'category': self.category,  
+            'start_date_time': self.start_date_time+' 20:20',
+            'final_date_time': self.final_date_time+' 20:20'
+        }
+        form = EventForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertFormError(form=form, field='title', errors='Este campo é obrigatório.')
+
+    def test_missing_description_field(self):
+        data = {
+            'title': 'Título 1',
+            'description': '',
+            'category': self.category,  
+            'start_date_time': self.start_date_time+' 20:20',
+            'final_date_time': self.final_date_time+' 20:20'
+        }
+        form = EventForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertFormError(form=form, field='description', errors='Este campo é obrigatório.')
+
+    def test_missing_category_field(self):
+        data = {
+            'title': 'Título 1',
+            'description': 'Descrição qualquer',
+            'start_date_time': self.start_date_time+' 20:20',
+            'final_date_time': self.final_date_time+' 20:20'
+        }
+        form = EventForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertFormError(form=form, field='category', errors='Este campo é obrigatório.')
+
+    def test_missing_start_date_time_field(self):
+        data = {
+            'title': 'Título 1',
+            'description': 'Descrição qualquer',
+            'category': self.category,  
+            'final_date_time': self.final_date_time+' 20:20'
+        }
+        form = EventForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertFormError(form=form, field='start_date_time', errors='Este campo é obrigatório.')
+
+    def test_missing_final_date_time_field(self):
+        data = {
+            'title': 'Título 1',
+            'description': '',
+            'category': self.category,  
+            'start_date_time': self.start_date_time+' 20:20',
+        }
+        form = EventForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertFormError(form=form, field='final_date_time', errors='Este campo é obrigatório.')
+
+    def test_category_choice_was_not_valid(self):
+        data = {
+            'title': 'Título 1',
+            'description': 'Descrição qualquer',
+            'category': 99,  
+            'start_date_time': self.start_date_time+' 20:20',
+            'final_date_time': self.final_date_time+' 20:20'
+        }
+        form = EventForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertFormError(form=form, field='category', errors='Faça uma escolha válida. Sua escolha não é uma das disponíveis.')
+
 

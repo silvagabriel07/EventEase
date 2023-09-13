@@ -20,7 +20,7 @@ class TestModelEvent(TestCase):
             idade=17, 
         )
         
-        any_category = Category.objects.create(
+        self.any_category = Category.objects.create(
             name='Categoria 1'
             )
         
