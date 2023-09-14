@@ -19,7 +19,7 @@ class TestFormEventForm(TestCase):
         )
         self.category = Category.objects.create(name='Categoria Qualquer') 
         
-    def test_create_event_successful_without_event_banner(self):
+    def test_create_event_successfully_without_event_banner(self):
         data = {
             'title': 'Título Qualquer',
             'description': 'Decrição qualquer',

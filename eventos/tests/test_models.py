@@ -70,6 +70,18 @@ class TestModelEvent(TestCase):
         self.assertFalse(event.unban_user(user_id=10))
         self.assertEqual(event.banned_users.count(), 1)
     
+    def test_method_unban_user_does_not_exist_in_the_banned_users_list(self):
+        another_user = User.objects.create_user(
+            username='another user', 
+            password='senhaqualquer12', 
+            email='anotheruser@gmail.com', 
+            idade=19, 
+        )
+        self.any_event.banned_users.add(another_user)
+        self.assertEqual(self.any_event.banned_users.count(), 1)
+        self.any_event.unban_user(self.any_user.id)
+        self.assertEqual(self.any_event.banned_users.count(), 1)
+    
     
     # user_is_banned method test
     def test_user_is_banned_success(self):

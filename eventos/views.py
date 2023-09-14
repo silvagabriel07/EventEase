@@ -105,7 +105,7 @@ def rejeitar_solicitacao(request, event_id, id_user_solicitation):
 @login_required
 def aceitar_solicitacao(request, event_id, id_user_solicitation):
     event = Event.objects.filter(id=event_id).first()
-    if not user_is_organizer(request, event):
+    if not user_is_organizer(request, event) or not event.private:
         return redirect('organizando')
     elif event.has_passed():
         messages.add_message(request, constants.ERROR, f'Não é possível aceitar solicitações de usuários do evento "{event.title}", pois ele já passou.')

@@ -177,6 +177,9 @@ class TestViewEditarEvento(TestCase):
         )
         response = self.client.get(reverse('editar_evento', args=[another_event.id]))
         self.assertRedirects(response, reverse('organizando'))
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Algo deu errado.')
+
         
     def test_edition_not_available_for_past_events(self):
         self.any_event.start_date_time -= timedelta(days=3)
@@ -262,6 +265,9 @@ class TestViewExcluirEvento(TestCase):
         self.client.login(email='email2@gmail.com', password='senhaqualquer12')
         response = self.client.get(reverse('excluir_evento', args=[self.any_event.id]))
         self.assertTrue(Event.objects.filter(id=self.any_event.id).exists())
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Algo deu errado.')
+
 
     def test_excluir_evento_ok_get(self):
         self.any_user.is_active = True
@@ -312,6 +318,9 @@ class TestViewSolicitacoesEvento(TestCase):
         response = self.client.get(reverse('solicitacoes_evento', args=[self.any_event.id]))
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('organizando'))
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Algo deu errado.')
+
     
     def test_solicitacoes_event_ok_get(self):
         self.any_user.is_active = True
@@ -441,3 +450,171 @@ class TestViewSolicitacoesEvento(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(list(rendered_solicitations), list(any_event_solicitations))
 
+
+class TestRejeitarSolicitacao(TestCase):
+    
+    def setUp(self) -> None:
+        self.start_date_time = datetime.now() + timedelta(days=2)
+        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+        
+
+        Category.objects.create(name='Categoria A')
+        self.any_event = Event.objects.create(
+            title='Titulo 1', 
+            description='descrition etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=True, 
+            free=False,             
+            start_date_time=self.start_date_time, 
+            final_date_time=self.final_date_time, 
+        )
+        self.another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=18, 
+        )
+        self.another_user.is_active = True
+        self.another_user.save()
+        Solicitation.objects.create(event=self.any_event, user=self.another_user)
+
+    
+    def test_user_is_not_the_event_organizer(self):
+        self.client.login(email='email2@gmail.com', password='senhaqualquer12')
+        response = self.client.get(reverse('rejeitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
+        self.assertTrue(Solicitation.objects.exists())
+        self.assertRedirects(response, reverse('organizando'))
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Algo deu errado.')
+    
+    def test_rejeitar_solicitacao_event_has_passed(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        self.any_event.final_date_time = datetime.now().replace(tzinfo=timezone.utc) - timedelta(days=2) 
+        self.any_event.save()    
+        response = self.client.get(reverse('rejeitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
+        self.assertEqual(Solicitation.objects.first().status, 'w')
+        
+        self.assertRedirects(response, reverse('organizando'))
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Não é possível rejeitar solicitações de usuários do evento "{self.any_event.title}", pois ele já passou.')
+
+    def test_rejeitar_solicitacao_event_not_private(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        self.any_event.private = False
+        self.any_event.save()
+        response = self.client.get(reverse('rejeitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
+        self.assertRedirects(response, reverse('organizando'))
+
+    def test_rejeitar_solicitacao_successfully(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        response = self.client.get(reverse('rejeitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
+        self.assertRedirects(response, reverse('solicitacoes_evento', args=[self.any_event.id]))
+        self.assertEqual(Solicitation.objects.first().status, 'r')
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Solicitação <b>rejeitada</b> com sucesso.')
+
+    def test_rejeitar_solicitacao_user_did_not_solicitate_for_this_event(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        response = self.client.get(reverse('rejeitar_solicitacao', args=[self.any_event.id, self.any_user.id]))
+        self.assertRedirects(response, reverse('solicitacoes_evento', args=[self.any_event.id]))
+        self.assertEqual(Solicitation.objects.first().status, 'w')
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Usuário em questão não solicitou participação para este evento')
+
+
+class TestAceitarSolicitacao(TestCase):
+    
+    def setUp(self) -> None:
+        self.start_date_time = datetime.now() + timedelta(days=2)
+        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+        
+
+        Category.objects.create(name='Categoria A')
+        self.any_event = Event.objects.create(
+            title='Titulo 1', 
+            description='descrition etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=True, 
+            free=False,             
+            start_date_time=self.start_date_time, 
+            final_date_time=self.final_date_time, 
+        )
+        self.another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=18, 
+        )
+        self.another_user.is_active = True
+        self.another_user.save()
+        Solicitation.objects.create(event=self.any_event, user=self.another_user)
+
+    
+    def test_user_is_not_the_event_organizer(self):
+        self.client.login(email='email2@gmail.com', password='senhaqualquer12')
+        response = self.client.get(reverse('rejeitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
+        self.assertTrue(Solicitation.objects.exists())
+        self.assertRedirects(response, reverse('organizando'))
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Algo deu errado.')
+    
+    def test_aceitar_solicitacao_event_has_passed(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        self.any_event.final_date_time = datetime.now().replace(tzinfo=timezone.utc) - timedelta(days=2) 
+        self.any_event.save()    
+        response = self.client.get(reverse('aceitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
+        self.assertEqual(Solicitation.objects.first().status, 'w')
+        
+        self.assertRedirects(response, reverse('organizando'))
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Não é possível aceitar solicitações de usuários do evento "{self.any_event.title}", pois ele já passou.')
+
+    def test_aceitar_solicitacao_event_not_private(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        self.any_event.private = False
+        self.any_event.save()
+        response = self.client.get(reverse('aceitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
+        self.assertRedirects(response, reverse('organizando'))
+
+    def test_aceitar_solicitacao_successfully(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        response = self.client.get(reverse('aceitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
+        self.assertRedirects(response, reverse('solicitacoes_evento', args=[self.any_event.id]))
+        self.assertEqual(Solicitation.objects.first().status, 'a')
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Solicitação <b>aceita</b> com sucesso.')
+
+    def test_aceitar_solicitacao_user_did_not_solicitate_for_this_event(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        response = self.client.get(reverse('aceitar_solicitacao', args=[self.any_event.id, self.any_user.id]))
+        self.assertRedirects(response, reverse('solicitacoes_evento', args=[self.any_event.id]))
+        self.assertEqual(Solicitation.objects.first().status, 'w')
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Usuário em questão não solicitou participação para este evento')
+
+
+    def test_aceitar_solicitacao_from_a_banned_user_unban_the_user(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        self.any_event.banned_users.add(self.another_user)
+        response = self.client.get(reverse('aceitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
+        self.assertEqual(self.any_event.banned_users.all().count(), 0)
+        self.assertRedirects(response, reverse('solicitacoes_evento', args=[self.any_event.id]))
+        self.assertEqual(Solicitation.objects.first().status, 'a')
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Solicitação <b>aceita</b> com sucesso.')
