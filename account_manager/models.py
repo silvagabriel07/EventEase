@@ -64,11 +64,10 @@ class User(AbstractUser):
         else:
             return False
         
-
     def is_user_participant(self, event_instance):
         return event_instance.participants.filter(id=self.id).exists()
     
-    def user_already_solicitated(self, event_instance):
+    def user_already_solicited(self, event_instance):
         return self.solicitation_set.filter(event=event_instance.id).exists()
 
     def __str__(self):

@@ -123,13 +123,13 @@ def aceitar_solicitacao(request, event_id, id_user_solicitation):
 
 def ver_mais(request, id_event):
     event = Event.objects.get(id=id_event)
-    user_already_solicitated = is_user_participant = is_banned_user = False
+    user_already_solicited = is_user_participant = is_banned_user = False
     if request.user.is_authenticated:
         is_user_participant = request.user.is_user_participant(event)
-        user_already_solicitated = request.user.user_already_solicitated(event)
+        user_already_solicited = request.user.user_already_solicited(event)
         is_banned_user = event.is_banned_user(request.user.id)
 
-    return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicitated': user_already_solicitated,  'is_banned_user': is_banned_user})
+    return render(request, 'ver_mais.html', {'event': event, 'is_user_participant': is_user_participant, 'user_already_solicited': user_already_solicited,  'is_banned_user': is_banned_user})
 
 
 def participantes(request, event_id):

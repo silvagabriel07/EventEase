@@ -608,7 +608,6 @@ class TestAceitarSolicitacao(TestCase):
         msgs = list(messages.get_messages(response.wsgi_request))
         self.assertEqual(str(msgs[0]), 'Usuário em questão não solicitou participação para este evento')
 
-
     def test_aceitar_solicitacao_from_a_banned_user_unban_the_user(self):
         self.client.login(email='email@gmail.com', password='senhaqualquer12')
         self.any_event.banned_users.add(self.another_user)
@@ -618,3 +617,204 @@ class TestAceitarSolicitacao(TestCase):
         self.assertEqual(Solicitation.objects.first().status, 'a')
         msgs = list(messages.get_messages(response.wsgi_request))
         self.assertEqual(str(msgs[0]), 'Solicitação <b>aceita</b> com sucesso.')
+
+
+class TestViewVerMais(TestCase):
+    
+    def setUp(self) -> None:
+        self.start_date_time = datetime.now() + timedelta(days=2)
+        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.any_user = User.objects.create(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+        
+        Category.objects.create(name='Categoria A')
+        self.any_event = Event.objects.create(
+            title='Titulo 1', 
+            description='descrition etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=self.start_date_time, 
+            final_date_time=self.final_date_time, 
+        )
+
+    
+    def test_ver_evento_event_public_with_unauthenticated_user(self):
+        response = self.client.get(reverse('ver_mais', args=[self.any_event.id]))
+        self.assertEqual(response.status_code, 200)
+        context = response.context
+        self.assertFalse(context.get('is_user_participant'))
+        self.assertFalse(context.get('user_already_solicited'))
+        self.assertFalse(context.get('is_banned_user'))
+        
+        btn_expected_url = reverse('account_login')
+        self.assertContains(response, f'href="{btn_expected_url}">Participar</a>')
+
+    def test_ver_evento_event_private_with_unauthenticated_user(self):
+        self.any_event.private = True
+        self.any_event.save()
+        
+        response = self.client.get(reverse('ver_mais', args=[self.any_event.id]))
+        self.assertEqual(response.status_code, 200)
+        context = response.context
+        self.assertFalse(context.get('is_user_participant'))
+        self.assertFalse(context.get('user_already_solicited'))
+        self.assertFalse(context.get('is_banned_user'))
+        
+        btn_expected_url = reverse('account_login')
+        self.assertContains(response, f'href="{btn_expected_url}">Solicitar Participação</a>')
+
+    
+    def test_authenticated_user_get_view(self):
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=18,
+            is_active=True 
+        )
+        self.client.login(email='email2@gmail.com', password='senhaqualquer12')
+        response = self.client.get(reverse('ver_mais', args=[self.any_event.id]))
+        self.assertEqual(response.status_code, 200)
+        context = response.context
+        self.assertFalse(context.get('is_user_participant'))
+        self.assertFalse(context.get('user_already_solicited'))
+        self.assertFalse(context.get('is_banned_user'))
+        
+        btn_expected_url = reverse('participar', args=[self.any_event.id])
+        self.assertContains(response, f'href="{btn_expected_url}">Participar</a>')
+
+    def test_authenticated_user_is_participant(self):
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=18,
+            is_active=True 
+        )
+        self.client.login(email='email2@gmail.com', password='senhaqualquer12')
+        
+        self.any_event.participants.add(another_user)
+
+        response = self.client.get(reverse('ver_mais', args=[self.any_event.id]))
+        context = response.context
+        self.assertTrue(context.get('is_user_participant'))
+        self.assertFalse(context.get('is_banned_user'))
+        self.assertFalse(context.get('user_already_solicited'))
+
+        self.assertContains(response, f'href="#">Já participa</button>')
+    
+    
+    def test_authenticated_user_already_solicited(self):
+        self.any_event.private = True
+        self.any_event.save()
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=18,
+            is_active=True 
+        )
+        self.client.login(email='email2@gmail.com', password='senhaqualquer12')
+        Solicitation.objects.create(event=self.any_event, user=another_user)
+        response = self.client.get(reverse('ver_mais', args=[self.any_event.id]))
+        context = response.context
+        self.assertTrue(context.get('user_already_solicited'))
+        self.assertFalse(context.get('is_user_participant'))
+        self.assertFalse(context.get('is_banned_user'))
+        
+        self.assertContains(response, f'href="#">Já Solicitou Participação</button>')
+    
+    def test_authenticated_user_is_banned_and_the_event_is_public(self):
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=18,
+            is_active=True 
+        )
+        self.client.login(email='email2@gmail.com', password='senhaqualquer12')
+        self.any_event.banned_users.add(another_user)
+        response = self.client.get(reverse('ver_mais', args=[self.any_event.id]))
+        context = response.context
+        self.assertFalse(context.get('user_already_solicited'))
+        self.assertFalse(context.get('is_user_participant'))
+        self.assertTrue(context.get('is_banned_user'))
+        
+        btn_expected_url = reverse('participar', args=[self.any_event.id])
+        self.assertContains(response, f'href="{btn_expected_url}">Solicitar Participação</a>')
+
+    def test_authenticated_user_is_banned_and_the_event_is_private(self):
+        self.any_event.private = True
+        self.any_event.save()
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=18,
+            is_active=True 
+        )
+        self.client.login(email='email2@gmail.com', password='senhaqualquer12')
+        self.any_event.banned_users.add(another_user)
+        response = self.client.get(reverse('ver_mais', args=[self.any_event.id]))
+        context = response.context
+        self.assertFalse(context.get('user_already_solicited'))
+        self.assertFalse(context.get('is_user_participant'))
+        self.assertTrue(context.get('is_banned_user'))
+        
+        btn_expected_url = reverse('participar', args=[self.any_event.id])
+        self.assertContains(response, f'href="{btn_expected_url}">Solicitar Participação</a>')
+
+    def test_user_is_minor_and_the_event_is_not_free(self):
+        another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=13,
+            is_active=True 
+        )
+        self.client.login(email='email2@gmail.com', password='senhaqualquer12')
+        response = self.client.get(reverse('ver_mais', args=[self.any_event.id]))
+        context = response.context
+        self.assertFalse(context.get('user_already_solicited'))
+        self.assertFalse(context.get('is_user_participant'))
+        self.assertFalse(context.get('is_banned_user'))
+        
+        self.assertContains(response, 'href="#">Participar</button>')
+        self.assertContains(response, 'Você não pode participar deste evento, pois ele é para maiores de idade.')
+
+    def test_user_authenticated_is_organizer(self):
+        self.client.force_login(self.any_user)
+        response = self.client.get(reverse('ver_mais', args=[self.any_event.id]))
+        
+        context = response.context
+        self.assertFalse(context.get('user_already_solicited'))
+        self.assertFalse(context.get('is_user_participant'))
+        self.assertFalse(context.get('is_banned_user'))
+
+        btn_expected_url = reverse('participar', args=[self.any_event.id])
+        self.assertContains(response, f'href="{btn_expected_url}">Participar</a>')
+
+    def test_ver_evento_event_has_already_passed(self):
+        self.any_event.final_date_time -= timedelta(days=5)
+        self.any_event.start_date_time -= timedelta(days=3)
+        self.any_event.save()        
+        response = self.client.get(reverse('ver_mais', args=[self.any_event.id]))
+        
+        self.assertNotContains(response, 'btn cta-button')
+        self.assertContains(response, 'Evento já passou...')
+        
+    
+
+
+
+
+
+    # preciso testar o q é renderizado no botão {particpar/já participa/solicitar participação/já solicitou participação}
+ 
