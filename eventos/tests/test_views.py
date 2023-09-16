@@ -870,6 +870,7 @@ class TestViewParticipantes(TestCase):
 
 
 class TestViewRemoverParticipante(TestCase):
+    
     def setUp(self) -> None:
         start_date_time = datetime.now() + timedelta(days=2)
         final_date_time = datetime.now() + timedelta(days=4)
@@ -909,7 +910,7 @@ class TestViewRemoverParticipante(TestCase):
         msgs =  list(messages.get_messages(response.wsgi_request))
         self.assertEqual(str(msgs[0]), f'Algo deu errado.')
 
-    def test_remover_participante_from_event_already_has_passed(self):
+    def test_remover_participante_from_event_has_already_passed(self):
         self.any_event.start_date_time -= timedelta(days=3)
         self.any_event.final_date_time -= timedelta(days=5)
         self.any_event.save()
@@ -941,5 +942,154 @@ class TestViewRemoverParticipante(TestCase):
         url = reverse('remover_participante', args=[self.any_event.id, self.another_user.id])
         response = self.client.get(url)
         self.assertEqual(self.any_event.solicitation_set.all().count(), 0)
+        
+
+class TestViewParticipar(TestCase):
+    
+    def setUp(self) -> None:
+        start_date_time = datetime.now() + timedelta(days=2)
+        final_date_time = datetime.now() + timedelta(days=4)
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+        self.another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='another@gmail.com', 
+            idade=18, 
+            is_active=True
+        )
+
+        Category.objects.create(name='Categoria A')
+        self.any_event = Event.objects.create(
+            title='Titulo 1', 
+            description='descrition etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=start_date_time, 
+            final_date_time=final_date_time, 
+        )
+        
+    def test_participar_public_event_has_already_passed(self):
+        self.any_event.start_date_time -= timedelta(days=3)
+        self.any_event.final_date_time -= timedelta(days=5)
+        self.any_event.save()
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participar', args=[self.any_event.id]))
+        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Não é possível participar do evento "{self.any_event.title}", pois ele já passou.')
+        self.assertEqual(self.any_event.participants.all().count(), 0)
+        
+    def test_participar_private_event_has_already_passed(self):
+        self.any_event.private = True
+        self.any_event.start_date_time -= timedelta(days=3)
+        self.any_event.final_date_time -= timedelta(days=5)
+        self.any_event.save()
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participar', args=[self.any_event.id]))
+        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Não é possível solicitar partipação para o evento "{self.any_event.title}", pois ele já passou.')
+        self.assertEqual(self.any_event.solicitation_set.all().count(), 0)
+        
+    def test_participar_user_is_already_a_participant_in_the_event(self):
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        self.any_event.participants.add(self.another_user)
+        response = self.client.get(reverse('participar', args=[self.any_event.id]))
+        
+        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Você já participa deste evento.')
+        self.assertEqual(self.any_event.solicitation_set.all().count(), 0)
+
+    def test_participar_not_free_event_and_user_need_set_age(self):
+        self.any_event.free = False
+        self.any_event.save()
+        self.another_user.idade = None
+        self.another_user.save()
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participar', args=[self.any_event.id]))
+        self.assertRedirects(response, reverse('perfil'))
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Para realizar tal ação <b>é preciso informar sua idade</b>.')
+        
+
+    def test_participar_not_free_event_and_user_is_minor(self):
+        self.any_event.free = False
+        self.any_event.save()
+        self.another_user.idade = 17
+        self.another_user.save()
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participar', args=[self.any_event.id]))
+        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Você não pode participar deste evento, pois ele é apenas para maiores de idade.')
+
+    def test_participar_public_event_as_a_banned_user_solicits_a_participation(self):
+        self.any_event.banned_users.add(self.another_user)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participar', args=[self.any_event.id]))
+        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))
+        self.assertTrue(self.any_event.solicitation_set.all().exists())
+        self.assertFalse(self.any_event.participants.all().exists())
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Solicitação realizada com sucesso, aguarde a reposta.')
+
+    def test_participar_private_event_as_a_banned_user_solicits_a_participation(self):
+        self.any_event.private = True
+        self.any_event.save()
+        self.any_event.banned_users.add(self.another_user)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participar', args=[self.any_event.id]))
+        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))
+        self.assertTrue(self.any_event.solicitation_set.all().exists())
+        self.assertFalse(self.any_event.participants.all().exists())
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Solicitação realizada com sucesso, aguarde a reposta.')
+
+    def test_participar_solicitate_participation_in_the_private_event_successfully(self):
+        self.any_event.private = True
+        self.any_event.save()
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+
+        response = self.client.get(reverse('participar', args=[self.any_event.id]))
+        self.assertEqual(self.any_event.solicitation_set.all().count(), 1)
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Solicitação realizada com sucesso, aguarde a reposta.')
+        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))
+
+    def test_participar_public_event_successfully(self):
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participar', args=[self.any_event.id]))
+        self.assertEqual(self.any_event.participants.all().count(), 1)
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Você está participando do evento <b>{self.any_event.title}</b>')
+        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))
+
+    def test_participar_private_event_user_has_already_solicited_participation_in_the_event(self):
+        self.any_event.private = True
+        self.any_event.save()
+        Solicitation.objects.create(user=self.any_user, event=self.any_event)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participar', args=[self.any_event.id]))
+        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))
+        self.assertEqual(self.any_event.solicitation_set.all().couont(), 1)
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
         
 

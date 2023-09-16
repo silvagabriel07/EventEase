@@ -176,7 +176,7 @@ def participar(request, id_event):
     
     if event.has_passed():
         if event.private:
-            messages.add_message(request, constants.ERROR, f'Não é possível solicitar partipação do evento "{event.title}", pois ele já passou.')
+            messages.add_message(request, constants.ERROR, f'Não é possível solicitar partipação para o evento "{event.title}", pois ele já passou.')
         else:
             messages.add_message(request, constants.ERROR, f'Não é possível participar do evento "{event.title}", pois ele já passou.')
         return redirect(redirect_event_details)
