@@ -809,12 +809,64 @@ class TestViewVerMais(TestCase):
         
         self.assertNotContains(response, 'btn cta-button')
         self.assertContains(response, 'Evento já passou...')
-        
+
+
+class TestViewParticipantes(TestCase):
     
+    def setUp(self) -> None:
+        start_date_time = datetime.now() + timedelta(days=2)
+        final_date_time = datetime.now() + timedelta(days=4)
+        self.any_user = User.objects.create(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+        self.another_user = User.objects.create(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='email2@gmail.com', 
+            idade=18, 
+            is_active=True
+        )
+
+        Category.objects.create(name='Categoria A')
+        self.any_event = Event.objects.create(
+            title='Titulo 1', 
+            description='descrition etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=start_date_time, 
+            final_date_time=final_date_time, 
+        )
+        self.any_event.participants.add(self.another_user)
+
+    def test_participantes_render_event_participants_correcly(self):
+        response = self.client.get(reverse('participantes', args=[self.any_event.id]))
+        self.assertEqual(response.status_code, 200)
+        all_participants = list(self.any_event.participants.all())
+        self.assertEqual(list(response.context.get('participants')), all_participants)
+
+    def test_participantes_render_qtd_event_participants_correcly(self):
+        response = self.client.get(reverse('participantes', args=[self.any_event.id]))
+        self.assertEqual(response.status_code, 200)
+        total_participants = self.any_event.participants.all().count()
+        self.assertEqual(response.context.get('qtd_participants'), total_participants)
+
+    def test_participantes_render_search_event_participants_correcly(self):
+        response = self.client.get(reverse('participantes', args=[self.any_event.id]), data={'search-input': 'a'})
+        self.assertEqual(response.status_code, 200)
+        all_participants = list(self.any_event.participants.filter(username__icontains='a'))
+        self.assertEqual(list(response.context.get('participants')), all_participants)
+        
+    def test_participantes_organizer_event(self):
+        print(self.client.force_login(self.any_user))
+        response = self.client.get(reverse('participantes', args=[self.any_event.id]))
+        url_remover_participante = reverse('remover_participante', args=[self.any_event.id, self.another_user.id])
+        self.assertContains(response, f'href="{url_remover_participante}">Expulsar</a>')
 
 
-
-
-
-    # preciso testar o q é renderizado no botão {particpar/já participa/solicitar participação/já solicitou participação}
  
