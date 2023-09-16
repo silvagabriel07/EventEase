@@ -149,7 +149,7 @@ def remover_participante(request, event_id, participant_id):
     event = Event.objects.get(id=event_id)
     
     if not user_is_organizer(request, event):
-        return redirect('participantes', args=[event_id])
+        return redirect('participantes', event_id)
     elif event.has_passed():
         messages.add_message(request, constants.ERROR, f'Não é possível remover usuários do evento "{event.title}", pois ele já passou.')
         return redirect('organizando')

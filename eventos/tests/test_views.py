@@ -624,7 +624,7 @@ class TestViewVerMais(TestCase):
     def setUp(self) -> None:
         self.start_date_time = datetime.now() + timedelta(days=2)
         self.final_date_time = datetime.now() + timedelta(days=4)
-        self.any_user = User.objects.create(
+        self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
             email='email@gmail.com', 
@@ -816,14 +816,14 @@ class TestViewParticipantes(TestCase):
     def setUp(self) -> None:
         start_date_time = datetime.now() + timedelta(days=2)
         final_date_time = datetime.now() + timedelta(days=4)
-        self.any_user = User.objects.create(
+        self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
             email='email@gmail.com', 
             idade=29, 
             is_active=True
         )
-        self.another_user = User.objects.create(
+        self.another_user = User.objects.create_user(
             username='user 2', 
             password='senhaqualquer12', 
             email='email2@gmail.com', 
@@ -863,10 +863,83 @@ class TestViewParticipantes(TestCase):
         self.assertEqual(list(response.context.get('participants')), all_participants)
         
     def test_participantes_organizer_event(self):
-        print(self.client.force_login(self.any_user))
+        self.client.force_login(self.any_user)
         response = self.client.get(reverse('participantes', args=[self.any_event.id]))
         url_remover_participante = reverse('remover_participante', args=[self.any_event.id, self.another_user.id])
         self.assertContains(response, f'href="{url_remover_participante}">Expulsar</a>')
 
 
- 
+class TestViewRemoverParticipante(TestCase):
+    def setUp(self) -> None:
+        start_date_time = datetime.now() + timedelta(days=2)
+        final_date_time = datetime.now() + timedelta(days=4)
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+        self.another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='another@gmail.com', 
+            idade=18, 
+            is_active=True
+        )
+
+        Category.objects.create(name='Categoria A')
+        self.any_event = Event.objects.create(
+            title='Titulo 1', 
+            description='descrition etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=start_date_time, 
+            final_date_time=final_date_time, 
+        )
+        self.any_event.participants.add(self.another_user)
+
+    def test_user_is_not_the_event_organizer(self):        
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        url = reverse('remover_participante', args=[self.any_event.id, self.another_user.id])
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse('participantes', args=[self.any_event.id]))
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Algo deu errado.')
+
+    def test_remover_participante_from_event_already_has_passed(self):
+        self.any_event.start_date_time -= timedelta(days=3)
+        self.any_event.final_date_time -= timedelta(days=5)
+        self.any_event.save()
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+
+        url = reverse('remover_participante', args=[self.any_event.id, self.another_user.id])
+        response = self.client.get(url)
+        self.assertRedirects(response, reverse('organizando'))
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Não é possível remover usuários do evento "{self.any_event.title}", pois ele já passou.')
+        
+    def test_remover_participante_successfully_user_becomes_banned_user(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        url = reverse('remover_participante', args=[self.any_event.id, self.another_user.id])
+        response = self.client.get(url)
+        self.assertEqual(self.any_event.banned_users.first(), self.another_user)
+        
+    def test_remover_participante_successfully_removes_the_user_from_the_event(self):
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        url = reverse('remover_participante', args=[self.any_event.id, self.another_user.id])
+        response = self.client.get(url)
+        self.assertFalse(self.any_event.participants.exists())
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Usuário removido com sucesso.')
+
+    def test_remover_participante_successfully_delete_the_user_solicitation(self):
+        Solicitation.objects.create(user=self.another_user, event=self.any_event, status='a')
+        self.client.login(email='email@gmail.com', password='senhaqualquer12')
+        url = reverse('remover_participante', args=[self.any_event.id, self.another_user.id])
+        response = self.client.get(url)
+        self.assertEqual(self.any_event.solicitation_set.all().count(), 0)
+        
+
