@@ -23,7 +23,7 @@ class TestViewOrganizando(TestCase):
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=self.any_user, 
             category_id=1, 
             private=False, 
@@ -47,7 +47,7 @@ class TestViewOrganizando(TestCase):
         # crio um outro evento para que tenha 2 eventos no BD
         Event.objects.create(
             title='Titulo 2', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=another_user, 
             category_id=1, 
             private=False, 
@@ -148,7 +148,7 @@ class TestViewEditarEvento(TestCase):
         
         self.any_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=self.any_user, 
             category_id=1, 
             private=False, 
@@ -167,7 +167,7 @@ class TestViewEditarEvento(TestCase):
         )
         another_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=another_user, 
             category_id=1, 
             private=False, 
@@ -243,7 +243,7 @@ class TestViewExcluirEvento(TestCase):
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=self.any_user, 
             category_id=1, 
             private=False, 
@@ -294,7 +294,7 @@ class TestViewSolicitacoesEvento(TestCase):
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=self.any_user, 
             category_id=1, 
             private=False, 
@@ -468,7 +468,7 @@ class TestRejeitarSolicitacao(TestCase):
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=self.any_user, 
             category_id=1, 
             private=True, 
@@ -547,7 +547,7 @@ class TestAceitarSolicitacao(TestCase):
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=self.any_user, 
             category_id=1, 
             private=True, 
@@ -635,7 +635,7 @@ class TestViewVerMais(TestCase):
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=self.any_user, 
             category_id=1, 
             private=False, 
@@ -834,7 +834,7 @@ class TestViewParticipantes(TestCase):
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=self.any_user, 
             category_id=1, 
             private=False, 
@@ -892,7 +892,7 @@ class TestViewRemoverParticipante(TestCase):
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=self.any_user, 
             category_id=1, 
             private=False, 
@@ -967,7 +967,7 @@ class TestViewParticipar(TestCase):
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(
             title='Titulo 1', 
-            description='descrition etc', 
+            description='description etc', 
             organizer=self.any_user, 
             category_id=1, 
             private=False, 
@@ -1093,3 +1093,285 @@ class TestViewParticipar(TestCase):
         self.assertEqual(str(msgs[0]), f'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
         
 
+class TestViewParticipando(TestCase):
+    
+    def setUp(self) -> None:
+        start_date_time = datetime.now() + timedelta(days=2)
+        final_date_time = datetime.now() + timedelta(days=4)
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+        self.another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='another@gmail.com', 
+            idade=18, 
+            is_active=True
+        )
+
+        Category.objects.create(name='Categoria A')
+        self.any_event = Event.objects.create(
+            title='Titulo 1', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=start_date_time, 
+            final_date_time=final_date_time, 
+        )
+    
+    # tests about rendering of event solicitations 
+    def test_participando_see_event_solicitation_correctly(self):
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        Solicitation.objects.create(user=self.another_user, event=self.any_event)  
+           
+        response = self.client.get(reverse('participando', args=[1]))
+        self.assertEqual(response.status_code, 200)
+        expected_solicitations = Event.objects.filter(id=self.any_event.id)
+        self.assertEqual(list(response.context.get('events')), list(expected_solicitations))
+        expected_url = reverse('participando', args=[0])
+        self.assertContains(response, f'href="{expected_url}">Participando ▼</a>')
+        
+    def test_participando_see_event_solicitations_that_ended_yeasterday(self):
+        any_event2 = Event.objects.create(
+            title='Titulo 2', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=datetime.now() - timedelta(days=2), 
+            final_date_time=datetime.now() - timedelta(days=1), 
+        )
+        self.any_event.start_date_time = datetime.now() - timedelta(days=3)
+        self.any_event.final_date_time = datetime.now() - timedelta(days=2)
+        self.any_event.save()
+        Solicitation.objects.create(user=self.another_user, event=self.any_event)
+        Solicitation.objects.create(user=self.another_user, event=any_event2)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participando', args=[1]))
+        self.assertEqual(response.status_code, 200)
+        # i  did this just so that any_event is a queryset
+        expected_solicitations = Event.objects.filter(id=any_event2.id)
+        self.assertEqual(list(response.context.get('events')), list(expected_solicitations))
+        self.assertContains(response, 'Evento já acabou...')
+
+
+    def test_participando_see_event_solicitations_that_ended_yeasterday_with_status_solicitation_filter(self):
+        any_event2 = Event.objects.create(
+            title='Titulo 2', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=datetime.now() - timedelta(days=2), 
+            final_date_time=datetime.now() - timedelta(days=1), 
+        )
+        any_event3 = Event.objects.create(
+            title='Titulo 3', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=datetime.now() - timedelta(days=2), 
+            final_date_time=datetime.now() - timedelta(days=1), 
+        )
+        self.any_event.start_date_time = datetime.now() - timedelta(days=3)
+        self.any_event.final_date_time = datetime.now() - timedelta(days=2)
+        self.any_event.save()
+        Solicitation.objects.create(user=self.another_user, event=self.any_event)
+        Solicitation.objects.create(user=self.another_user, event=any_event2)
+        Solicitation.objects.create(user=self.another_user, event=any_event3, status='r')
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participando', args=[1]), data={'select_status_solicitation': 'r'})
+        self.assertEqual(response.status_code, 200)
+        # i  did this just so that any_event is a queryset
+        expected_solicitations = Event.objects.filter(id=any_event3.id)
+        self.assertEqual(list(response.context.get('events')), list(expected_solicitations))
+
+    # tests about rendering of participating events
+    def test_participando_see_participanting_events_correctly(self):
+        self.any_event.participants.add(self.another_user)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+           
+        response = self.client.get(reverse('participando', args=[0]))
+        self.assertEqual(response.status_code, 200)
+        expected_solicitations = Event.objects.filter(id=self.any_event.id)
+        self.assertEqual(list(response.context.get('events')), list(expected_solicitations))
+        expected_url = reverse('participando', args=[1])
+        self.assertContains(response, f'href="{expected_url}">Solicitações ▲</a>')
+
+    def test_participando_see_participanting_events_that_ended_yeasterday(self):
+        any_event2 = Event.objects.create(
+            title='Titulo 2', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=datetime.now() - timedelta(days=2), 
+            final_date_time=datetime.now() - timedelta(days=1), 
+        )
+        self.any_event.start_date_time = datetime.now() - timedelta(days=3)
+        self.any_event.final_date_time = datetime.now() - timedelta(days=2)
+        self.any_event.save()
+        self.any_event.participants.add(self.another_user)
+        any_event2.participants.add(self.another_user)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participando', args=[0]))
+        self.assertEqual(response.status_code, 200)
+        # i  did this just so that any_event is a queryset
+        expected_solicitations = Event.objects.filter(id=any_event2.id)
+        self.assertEqual(list(response.context.get('events')), list(expected_solicitations))
+        self.assertContains(response, 'Evento já acabou...')
+
+    def test_participando_see_participanting_events_with_decrescent_and_title_order_filter(self):
+        any_event2 = Event.objects.create(
+            title='Z Título 2', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=datetime.now() + timedelta(days=2), 
+            final_date_time=datetime.now() + timedelta(days=1), 
+        )
+        any_event2.participants.add(self.another_user)
+        self.any_event.participants.add(self.another_user)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+           
+        response = self.client.get(reverse('participando', args=[0]), data={'select_dec_cre': 'decrescent'})
+        self.assertEqual(response.status_code, 200)
+        expected_order = ['Z Título 2', 'Titulo 1']
+        self.assertQuerysetEqual(response.context.get('events'), expected_order, transform=lambda x: x.title)
+        
+    def test_participando_see_participanting_events_with_crescent_and_title_order_filter(self):
+        any_event2 = Event.objects.create(
+            title='Z Título 2', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=datetime.now() + timedelta(days=2), 
+            final_date_time=datetime.now() + timedelta(days=1), 
+        )
+        any_event2.participants.add(self.another_user)
+        self.any_event.participants.add(self.another_user)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+           
+        response = self.client.get(reverse('participando', args=[0]), data={'select_dec_cre': 'crescent'})
+        self.assertEqual(response.status_code, 200)
+        expected_order = ['Titulo 1', 'Z Título 2']
+        self.assertQuerysetEqual(response.context.get('events'), expected_order, transform=lambda x: x.title)
+
+    def test_participando_see_participanting_events_with_start_date_time_order_filter(self):
+        any_event2 = Event.objects.create(
+            title='Z Título 2', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=datetime.now() + timedelta(days=1), 
+            final_date_time=datetime.now() + timedelta(days=2), 
+        )
+        self.any_event.start_date_time = datetime.now() + timedelta(days=3)
+        self.any_event.start_date_time = datetime.now() + timedelta(days=4)
+        self.any_event.save()
+        
+        any_event2.participants.add(self.another_user)
+        self.any_event.participants.add(self.another_user)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+           
+        response = self.client.get(reverse('participando', args=[0]), data={'select_order': 'start_date_time'})
+        self.assertEqual(response.status_code, 200)
+        expected_order = ['Z Título 2', 'Titulo 1']
+        self.assertQuerysetEqual(response.context.get('events'), expected_order, transform=lambda x: x.title)
+
+    def test_participando_see_participanting_events_with_num_participants_order_filter(self):
+        any_user2 = User.objects.create_user(
+            username='anyuser2', 
+            password='senhaqualquer12', 
+            email='email3@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+
+        any_event2 = Event.objects.create(
+            title='Z Título 2', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=datetime.now() + timedelta(days=1), 
+            final_date_time=datetime.now() + timedelta(days=2), 
+        )
+        self.any_event.start_date_time = datetime.now() + timedelta(days=3)
+        self.any_event.start_date_time = datetime.now() + timedelta(days=4)
+        self.any_event.save()
+        
+        any_event2.participants.add(self.another_user)        
+        self.any_event.participants.add(self.another_user)
+        # now, any_event has 2 participants
+        self.any_event.participants.add(any_user2)
+
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participando', args=[0]), data={'select_order': 'num_participants'})
+        self.assertEqual(response.status_code, 200)
+        expected_order = ['Z Título 2', 'Titulo 1']
+        self.assertQuerysetEqual(response.context.get('events'), expected_order, transform=lambda x: x.title)
+
+    def test_participando_see_participanting_events_with_invalid_filters(self):
+        any_event2 = Event.objects.create(
+            title='Z Título 2', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=datetime.now() + timedelta(days=1), 
+            final_date_time=datetime.now() + timedelta(days=2), 
+        )
+        self.any_event.participants.add(self.another_user)
+        any_event2.participants.add(self.another_user)        
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participando', args=[0]), data={'select_order': 'iaveib', 'select_dec_cre': '8163gdbiqn'})
+        self.assertEqual(response.status_code, 200)
+        # for default this is oredered by 'title' 'crescent'  
+        expected_order = ['Titulo 1', 'Z Título 2']
+        self.assertQuerysetEqual(response.context.get('events'), expected_order, transform=lambda x: x.title)
+
+    def test_participando_see_event_solicitations_with_invalid_filters(self):
+        any_event2 = Event.objects.create(
+            title='Z Título 2', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=True, 
+            free=True,
+            start_date_time=datetime.now() + timedelta(days=1), 
+            final_date_time=datetime.now() + timedelta(days=2), 
+        )
+        Solicitation.objects.create(event=self.any_event, user=self.another_user)
+        Solicitation.objects.create(event=any_event2, user=self.another_user)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('participando', args=[1]), data={'select_order': 'iaveib', 'select_dec_cre': '8163gdbiqn'})
+        self.assertEqual(response.status_code, 200)
+        # for default this is oredered by 'title' 'crescent'  
+        expected_order = ['Titulo 1', 'Z Título 2']
+        self.assertQuerysetEqual(response.context.get('events'), expected_order, transform=lambda x: x.title)

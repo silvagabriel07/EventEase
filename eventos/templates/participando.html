@@ -48,7 +48,7 @@
             
             <div class="div-btns-solicitations" >
               {% if not render_solicitations %}
-                <a class="cta-button" href="{% url 'participando_solicitacoes' %}">Solicitações ▲</a>
+                <a class="cta-button" href="{% url 'participando' 1 %}">Solicitações ▲</a>
               {% else %}
                 <a class="cta-button" href="{% url 'participando' 0 %}">Participando ▼</a>
               {% endif %}

@@ -10,7 +10,6 @@ urlpatterns = [
     path('organizando/solicitacoes_evento/<int:event_id>/rejeitar_solicitacao/<int:id_user_solicitation>/',views.rejeitar_solicitacao, name='rejeitar_solicitacao'),
     path('organizando/solicitacoes_evento/<int:event_id>/aceitar_solicitacao/<int:id_user_solicitation>/',views.aceitar_solicitacao, name='aceitar_solicitacao'),
     path('participando/<int:render_solicitations>/', views.participando, name='participando'),
-    path('participando/solicitacoes/', views.participando_solicitacoes, name='participando_solicitacoes'),
     path('participando/sair/<int:event_id>/<int:render_solicitations>/', views.deixar_evento, name='deixar_evento'),
     path('ver_mais/<int:id_event>/', views.ver_mais, name='ver_mais'),
     path('ver_mais/<int:event_id>/participantes/', views.participantes, name='participantes'),

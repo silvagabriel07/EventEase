@@ -219,13 +219,21 @@ def participando(request, render_solicitations=0):
 
     if render_solicitations == 1:
         solicitation_filter = request.GET.get('select_status_solicitation', 'w')
-        events = Event.objects.filter(solicitation__user=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
+        if solicitation_filter not in ['a', 'r', 'w']:
+            solicitation_filter = 'w'        
+        events = Event.objects.filter(solicitation__user=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1, hours=1))
         events = events.annotate(status_solicitation=F('solicitation__status')).filter(status_solicitation=solicitation_filter)
 
     else:
-        events = Event.objects.filter(participants=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
+        events = Event.objects.filter(participants=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1, hours=1))
+    
     order = request.GET.get('select_order', 'title')
+    if order not in ['title', 'start_date_time', 'num_participants']:
+        order = 'title'
+        
     dec_or_cres = request.GET.get('select_dec_cre', 'crescent')
+    if dec_or_cres not in ['crescent', 'decrescent']:
+        dec_or_cres = 'crescent'
 
     if dec_or_cres == 'crescent':   
         dec_or_cres = ''
@@ -239,14 +247,6 @@ def participando(request, render_solicitations=0):
     order = f'{dec_or_cres}{order}'    
     events_sorted = events.order_by(order)
     return render(request, 'participando.html', {'events': events_sorted, 'render_solicitations': render_solicitations})
-
-
-@login_required
-def participando_solicitacoes(request):
-    render_solicitations = 1
-    participando_url_redirect = reverse('participando', args=[render_solicitations])
-    return redirect(participando_url_redirect)
-
 
 @login_required
 def deixar_evento(request, event_id, render_solicitations=0):
