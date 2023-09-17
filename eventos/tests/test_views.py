@@ -1083,12 +1083,12 @@ class TestViewParticipar(TestCase):
     def test_participar_private_event_user_has_already_solicited_participation_in_the_event(self):
         self.any_event.private = True
         self.any_event.save()
-        Solicitation.objects.create(user=self.any_user, event=self.any_event)
+        Solicitation.objects.create(user=self.another_user, event=self.any_event)
         self.client.login(email='another@gmail.com', password='senhaqualquer12')
         
         response = self.client.get(reverse('participar', args=[self.any_event.id]))
-        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))
-        self.assertEqual(self.any_event.solicitation_set.all().couont(), 1)
+        self.assertRedirects(response, reverse('ver_mais', args=[self.any_event.id]))  
+        self.assertEqual(self.any_event.solicitation_set.all().count(), 1)
         msgs = list(messages.get_messages(response.wsgi_request))
         self.assertEqual(str(msgs[0]), f'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
         

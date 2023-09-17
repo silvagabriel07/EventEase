@@ -10,6 +10,7 @@ from account_manager.utils import need_set_age
 from account_manager.models import User
 from .utils import user_is_organizer
 from datetime import datetime, timedelta
+from django.db import IntegrityError
 
 # Views de organizando
 @login_required
@@ -201,14 +202,11 @@ def participar(request, id_event):
             
     if event.private or event.is_banned_user(user.id):
         # solicitar a participação do evento privado 
-        try:
-            solicitation = Solicitation(
-                user=user,
-                event=event
-            )
-            solicitation.save()
+        if not Solicitation.objects.filter(user=user, event=event).exists():
+            Solicitation.objects.create(user=user, event=event)
             messages.add_message(request, constants.SUCCESS, 'Solicitação realizada com sucesso, aguarde a reposta.')
-        except:
+            
+        else:
             messages.add_message(request, constants.ERROR, 'Algo deu errado. Verifique se você já não solicitou a participação para este evento')
     return redirect(redirect_event_details)
 
