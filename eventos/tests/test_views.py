@@ -1375,3 +1375,110 @@ class TestViewParticipando(TestCase):
         # for default this is oredered by 'title' 'crescent'  
         expected_order = ['Titulo 1', 'Z Título 2']
         self.assertQuerysetEqual(response.context.get('events'), expected_order, transform=lambda x: x.title)
+
+
+class TestViewDeixarEvento(TestCase):
+    
+    def setUp(self) -> None:
+        start_date_time = datetime.now() + timedelta(days=2)
+        final_date_time = datetime.now() + timedelta(days=4)
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+        self.another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='another@gmail.com', 
+            idade=18, 
+            is_active=True
+        )
+
+        Category.objects.create(name='Categoria A')
+        self.any_event = Event.objects.create(
+            title='Titulo 1', 
+            description='description etc', 
+            organizer=self.any_user, 
+            category_id=1, 
+            private=False, 
+            free=False,             
+            start_date_time=start_date_time, 
+            final_date_time=final_date_time, 
+        )
+    
+    def test_leave_event_as_a_participant_successfully(self):
+        self.any_event.participants.add(self.another_user)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+
+        response = self.client.get(reverse('deixar_evento', args=[self.any_event.id, 0]))
+        self.assertRedirects(response, reverse('participando', args=[0]))
+        self.assertEqual(self.any_event.participants.all().count(), 0)
+        
+    def test_leave_event_as_a_participant_who_is_not_you_fails(self):
+        any_user3 = User.objects.create_user(
+            username='user 3', 
+            password='senhaqualquer12', 
+            email='email3@gmail.com', 
+            idade=29, 
+            is_active=True
+            )
+        self.any_event.participants.add(self.another_user)
+        self.client.login(email='email3@gmail.com', password='senhaqualquer12')
+
+        response = self.client.get(reverse('deixar_evento', args=[self.any_event.id, 0]))
+        self.assertRedirects(response, reverse('participando', args=[0]))
+        self.assertEqual(self.any_event.participants.all().count(), 1)
+
+    def test_leave_an_event_that_already_passed_as_a_participant_fails(self):
+        self.any_event.start_date_time -= timedelta(days=3)
+        self.any_event.final_date_time -= timedelta(days=5)
+        self.any_event.save()
+        
+        self.any_event.participants.add(self.another_user)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('deixar_evento', args=[self.any_event.id, 0]))
+        self.assertRedirects(response, reverse('participando', args=[0]))
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Não é possível deixar de participar de um evento que já passou.')
+        
+##################
+
+    def test_remove_event_solicitation_successfully(self):
+        Solicitation.objects.create(user=self.another_user, event=self.any_event)
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+
+        response = self.client.get(reverse('deixar_evento', args=[self.any_event.id, 1]))
+        self.assertRedirects(response, reverse('participando', args=[1]))
+        self.assertEqual(self.any_event.solicitation_set.all().count(), 0)
+        
+    def test_remove_your_event_solicitation_as_a_user_other_than_you_fails(self):
+        any_user3 = User.objects.create_user(
+            username='user 3', 
+            password='senhaqualquer12', 
+            email='email3@gmail.com', 
+            idade=29, 
+            is_active=True
+            )
+        Solicitation.objects.create(user=self.another_user, event=self.any_event)
+        self.client.login(email='email3@gmail.com', password='senhaqualquer12')
+
+        response = self.client.get(reverse('deixar_evento', args=[self.any_event.id, 1]))
+        self.assertRedirects(response, reverse('participando', args=[1]))
+        self.assertEqual(self.any_event.solicitation_set.all().count(), 1)
+
+    def test_leave_an_event_that_already_passed_as_a_participant_fails(self):
+        self.any_event.start_date_time -= timedelta(days=3)
+        self.any_event.final_date_time -= timedelta(days=5)
+        self.any_event.save()
+        
+        Solicitation.objects.create(user=self.another_user, event=self.any_event)        
+        self.client.login(email='another@gmail.com', password='senhaqualquer12')
+        
+        response = self.client.get(reverse('deixar_evento', args=[self.any_event.id, 1]))
+        self.assertRedirects(response, reverse('participando', args=[1]))
+        msgs = list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Não é possível remover a solicitação de um evento que já passou.')

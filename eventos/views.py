@@ -250,20 +250,29 @@ def participando(request, render_solicitations=0):
 
 @login_required
 def deixar_evento(request, event_id, render_solicitations=0):
-    event = Event.objects.get(id=event_id)
     participando_url_redirect = reverse('participando', args=[render_solicitations])
+    try:
+        event = Event.objects.get(id=event_id)
+    except Event.DoesNotExist:
+        messages.add_message(request, constants.ERROR, f'Não foi possível encontrar o evento.')
+        return redirect(participando_url_redirect)
 
     if render_solicitations == 1:
         if event.has_passed():
             messages.add_message(request, constants.ERROR, f'Não é possível remover a solicitação de um evento que já passou.')
         else:
-            solicitation_ = event.solicitation_set.get(user=request.user)
+            try:
+                solicitation_ = event.solicitation_set.get(user=request.user)
+            except Solicitation.DoesNotExist:
+                messages.add_message(request, constants.ERROR, f'Não foi possível encontrar a sua solicitação para esse evento.')
+                return redirect(participando_url_redirect)
+
             solicitation_.delete()
             messages.add_message(request, constants.SUCCESS, f'Solicitação de participação para o evento <b>{event.title} removida com sucessa</b>')  
     else:
         if event.has_passed():
             messages.add_message(request, constants.ERROR, f'Não é possível deixar de participar de um evento que já passou.')
-        else:
+        elif request.user in event.participants.all():
             event.participants.remove(request.user)
             event.save()
             messages.add_message(request, constants.SUCCESS, f'Você <b>removeu</b> sua participação no evento <b>{event.title}</b>')
