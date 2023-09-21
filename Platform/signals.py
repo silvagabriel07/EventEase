@@ -19,7 +19,7 @@ def send_solicitation_notification(sender, instance, created, **kwargs):
         if event.is_banned_user(user.id):
             notify.send(user,
                 recipient=event.organizer,
-                verb=f'O usuário {user.username}, que <u>havia sido banido</u> do evento <a class="link" href="{ver_mais_url}">'+event.title+'</a>, solicitou participação',
+                verb=f'O usuário {user.username}, que <u>havia sido banido</u> do evento <a class="link" href="{ver_mais_url}">'+event.title+'</a>, solicitou participação.',
                 target=event,
                 actions=actions
             )
