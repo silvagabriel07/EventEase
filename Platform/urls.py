@@ -1,6 +1,5 @@
 from django.urls import path, include, re_path
 from . import views
-from notifications.views import mark_as_read
 
 urlpatterns = [
     path('home/', views.home, name='home'),
