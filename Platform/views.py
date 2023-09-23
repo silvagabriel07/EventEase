@@ -31,7 +31,7 @@ def explorar_eventos(request):
     
     if search:
         events = events.filter(title__icontains=search)
-    
+
     if select_category:
         events = events.filter(category_id=select_category)
 
@@ -59,21 +59,21 @@ def explorar_eventos(request):
 
     if select_num_participants:
         if select_num_participants == 'gt_10':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gt=10)
+            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=10)
         elif select_num_participants == 'lt_10':    
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lt=10)
+            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=10)
         elif select_num_participants == 'gt_20':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gt=20)
+            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=20)
         elif select_num_participants == 'lt_20':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lt=20)
+            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=20)
         elif select_num_participants == 'gt_50':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gt=50)
+            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=50)
         elif select_num_participants == 'lt_50':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lt=50)
+            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=50)
         elif select_num_participants == 'gt_100':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gt=100)
+            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=100)
         elif select_num_participants == 'lt_100':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lt=100)
+            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=100)
         
     page_num = request.GET.get('page', '1')
     event_paginator = Paginator(events, 24)
@@ -93,7 +93,7 @@ def perfil(request):
         extra = 0
         for ex in range(3, -1, -1):
             if phone_numbers.count() == ex:
-                extra = 3 - ex 
+                extra = 3 - ex
 
         form_factory = forms.inlineformset_factory(User, PhoneNumber, form=PhoneNumberForm, extra=extra)
 

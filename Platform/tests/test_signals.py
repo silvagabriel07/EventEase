@@ -1,8 +1,6 @@
-from django.db.models.signals import post_save, m2m_changed
 from notifications.models import Notification
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.test import override_settings
 from datetime import datetime, timedelta
