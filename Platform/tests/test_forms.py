@@ -1,6 +1,10 @@
 from django.test import TestCase
-from ..forms import ProfileForm
+from ..forms import ProfileForm, PhoneNumberForm
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.auth import get_user_model
+from account_manager.models import PhoneNumber
+
+User = get_user_model()
 
 class TestFormProfileForm(TestCase):
     
@@ -56,3 +60,51 @@ class TestFormProfileForm(TestCase):
         form = ProfileForm(data=data)
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data['user_img'], '/user_img/user_img.png')
+        
+
+class TestFormPhoneNumberForm(TestCase):
+    
+    def setUp(self) -> None:
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            )
+        
+    
+    def test_valid_phone_number_format(self):
+        data = {
+            'phone_number': '+10 00000-0000'
+        }
+        
+        form = PhoneNumberForm(data=data, instance=self.any_user)
+        self.assertTrue(form.is_valid())
+
+    
+    def test_invalid_phone_number_formats(self):
+        invalid_format_numbers = [
+            '+123456789010',
+            '012 34561-9000',
+            '+12 3456-08900',
+            '+10 3456078900',
+            '+1 23456-78900',
+        ]
+        for format_number in invalid_format_numbers:
+            data = {
+                'phone_number': format_number
+            }
+            
+            form = PhoneNumberForm(data=data, instance=self.any_user)
+            self.assertFalse(form.is_valid())
+            self.assertFormError(form=form, field='phone_number', errors='O número de telefone deve estar em um formato válido.')
+
+    def test_invalid_phone_number_has_more_than_14_characters(self):
+        data = {
+            'phone_number': '+10 00000-00001',
+        }
+        
+        form = PhoneNumberForm(data=data, instance=self.any_user)
+        self.assertFalse(form.is_valid())
+        self.assertFormError(form=form, field='phone_number', errors=f'Certifique-se de que o valor tenha no máximo 14 caracteres (ele possui {len(data["phone_number"])}).')
+

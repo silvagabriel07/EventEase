@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
+from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
 phone_number_validators = RegexValidator(
@@ -77,3 +78,9 @@ class User(AbstractUser):
 class PhoneNumber(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=14, validators=[phone_number_validators])
+    
+    def clean(self):
+        existing_phone_numbers = PhoneNumber.objects.filter(user=self.user)
+        if existing_phone_numbers.count() >= 3:
+            raise ValidationError('Um usuário só pode ter no máximo 3 números de telefone.')
+        super().clean()

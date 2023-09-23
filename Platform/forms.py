@@ -1,6 +1,5 @@
 from django import forms
-from account_manager.models import User, PhoneNumber
-
+from account_manager.models import User, PhoneNumber, phone_number_validators
 
 class PhoneNumberForm(forms.ModelForm):
     class Meta:
@@ -13,6 +12,10 @@ class PhoneNumberForm(forms.ModelForm):
             'phone_number': '',
             'DELETE': 'Remover'
         }
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data['phone_number']
+        phone_number_validators(phone_number)
+        return phone_number
 
 
 class ProfileForm(forms.ModelForm):

@@ -3,8 +3,10 @@ from datetime import datetime, timedelta
 from eventos.models import Event, Solicitation, Category
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from unittest.mock import patch
-from account_manager.models import PhoneNumber
+# from unittest.mock import patch
+# from account_manager.models import PhoneNumber
+# from ..forms import ProfileForm
+# from django.forms import BaseInlineFormSet
 
 User = get_user_model()
 
@@ -288,9 +290,3 @@ class TestViewExplorarEventos(TestCase):
         self.assertEqual(events, list(expected_events))
 
 
-        
-        
-
-        
-        
-        
