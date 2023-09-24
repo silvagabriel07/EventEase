@@ -116,20 +116,32 @@ def perfil(request):
 
         
 def ver_perfil(request, user_id):
-    user = User.objects.get(id=user_id)
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        messages.add_message(request, constants.ERROR, 'Usuário não existe.')
+        return redirect('home')
     qtd_events_organizing = Event.objects.filter(organizer=user).count()
     qtd_event_participanting = user.event_participants.all().count()
     return render(request, 'ver_perfil.html', {'user': user, 'qtd_events_organizing': qtd_events_organizing, 'qtd_event_participanting': qtd_event_participanting})
 
 
 def ver_eventos_participando(request, user_id):
-    user = User.objects.get(id=user_id)
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        messages.add_message(request, constants.ERROR, 'Usuário não existe.')
+        return redirect('home')
     event_participanting = user.event_participants.filter(final_date_time__gte=datetime.now() - timedelta(days=1))
     return render(request, 'ver_eventos_participando.html', {'user': user, 'event_participanting': event_participanting})
 
 
 def ver_eventos_organizando(request, user_id):
-    user = User.objects.get(id=user_id)
+    try:
+        user = User.objects.get(id=user_id)
+    except User.DoesNotExist:
+        messages.add_message(request, constants.ERROR, 'Usuário não existe.')
+        return redirect('home')
     events_organizing = Event.objects.filter(organizer=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
     return render(request, 'ver_eventos_organizando.html', {'user': user, 'events_organizing': events_organizing})
 

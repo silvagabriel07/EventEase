@@ -401,3 +401,63 @@ class TestViewPerfil(TestCase):
         self.assertEqual(response.status_code, 200)
 
         self.assertFalse(self.any_user.phonenumber_set.all().exists())
+
+
+class TestViewVerPerfil(TestCase):
+    
+    def setUp(self) -> None:
+        self.start_date_time = datetime.now() + timedelta(days=1)
+        self.final_date_time = datetime.now() + timedelta(days=4)
+        Category.objects.create(name='Categoria A')
+
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+        self.another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='another@gmail.com', 
+            idade=18, 
+            is_active=True
+        )
+    
+    def test_ver_perfil_view(self):
+        for i in range(3):
+            organizer = self.any_user
+            if i == 2:
+                organizer = self.another_user
+                
+            Event.objects.create(
+                title=f'Titulo {i}', 
+                description=f'description etc {i}', 
+                organizer=organizer, 
+                category_id=1, 
+                private=False, 
+                free=False,             
+                start_date_time=self.start_date_time, 
+                final_date_time=self.final_date_time, 
+            )
+        other_event = Event.objects.get(id=3)
+        other_event.participants.add(self.any_user)
+        
+        response = self.client.get(reverse('ver_perfil', args=[self.any_user.id]))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context.get('qtd_events_organizing'), 2)
+        self.assertEqual(response.context.get('qtd_event_participanting'), 1)
+        
+
+    def test_user_does_not_exist(self):
+        response = self.client.get(reverse('ver_perfil', args=[10]))
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Usuário não existe.')
+        self.assertRedirects(response, reverse('home'))
+        
+
+
+        
+    
