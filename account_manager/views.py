@@ -10,34 +10,10 @@ from django.contrib.messages import constants
 from django.contrib import messages
 from .models import User
 from django.contrib.auth import login
-
+from allauth.socialaccount.models import SocialAccount
 from allauth.account.views import LoginView, SignupView
 # Create your views here.
-
-
-
-class CustomSignupView(SignupView):
-    def form_valid(self, form):
-        user = form.save(self.request)
-        
-        if not user.is_active:
-            activateEmail(self.request, user, user.email)
-            return redirect('account_inactive')
-        login(self.request, user)
-        return HttpResponseRedirect(self.get_success_url())
-        
-        
-class CustomLoginView(LoginView):
-    def form_valid(self, form):
-        email = form.cleaned_data['login']
-        user = User.objects.get(email=email)        
-        
-        if not user.is_active:
-            activateEmail(self.request, user, user.email)
-            return redirect('account_inactive')
-        return super().form_valid(form)
     
-
 def activateEmail(request, user, to_email):
     if request.user.is_active:
         return redirect('home')
@@ -62,6 +38,29 @@ def account_inactive(request):
         return redirect('home')
     message = request.session.pop('activation_message', 'Esta conta está <b>desativada</b>. Verifique na caixa de mensagens do seu email se não enviamos um link para ativação. Se não foi enviado, tente logar novamente, verificando se o email foi digitado corretamente.')
     return render(request, 'account/account_inactive.html', {'message': message})
+
+#
+class CustomSignupView(SignupView):
+    def form_valid(self, form):
+        user = form.save(self.request)
+        
+        if not user.is_active:
+            activateEmail(self.request, user, user.email)
+            return redirect('account_inactive')
+        login(self.request, user)
+        return HttpResponseRedirect(self.get_success_url())
+        
+        
+class CustomLoginView(LoginView):
+    def form_valid(self, form):
+        email = form.cleaned_data['login']
+        user = User.objects.get(email=email)        
+        
+        if not user.is_active:
+            activateEmail(self.request, user, user.email)
+            return redirect('account_inactive')
+        return super().form_valid(form)
+#
 
 def activate_account(request, uidb64, token):
     if request.user.is_active:

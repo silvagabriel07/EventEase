@@ -1,4 +1,3 @@
-from django.shortcuts import redirect
 from django.contrib.messages import constants
 from django.contrib import messages
 

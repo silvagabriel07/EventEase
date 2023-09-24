@@ -1,12 +1,12 @@
 from django.urls import path
 from . import views
 from allauth.account.views import (
-    LogoutView, SignupView, PasswordChangeView,
+    LogoutView, PasswordChangeView,
     PasswordResetView, PasswordResetDoneView, PasswordResetFromKeyView,
     PasswordResetFromKeyDoneView, PasswordSetView
 )
 from allauth.socialaccount.views import (
-    SignupView, 
+    SignupView as SocialSignUpView, 
     LoginCancelledView, 
     LoginErrorView, 
     ConnectionsView,
@@ -29,7 +29,7 @@ urlpatterns = [
     path('activate_account/<uidb64>/<token>/', views.activate_account, name='activate_account'),
 
     # socialaccount
-    path('social/signup/', SignupView.as_view(), name='socialaccount_signup'),
+    path('social/signup/', SocialSignUpView.as_view(), name='socialaccount_signup'),
     path('social/login/cancelled/', LoginCancelledView.as_view(), name='socialaccount_login_cancelled'),
     path('social/login/error/', LoginErrorView.as_view(), name='socialaccount_login_error'),
     path('social/connections/', ConnectionsView.as_view(), name='socialaccount_connections'),

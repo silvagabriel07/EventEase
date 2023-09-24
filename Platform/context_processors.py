@@ -7,3 +7,5 @@ def notifications_count(request):
         return {'notifications_count': count}
     else:
         return {}
+
+
