@@ -39,11 +39,9 @@ class TestFormEventForm(TestCase):
             'start_date_time': self.start_date_time+' 20:20',
             'final_date_time': self.final_date_time+' 20:20',
         }
-        # Crie uma instância do formulário com o arquivo simulado
+
         form = EventForm(data, {'event_banner': self.uploaded_file})
-        # Verifique se o formulário é válido
         self.assertTrue(form.is_valid())
-        # Verifique se o campo event_banner não é substituído pela imagem padrão
         self.assertEqual(form.cleaned_data['event_banner'], self.uploaded_file)    
     
     def test_DateTimeField_invalid_formats_1(self):
@@ -54,7 +52,7 @@ class TestFormEventForm(TestCase):
             'start_date_time': '10-09-2023 20:20',
             'final_date_time': '10-09-2023 20:20'
         }
-        # Crie uma instância do formulário com o arquivo simulado
+
         form = EventForm(data, {'event_banner': self.uploaded_file})
         self.assertFalse(form.is_valid())
         self.assertEqual(len(form.errors['start_date_time']), 1)
@@ -68,7 +66,7 @@ class TestFormEventForm(TestCase):
             'start_date_time': '2023/09/20 20:10',
             'final_date_time': '2023/10/01 19:05'
         }
-        # Crie uma instância do formulário com o arquivo simulado
+
         form = EventForm(data, {'event_banner': self.uploaded_file})
         self.assertFalse(form.is_valid())
         self.assertEqual(len(form.errors['start_date_time']), 1)
@@ -82,7 +80,7 @@ class TestFormEventForm(TestCase):
             'start_date_time': '16/10/2023 20-10',
             'final_date_time': '16/10/2023 20-10'
         }
-        # Crie uma instância do formulário com o arquivo simulado
+
         form = EventForm(data, {'event_banner': self.uploaded_file})
         self.assertFalse(form.is_valid())
         self.assertEqual(len(form.errors['start_date_time']), 1)
@@ -98,7 +96,7 @@ class TestFormEventForm(TestCase):
             'start_date_time': start_date_time+' 20:20',
             'final_date_time': final_date_time+' 20:00',
         }
-        # Crie uma instância do formulário com o arquivo simulado
+
         form = EventForm(data, {'event_banner': self.uploaded_file})
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors['__all__'][0], 'Data inicial não pode ser após a data final do evento.')

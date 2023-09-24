@@ -3,10 +3,12 @@ from datetime import datetime, timedelta
 from eventos.models import Event, Solicitation, Category
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-# from unittest.mock import patch
-# from account_manager.models import PhoneNumber
-# from ..forms import ProfileForm
-# from django.forms import BaseInlineFormSet
+from unittest.mock import patch
+from account_manager.models import PhoneNumber
+from ..forms import ProfileForm
+from django.forms import BaseInlineFormSet
+from django.contrib import messages
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 User = get_user_model()
 
@@ -290,3 +292,112 @@ class TestViewExplorarEventos(TestCase):
         self.assertEqual(events, list(expected_events))
 
 
+class TestViewPerfil(TestCase):
+    
+    def setUp(self) -> None:
+        self.url = reverse('perfil')
+
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )        
+        self.client.login(password='senhaqualquer12', email='email@gmail.com')
+
+    # GET REQUEST    
+    def test_get_request_renders_what_is_expected(self):
+        self.client.login(password='senhaqualquer12', email='email@gmail.com')
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIsInstance(response.context['form'], ProfileForm)
+        self.assertIsInstance(response.context['form_filho'], BaseInlineFormSet)
+  
+    @patch('Platform.views.forms.inlineformset_factory', spec=True)
+    def test_number_of_phone_numbers_input_correctly(self, mock_form_factory):
+        for n in range(0, 4):
+            if n != 0:
+                PhoneNumber.objects.create(user=self.any_user, phone_number=f'+00 00000-000{n}')
+            response = self.client.get(self.url)
+            amount_phonenumber_inputs = mock_form_factory.call_args[1]['extra']
+            self.assertEqual(amount_phonenumber_inputs, 3 - n)
+
+    # POST REQUEST
+    # Because I am testing a view, I will not focus on testing the form itself,
+    # but rather on the view's behavior with the forms.
+    def test_POST_update_only_username_valid(self):
+        form_data = {
+            'username': 'newusername',
+            'idade': self.any_user.idade,
+            'phonenumber_set-TOTAL_FORMS': '3', # number of forms submitted to be rendered
+            'phonenumber_set-INITIAL_FORMS': '0', # amount of forms linked to user instance (in this case)
+            'phonenumber_set-MIN_NUM_FORMS': '3',
+            'phonenumber_set-MAX_NUM_FORMS': '3',
+        }
+        response = self.client.post(self.url, data=form_data)
+        self.assertEqual(response.status_code, 302)  # Redirecionamento após POST bem-sucedido
+
+        self.any_user.refresh_from_db()
+        self.assertEqual(self.any_user.username, 'newusername')
+        msgs = len(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Alterações salvas.')
+    
+    def test_POST_adding_a_new_phone_number_valid(self):
+        form_data = {
+            'username': self.any_user.username,
+            'idade': self.any_user.idade,
+            'phonenumber_set-TOTAL_FORMS': '3',
+            'phonenumber_set-INITIAL_FORMS': '0',
+            'phonenumber_set-MIN_NUM_FORMS': '3',
+            'phonenumber_set-MAX_NUM_FORMS': '3',
+            
+            'phonenumber_set-0-phone_number': '+11 11111-1111',
+        }       
+        response = self.client.post(self.url, data=form_data)
+        self.assertEqual(response.status_code, 302)  
+        self.any_user.refresh_from_db()
+        self.assertTrue(self.any_user.phonenumber_set.all().exists())
+        msgs = len(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Alterações salvas.')
+
+           
+    def test_POST_update_only_phone_number_valid(self):
+        phone_number = PhoneNumber.objects.create(user=self.any_user, phone_number='+00 00000-0000')
+
+        form_data = {
+            'username': self.any_user.username,
+            'idade': self.any_user.idade,
+            'phonenumber_set-TOTAL_FORMS': '3',
+            'phonenumber_set-INITIAL_FORMS': '1',
+            'phonenumber_set-MIN_NUM_FORMS': '3',
+            'phonenumber_set-MAX_NUM_FORMS': '3',
+            
+            'phonenumber_set-0-user': self.any_user.id,
+            'phonenumber_set-0-id': phone_number.id,
+            'phonenumber_set-0-phone_number': '+11 11111-1111',
+        }
+        response = self.client.post(self.url, data=form_data)
+        self.assertEqual(response.status_code, 302) 
+        
+        self.any_user.refresh_from_db()
+        self.assertEqual(PhoneNumber.objects.get(id=1).phone_number, '+11 11111-1111')
+        msgs = len(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), 'Alterações salvas.')
+
+
+    def test_POST_invalid_phone_number(self):
+        form_data = {
+            'username': self.any_user.username,
+            'idade': self.any_user.idade,
+            'phonenumber_set-TOTAL_FORMS': '1',
+            'phonenumber_set-INITIAL_FORMS': '0',
+            'phonenumber_set-MIN_NUM_FORMS': '',
+            'phonenumber_set-MAX_NUM_FORMS': '',
+            
+            'phonenumber_set-0-phone_number': '010 93099-3900',
+        }
+        response = self.client.post(self.url, data=form_data)
+        self.assertEqual(response.status_code, 200)
+
+        self.assertFalse(self.any_user.phonenumber_set.all().exists())
