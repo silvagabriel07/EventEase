@@ -340,7 +340,8 @@ class TestViewPerfil(TestCase):
 
         self.any_user.refresh_from_db()
         self.assertEqual(self.any_user.username, 'newusername')
-        msgs = len(messages.get_messages(response.wsgi_request))
+        msgs = list(messages.get_messages(response.wsgi_request))
+        print(msgs)
         self.assertEqual(str(msgs[0]), 'Alterações salvas.')
     
     def test_POST_adding_a_new_phone_number_valid(self):
@@ -358,7 +359,7 @@ class TestViewPerfil(TestCase):
         self.assertEqual(response.status_code, 302)  
         self.any_user.refresh_from_db()
         self.assertTrue(self.any_user.phonenumber_set.all().exists())
-        msgs = len(messages.get_messages(response.wsgi_request))
+        msgs = list(messages.get_messages(response.wsgi_request))
         self.assertEqual(str(msgs[0]), 'Alterações salvas.')
 
            
@@ -382,7 +383,7 @@ class TestViewPerfil(TestCase):
         
         self.any_user.refresh_from_db()
         self.assertEqual(PhoneNumber.objects.get(id=1).phone_number, '+11 11111-1111')
-        msgs = len(messages.get_messages(response.wsgi_request))
+        msgs = list(messages.get_messages(response.wsgi_request))
         self.assertEqual(str(msgs[0]), 'Alterações salvas.')
 
 
@@ -457,7 +458,105 @@ class TestViewVerPerfil(TestCase):
         self.assertEqual(str(msgs[0]), f'Usuário não existe.')
         self.assertRedirects(response, reverse('home'))
         
-
+    def test_view_render_correctly_template(self):
+        response = self.client.get(reverse('ver_perfil', args=[self.any_user.id]))
+        self.assertTemplateUsed(response, 'ver_perfil.html')
 
         
+class TestViewVerEventosParticipando(TestCase):
+    
+    def setUp(self) -> None:
+        self.start_date_time = datetime.now() + timedelta(days=1)
+        self.final_date_time = datetime.now() + timedelta(days=4)
+        Category.objects.create(name='Categoria A')
+
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+        self.another_user = User.objects.create_user(
+            username='user 2', 
+            password='senhaqualquer12', 
+            email='another@gmail.com', 
+            idade=18, 
+            is_active=True
+        )
+    
+    def test_ver_eventos_participando_view(self):
+        for i in range(3):                
+            event = Event.objects.create(
+                title=f'Titulo {i}', 
+                description=f'description etc {i}', 
+                organizer=self.any_user, 
+                category_id=1, 
+                private=False, 
+                free=False,             
+                start_date_time=self.start_date_time, 
+                final_date_time=self.final_date_time, 
+            )        
+            event.participants.add(self.another_user)
+        response = self.client.get(reverse('ver_eventos_participando', args=[self.another_user.id]))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context.get('events_participanting').count(), 3)
+
+    def test_user_does_not_exist(self):
+        response = self.client.get(reverse('ver_eventos_participando', args=[10]))
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Usuário não existe.')
+        self.assertRedirects(response, reverse('home'))
+
+    def test_view_render_correctly_template(self):
+        response = self.client.get(reverse('ver_eventos_participando', args=[self.any_user.id]))
+        self.assertTemplateUsed(response, 'ver_eventos_participando.html')
+
+
+
+class TestViewVerEventosOrganizando(TestCase):
+    
+    def setUp(self) -> None:
+        self.start_date_time = datetime.now() + timedelta(days=1)
+        self.final_date_time = datetime.now() + timedelta(days=4)
+        Category.objects.create(name='Categoria A')
+
+        self.any_user = User.objects.create_user(
+            username='user 1', 
+            password='senhaqualquer12', 
+            email='email@gmail.com', 
+            idade=29, 
+            is_active=True
+        )
+
+    def test_ver_eventos_organizando_view(self):
+        for i in range(3):                
+            event = Event.objects.create(
+                title=f'Titulo {i}', 
+                description=f'description etc {i}', 
+                organizer=self.any_user, 
+                category_id=1, 
+                private=False, 
+                free=False,             
+                start_date_time=self.start_date_time, 
+                final_date_time=self.final_date_time, 
+            )       
+            
+        response = self.client.get(reverse('ver_eventos_organizando', args=[self.any_user.id]))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context.get('events_organizing').count(), 3)
+
+    def test_user_does_not_exist(self):
+        response = self.client.get(reverse('ver_eventos_organizando', args=[10]))
+        msgs =  list(messages.get_messages(response.wsgi_request))
+        self.assertEqual(str(msgs[0]), f'Usuário não existe.')
+        self.assertRedirects(response, reverse('home'))
+
+    def test_view_render_correctly_template(self):
+        response = self.client.get(reverse('ver_eventos_organizando', args=[self.any_user.id]))
+        self.assertTemplateUsed(response, 'ver_eventos_organizando.html')
+
+
     

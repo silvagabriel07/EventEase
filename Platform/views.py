@@ -133,7 +133,7 @@ def ver_eventos_participando(request, user_id):
         messages.add_message(request, constants.ERROR, 'Usuário não existe.')
         return redirect('home')
     event_participanting = user.event_participants.filter(final_date_time__gte=datetime.now() - timedelta(days=1))
-    return render(request, 'ver_eventos_participando.html', {'user': user, 'event_participanting': event_participanting})
+    return render(request, 'ver_eventos_participando.html', {'user': user, 'events_participanting': event_participanting})
 
 
 def ver_eventos_organizando(request, user_id):
