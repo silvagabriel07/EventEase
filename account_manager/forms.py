@@ -14,11 +14,12 @@ class CustomSignupForm(SignupForm):
         self.fields['username'].label = 'Nome de Usuário:'
         self.fields['email'].widget.attrs.update({'class': 'form-control custom-form-width', "placeholder": "Endereço de email"})
         self.fields['email'].label = 'Endereço de email:'
+        
     
     idade = forms.IntegerField(required=True, label='Idade:', widget=forms.NumberInput(attrs={'class': 'form-control custom-form-width', 'placeholder': 'Idade'}))
     # Não obrigatórios
     phone_number = forms.CharField(required=False, label='Número de telefone:', max_length=14, validators=[phone_number_validators], widget=forms.TextInput(attrs={'id': 'id_phone_number', 'class': 'form-control custom-form-width', 'placeholder': '+00 00000-0000'}))
-    
+    #
     field_order = ['username', 'email', 'idade', 'password1', 'password2', 'user_img']
 
     def clean_email(self):
@@ -28,8 +29,6 @@ class CustomSignupForm(SignupForm):
                 self.add_error('email', 'Alguém já se registrou com este endereço de e-mail.')
             else:
                 return email
-        else:
-            self.add_error('email', 'O email deve ser informada.')
 
     def clean_idade(self):
         idade = self.cleaned_data["idade"]
@@ -38,9 +37,7 @@ class CustomSignupForm(SignupForm):
                 self.add_error('idade', 'Menores de 14 anos não podem se cadastrar.')
             else:
                 return idade
-        else:
-            self.add_error('idade', 'A idade deve ser informada.')
- 
+    # TODO test this in test_views
     def save(self, request):
         user = User.objects.create_user(
         email=self.cleaned_data['email'],
