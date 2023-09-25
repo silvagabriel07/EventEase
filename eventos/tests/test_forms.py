@@ -2,6 +2,7 @@ from django.test import TestCase
 from ..forms import EventForm, Category, Event
 from django.core.files.uploadedfile import SimpleUploadedFile
 from datetime import datetime, timedelta
+import os
 
 # PRECISO FAZER MUITO MAIS TESTES PARA ESSE FORM
 # PRECISO COBRIR TODAS AS POSSIVILIDADES DE ERRO COM ESSE FORM.
@@ -18,7 +19,7 @@ class TestFormEventForm(TestCase):
             content_type='image/png'
         )
         self.category = Category.objects.create(name='Categoria Qualquer') 
-        
+                
     def test_create_event_successfully_without_event_banner(self):
         data = {
             'title': 'Título Qualquer',

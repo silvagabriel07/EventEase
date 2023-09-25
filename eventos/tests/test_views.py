@@ -1,4 +1,5 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.storage import default_storage
 from django.test import TestCase
 from ..views import User
 from ..models import Event, Category, Solicitation
@@ -105,10 +106,10 @@ class TestViewCriarEvento(TestCase):
         )
 
         response = self.client.post(self.url, data=form_data, files={'event_banner': uploaded_file})
-
         self.assertEqual(response.status_code, 302) 
         self.assertEqual(Event.objects.count(), 1)  
         self.assertRedirects(response, reverse('organizando'))  
+        
 
     def test_criar_evento_post_invalid(self):
         form_data = {
