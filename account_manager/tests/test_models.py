@@ -21,7 +21,6 @@ class TestModelUser(TestCase):
             password='senhaqualquer12',
             user_img=image
         )
-        print(user.user_img.url)
         self.assertTrue(user.user_img.url.startswith('/user_img/test_img.jpg'))
         default_storage.delete(user.user_img.path)
 
@@ -186,5 +185,79 @@ class TestModelUser(TestCase):
             )
 
 
-
+class TestManagerCustomUserManager(TestCase):
+    
+    def test_create_user_without_username(self):
+        any_user = User.objects.create_user(
+            idade=17,
+            email='anyuser@gmail.com',
+            password='senhaqualquer12',
+        )
+        self.assertEqual(any_user.username, any_user.email)
+    
+    def test_create_user_without_password_fails(self):
+        with self.assertRaises(ValueError) as context:
+            any_user = User.objects.create_user(
+                username='test',
+                idade=17,
+                email='anyuser@gmail.com',
+            )
+        self.assertEqual(str(context.exception), 'A senha deve ser informada')
+            
+    def test_create_user_without_email_fails(self):
+        with self.assertRaises(TypeError):
+            any_user = User.objects.create_user(
+                username='test',
+                idade=17,
+                password='senhaqualquer12'
+            )
+    
+    def test_password_hash_is_created(self):
+        any_user = User.objects.create_user(
+            username='any user',
+            idade=17,
+            email='anyuser@gmail.com',
+            password='senhaqualquer12',
+        )
+        self.assertTrue(any_user.check_password('senhaqualquer12'))
+    
+    def test_create_user_by_default_as_active(self):
+        any_user = User.objects.create_user(
+            username='any user',
+            idade=17,
+            email='anyuser@gmail.com',
+            password='senhaqualquer12',
+        )
+        self.assertFalse(any_user.is_active)
         
+    def test_create_user_by_default_with_is_staff_and_is_superuser_false(self):
+        any_user = User.objects.create_user(
+            username='any user',
+            idade=17,
+            email='anyuser@gmail.com',
+            password='senhaqualquer12',
+        )
+        self.assertFalse(any_user.is_staff)
+        self.assertFalse(any_user.is_superuser)
+    
+    def test_create_superuser_with_is_staff_false_fails(self):
+        with self.assertRaises(ValueError) as context:
+            any_user = User.objects.create_superuser(
+                username='any user',
+                idade=17,
+                email='anyuser@gmail.com',
+                password='senhaqualquer12',
+                is_staff=False,
+            )
+        self.assertEqual(str(context.exception), 'Superuser deve ter is_staff=True.')
+
+    def test_create_superuser_with_is_superuser_false_fails(self):
+        with self.assertRaises(ValueError) as context:
+            any_user = User.objects.create_superuser(
+                username='any user',
+                idade=17,
+                email='anyuser@gmail.com',
+                password='senhaqualquer12',
+                is_superuser=False,
+            )
+        self.assertEqual(str(context.exception), 'Superuser deve ter is_superuser=True.')
