@@ -40,7 +40,7 @@ class CustomSignupForm(SignupForm):
                 return idade
         else:
             self.add_error('idade', 'A idade deve ser informada.')
-
+ 
     def save(self, request):
         user = User.objects.create_user(
         email=self.cleaned_data['email'],

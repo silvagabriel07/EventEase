@@ -1,10 +1,12 @@
 from django.test import TestCase
-from ..models import User
+from ..models import User, PhoneNumber
 from django.core.files.uploadedfile import SimpleUploadedFile
 from eventos.models import Event, Category, Solicitation
 from datetime import datetime, timedelta
 from django.db.utils import IntegrityError
 from django.core.files.storage import default_storage
+from django.core.exceptions import ValidationError
+
 
 class TestModelUser(TestCase):
     
@@ -261,3 +263,21 @@ class TestManagerCustomUserManager(TestCase):
                 is_superuser=False,
             )
         self.assertEqual(str(context.exception), 'Superuser deve ter is_superuser=True.')
+
+
+class TestModelPhoneNumber(TestCase):
+    
+    def test_user_cannot_have_more_than_3_phone_numbers(self):
+        user = User.objects.create_user(
+            username='user',
+            idade=19, 
+            password='senhaqualquer12',
+            email='user@gmail.com'
+        )
+        for i in range(4):
+            phone_number = PhoneNumber(user=user, phone_number=f'+11 12345-123{i}')
+            if i == 3:
+                with self.assertRaises(ValidationError): 
+                    phone_number.save()
+            else:
+                phone_number.save()

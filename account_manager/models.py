@@ -83,3 +83,8 @@ class PhoneNumber(models.Model):
         if existing_phone_numbers.count() >= 3:
             raise ValidationError('Um usuário só pode ter no máximo 3 números de telefone.')
         super().clean()
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        return super().save(*args, **kwargs)
+

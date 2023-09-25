@@ -318,7 +318,8 @@ class TestViewPerfil(TestCase):
     def test_number_of_phone_numbers_input_correctly(self, mock_form_factory):
         for n in range(0, 4):
             if n != 0:
-                PhoneNumber.objects.create(user=self.any_user, phone_number=f'+00 00000-000{n}')
+                phone_number = PhoneNumber(user=self.any_user, phone_number=f'+00 00000-000{n}')
+                phone_number.save()
             response = self.client.get(self.url)
             amount_phonenumber_inputs = mock_form_factory.call_args[1]['extra']
             self.assertEqual(amount_phonenumber_inputs, 3 - n)
@@ -364,8 +365,9 @@ class TestViewPerfil(TestCase):
 
            
     def test_POST_update_only_phone_number_valid(self):
-        phone_number = PhoneNumber.objects.create(user=self.any_user, phone_number='+00 00000-0000')
-
+        phone_number = PhoneNumber(user=self.any_user, phone_number='+00 00000-0000')
+        phone_number.save()
+    
         form_data = {
             'username': self.any_user.username,
             'idade': self.any_user.idade,
