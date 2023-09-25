@@ -120,3 +120,34 @@ class TestFormCustomSignupForm(TestCase):
         self.assertFalse(form.is_valid())
         self.assertFormError(form=form, field='idade', errors='Menores de 14 anos não podem se cadastrar.')
         
+
+class TestFormCustomChangePasswordForm(TestCase):
+    def setUp(self) -> None:
+        self.user = User.objects.create_user(
+            username='user',
+            idade=18,
+            email='user@gmail.com',
+            password='senhaantiga1'
+        )
+        
+    def test_incorrect_oldpassword_field_raise_an_error(self):
+        data = {
+            'oldpassword': 'senhaantiga12',
+            'password1': 'senhanova12',
+            'password2': 'senhanova12'
+        }
+        form = CustomChangePasswordForm(data=data, user=self.user)
+        self.assertFalse(form.is_valid())
+        self.assertFormError(form=form, field='oldpassword', errors='A senha atual está incorreta.')
+    
+    def test_password1_and_password2_do_not_match_raises_an_error(self):
+        data = {
+            'oldpassword': 'senhaantiga1',
+            'password1': 'senhanova12',
+            'password2': 'senhanova13'
+        }
+        form = CustomChangePasswordForm(data=data, user=self.user)
+        self.assertFalse(form.is_valid())
+        self.assertFormError(form=form, field='password2', errors='A mesma senha deve ser escrita em ambos os campos.')
+
+    
