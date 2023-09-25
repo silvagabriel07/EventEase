@@ -86,3 +86,4 @@ class TestFunctionUserIsOrganizer(TestCase):
         self.assertFalse(user_is_organizer(request=response.wsgi_request, event=self.any_event, message=False)) 
         msgs = list(messages.get_messages(response.wsgi_request))
         self.assertEqual(len(msgs), 0)
+    
