@@ -10,7 +10,6 @@ from django.contrib.messages import constants
 from django.contrib import messages
 from .models import User
 from django.contrib.auth import login
-from allauth.socialaccount.models import SocialAccount
 from allauth.account.views import LoginView, SignupView
 # Create your views here.
     
@@ -33,7 +32,7 @@ def activateEmail(request, user, to_email):
     request.session['activation_message'] = message
     return redirect('account_inactive')
 
-def account_inactive(request):
+def account_inactive(request):    
     if request.user.is_active:
         return redirect('home')
     message = request.session.pop('activation_message', 'Esta conta está <b>desativada</b>. Verifique na caixa de mensagens do seu email se não enviamos um link para ativação. Se não foi enviado, tente logar novamente, verificando se o email foi digitado corretamente.')

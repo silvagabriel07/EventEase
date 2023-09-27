@@ -5,7 +5,6 @@ from django.urls import reverse
 from django.test import override_settings
 from datetime import datetime, timedelta
 from eventos.models import Event, Solicitation, Category
-from ..signals import send_solicitation_notification, send_participant_notification
 
 start_of_url = 'http://127.0.0.1:8000'
 User = get_user_model()

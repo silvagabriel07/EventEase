@@ -10,6 +10,10 @@ phone_number_validators = RegexValidator(
     )
 
 
+def password_validate(password):
+    if not password:
+        raise ValidationError("A senha deve ser informada.")
+
 # Create your models here.
 class CustomUserManager(UserManager):
     def _create_user(self, email, password, username, **extra_fields):
@@ -18,8 +22,7 @@ class CustomUserManager(UserManager):
         email = self.normalize_email(email)
         if not username:
             username = email
-        if not password:
-            raise ValueError("A senha deve ser informada")
+        password_validate(password)
 
         user = self.model(email=email, username=username, **extra_fields)
         user.password = make_password(password)
