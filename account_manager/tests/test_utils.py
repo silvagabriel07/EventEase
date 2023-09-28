@@ -5,7 +5,6 @@ from ..utils import need_set_age
 from django.urls import reverse
 from django.core import mail
 from ..utils import activateEmail
-from django.contrib.sites.shortcuts import get_current_site
 
 class TestUtilsNeedSetAge(TestCase):
         
