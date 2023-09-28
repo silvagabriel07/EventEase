@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..forms import ProfileForm, PhoneNumberForm
+from Platform.forms import ProfileForm, PhoneNumberForm
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
 

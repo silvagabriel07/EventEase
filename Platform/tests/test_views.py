@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from unittest.mock import patch
 from account_manager.models import PhoneNumber
-from ..forms import ProfileForm
+from Platform.forms import ProfileForm
 from django.forms import BaseInlineFormSet
 from django.contrib import messages
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -342,7 +342,6 @@ class TestViewPerfil(TestCase):
         self.any_user.refresh_from_db()
         self.assertEqual(self.any_user.username, 'newusername')
         msgs = list(messages.get_messages(response.wsgi_request))
-        print(msgs)
         self.assertEqual(str(msgs[0]), 'Alterações salvas.')
     
     def test_POST_adding_a_new_phone_number_valid(self):

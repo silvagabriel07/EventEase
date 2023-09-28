@@ -1,8 +1,8 @@
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.files.storage import default_storage
 from django.test import TestCase
-from ..views import User
-from ..models import Event, Category, Solicitation
+from eventos.views import User
+from eventos.models import Event, Category, Solicitation
 from django.urls import reverse
 from datetime import datetime, timezone, timedelta
 from django.contrib import messages

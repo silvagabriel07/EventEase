@@ -31,5 +31,4 @@ def activateEmail(request, user, to_email):
         message = f'Houve um problema ao tentar enviar o email de ativação para: {to_email}, verifique se o e-mail se foi digitado corretamente e tente novamente <a href="account/login/">login</a>.'
     
     request.session['activation_message'] = message
-    return redirect('account_inactive')
  

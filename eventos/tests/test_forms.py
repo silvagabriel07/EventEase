@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..forms import EventForm, Category, Event
+from eventos.forms import EventForm, Category, Event
 from django.core.files.uploadedfile import SimpleUploadedFile
 from datetime import datetime, timedelta
 import os

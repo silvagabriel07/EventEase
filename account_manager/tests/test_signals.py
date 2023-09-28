@@ -1,6 +1,6 @@
 from django.test import TestCase, RequestFactory
 from allauth.socialaccount.models import SocialAccount
-from ..models import User
+from account_manager.models import User
 from django.urls import reverse
 from allauth.account.signals import user_signed_up
 

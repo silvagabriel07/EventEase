@@ -1,6 +1,6 @@
 from django.test import TestCase
-from ..forms import CustomSignupForm, CustomChangePasswordForm
-from ..models import User
+from account_manager.forms import CustomSignupForm, CustomChangePasswordForm
+from account_manager.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 class TestFormCustomSignupForm(TestCase):

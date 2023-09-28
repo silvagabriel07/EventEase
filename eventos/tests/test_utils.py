@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.test import TestCase
-from ..utils import user_is_organizer
-from ..models import Category, Event, User
+from eventos.utils import user_is_organizer
+from eventos.models import Category, Event, User
 from datetime import datetime, timedelta, timezone
 from django.urls import reverse
 
@@ -35,7 +35,7 @@ class TestFunctionUserIsOrganizer(TestCase):
         response = self.client.get('/')
         self.assertTrue(user_is_organizer(request=response.wsgi_request, event=self.any_event))
         
-    def test_useris_organizer_false(self):
+    def test_user_is_organizer_false(self):
         another_user = User.objects.create_user(
             username='user 2', 
             password='senhaqualquer12', 

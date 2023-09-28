@@ -1,10 +1,10 @@
 from django.test import TestCase
-from ..models import User
+from account_manager.models import User
 from django.contrib import messages
-from ..utils import need_set_age
+from account_manager.utils import need_set_age
 from django.urls import reverse
 from django.core import mail
-from ..utils import activateEmail
+from account_manager.utils import activateEmail
 
 class TestUtilsNeedSetAge(TestCase):
         
@@ -61,8 +61,8 @@ class TestUtilsActivateEmail(TestCase):
         email = mail.outbox[0].body
         if 'example.com' in email:
             email = email.replace('example.com', 'http://127.0.0.1:8000')
-        
         url = email.split()[-1]
         response = self.client.get(url)
         
+        self.user.refresh_from_db()
         self.assertTrue(self.user.is_active)

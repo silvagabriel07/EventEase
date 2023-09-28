@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from ..models import User
+from account_manager.models import User
 from django.db.utils import IntegrityError
 from unittest.mock import patch
 from django.core.exceptions import ValidationError

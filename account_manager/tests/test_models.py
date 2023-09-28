@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..models import User, PhoneNumber
+from account_manager.models import User, PhoneNumber
 from django.core.files.uploadedfile import SimpleUploadedFile
 from eventos.models import Event, Category, Solicitation
 from datetime import datetime, timedelta
@@ -33,7 +33,6 @@ class TestModelUser(TestCase):
             email='anyuser@gmail.com',
             password='senhaqualquer12',
         )
-        print(user.user_img.url)
         self.assertEqual(user.user_img, '/user_img/user_img.png')
     
     def test_user_is_minor(self):
@@ -198,13 +197,13 @@ class TestManagerCustomUserManager(TestCase):
         self.assertEqual(any_user.username, any_user.email)
     
     def test_create_user_without_password_fails(self):
-        with self.assertRaises(ValueError) as context:
+        with self.assertRaises(ValidationError) as context:
             any_user = User.objects.create_user(
                 username='test',
                 idade=17,
                 email='anyuser@gmail.com',
             )
-        self.assertEqual(str(context.exception), 'A senha deve ser informada')
+        self.assertEqual(str(context.exception.messages[0]), 'A senha deve ser informada.')
             
     def test_create_user_without_email_fails(self):
         with self.assertRaises(TypeError):

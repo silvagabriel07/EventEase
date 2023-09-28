@@ -53,7 +53,7 @@ class TestSignalsSendSolicitationNotification(TestCase):
         self.assertEqual(Notification.objects.all().count(), 1)
 
     @override_settings(USE_TZ=False)
-    def test_send_notification_to_solicitation_created_creates_a_notification_correctly(self):
+    def test_send_notification_to_solicitation_organizer_when_user_banned_is_accepted(self):
         self.any_event.banned_users.add(self.another_user)
         solicitation = Solicitation.objects.create(
             user=self.another_user,

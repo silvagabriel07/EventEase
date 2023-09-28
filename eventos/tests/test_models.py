@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..models import Event, Category, User, Solicitation
+from eventos.models import Event, Category, User, Solicitation
 from datetime import datetime, timedelta, timezone
 from django.db.utils import IntegrityError
 
