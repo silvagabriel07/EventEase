@@ -1,5 +1,5 @@
 # EventEase
-_If you just want to start: [Getting Started](https://github.com/silvagabriel07/EventEase/edit/main/README.md#getting-started)._
+_If you just want to start: [Getting Started](https://github.com/silvagabriel07/EventEase#getting-started)._
 ### Brief Description: 
 This project is a social network that allows users to organize events and interact with themselves through these events, participating or organizing. EventEase is not just limited to the usual CRUDE operations in events. This project is designed to handle more intricate resources related to events and has them fully integrated, operating for example, with solicitations, blocked users, notification system, etc. All resources in the system have been implemented with the appropriate permissions logic.
 ### Goals: 
