@@ -157,7 +157,7 @@ SOCIALACCOUNT_LOGIN_ON_GET = True
 
 LANGUAGE_CODE = 'pt-br'
 
-TIME_ZONE = 'America/Cuiaba'
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -202,7 +202,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587

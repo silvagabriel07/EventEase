@@ -13,7 +13,9 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     num_featured_events = 6
-    featured_events = Event.objects.all().annotate(qtd_part=Count('participants')).order_by('-qtd_part')[:num_featured_events]
+    data_atual = datetime.now()
+    # Para pegar os eventos que já passaram se o evento passou à apenas um dia
+    featured_events = Event.objects.filter(final_date_time__gte=data_atual - timedelta(days=1)).annotate(qtd_part=Count('participants')).order_by('-qtd_part')[:num_featured_events]
     return render(request, 'home.html', {'events': featured_events})
 
 
@@ -25,7 +27,7 @@ def explorar_eventos(request):
     select_private = request.GET.get('select_private')
     select_free = request.GET.get('select_free')
     data_atual = datetime.now()
-    # para pegar os eventos que já acabaram, com excessão se passou um dia depois de sua finalização
+    # Para pegar os eventos que já passaram se o evento passou à apenas um dia
     events = Event.objects.filter(final_date_time__gte=data_atual - timedelta(days=1))
     categories = Category.objects.all()
     

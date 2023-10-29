@@ -1,4 +1,45 @@
 # EventEase
-Este é um projeto que estou desenvolvendo para colocar em prática vários conceitos que eu estou aprendendo com python e o framework Django.
-Estou usando templates bootstrap e html com css gratuitos para este projeto pessoal. Fiz isso para facilitar o desenvolvimento das funcionalidades e para o site não ficar feio.
-Funcionalidades que são desenvolvidas:
+_If you just want to start: [Getting Started](https://github.com/silvagabriel07/EventEase/edit/main/README.md#getting-started)._
+### Brief Description: 
+This project is a social network that allows users to organize events and interact with themselves through these events, participating or organizing. EventEase is not just limited to the usual CRUDE operations in events. This project is designed to handle more intricate resources related to events and has them fully integrated, operating for example, with solicitations, blocked users, notification system, etc. All resources in the system have been implemented with the appropriate permissions logic.
+### Goals: 
+This is a project developed with the **aim of putting several concepts I learned using Python and Django Framework** into practice.
+I'm using free Bootstrap templates and HTML with CSS for this personal project. I did that to make it easier to visualize the functionalities I implemented and to gain experience in integrating the front end with the back end.
+the template I used (and customized): [Impact](https://bootstrapmade.com/impact-bootstrap-business-website-template/)
+
+## Main Features 
+- Authentication using the [django-allauth](https://django-allauth.readthedocs.io/en/latest/index.html![image](https://github.com/silvagabriel07/EventEase/assets/126366191/3fec501c-637c-44cd-b285-d394724e37b9)
+) package:
+  - login (based on email field)
+  - signup
+  - logout
+  - change password
+  - reset password
+  - activate account (customized)
+  - social account (Google provider)
+- Notification System ([Platform/signals.py](Platform/signals.py))
+- CRUD Events
+  - Solicitation feature
+  - Blocked user feature
+  - Complex filters
+- Unit and Integration Testing
+
+## Getting Started
+- In terminal: `git clone https://github.com/silvagabriel07/EventEase`
+- create the virtual environment: `python -m venv venv`
+- activate your venv: in windows `venv\scripts\activate` in linux: `venv/bin/activate`
+- install the requirements: `pip install -r requirements.txt`
+- run the migrations: `python manage.py migrate`
+- run the server: run the server: `python manage.py runserver`
+- access the page: http://127.0.0.1:8000/home/
+---
+
+## :framed_picture: Some EventEase website pictures  
+Home Page:
+![Home Page](https://github.com/silvagabriel07/EventEase/blob/main/Captura%20de%20tela%202023-10-28%20182622.png)
+
+Notification Page: 
+![Notification Page](https://github.com/silvagabriel07/EventEase/blob/main/Captura%20de%20tela%202023-10-28%20194305.png)
+
+Explore Page:
+![Explore Page](https://github.com/silvagabriel07/EventEase/blob/main/Captura%20de%20tela%202023-10-28%20193813.png)

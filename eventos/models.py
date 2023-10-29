@@ -36,7 +36,7 @@ class Event(models.Model):
             return True
         except ObjectDoesNotExist:
             return False        
-        
+    
     def unban_user(self, user_id):
         try:
             user = User.objects.get(id=user_id)
