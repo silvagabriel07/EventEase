@@ -27,7 +27,7 @@ the template I used (and customized): [Impact](https://bootstrapmade.com/impact-
 ## Getting Started
 - In terminal: `git clone https://github.com/silvagabriel07/EventEase`
 - create the virtual environment: `python -m venv venv`
-- activate your venv: in windows `venv\scripts\activate` in linux: `venv/bin/activate`
+- activate your venv: in windows `venv\scripts\activate` in Linux: `venv/bin/activate`
 - install the requirements: `pip install -r requirements.txt`
 - run the migrations: `python manage.py migrate`
 - run the server: run the server: `python manage.py runserver`
@@ -36,10 +36,10 @@ the template I used (and customized): [Impact](https://bootstrapmade.com/impact-
 
 ## :framed_picture: Some EventEase website pictures  
 Home Page:
-![Home Page](https://github.com/silvagabriel07/EventEase/blob/main/Captura%20de%20tela%202023-10-28%20182622.png)
+![Home Page](https://github.com/silvagabriel07/EventEase/blob/main/project_screenshots/Captura%20de%20tela%202023-10-28%20182622.png)
 
 Notification Page: 
-![Notification Page](https://github.com/silvagabriel07/EventEase/blob/main/Captura%20de%20tela%202023-10-28%20194305.png)
+![Notification Page](https://github.com/silvagabriel07/EventEase/blob/main/project_screenshots/Captura%20de%20tela%202023-10-28%20194305.png)
 
 Explore Page:
-![Explore Page](https://github.com/silvagabriel07/EventEase/blob/main/Captura%20de%20tela%202023-10-28%20193813.png)
+![Explore Page](https://github.com/silvagabriel07/EventEase/blob/main/project_screenshots/Captura%20de%20tela%202023-10-28%20193813.png)
