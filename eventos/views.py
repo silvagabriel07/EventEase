@@ -16,8 +16,6 @@ from datetime import datetime, timedelta
 def organizando(request):
     data_atual = datetime.now()
     include_has_passed = request.POST.get('include_has_passed')
-    print(include_has_passed == True)
-    print(include_has_passed)
     my_events = Event.objects.filter(organizer=request.user)
     if not include_has_passed:
         my_events = my_events.filter(final_date_time__gte=data_atual)        
