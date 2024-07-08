@@ -24,6 +24,33 @@ the template I used (and customized): [Impact](https://bootstrapmade.com/impact-
   - Complex filters
 - Unit and Integration Testing
 
+### If you want to use the django-allauth SocialApp functionality you must add the provider (e.g., Google) to the database and use a Google Oauth client.
+When using Google as the authentication provider, you must have a Google OAuth client, which provides you with the necessary client_id and client_secret. These credentials are required to integrate Google authentication with your Django application.
+On the terminal:
+  ```
+# Start the Django shell
+python manage.py shell
+
+# Import necessary models
+from allauth.socialaccount.models import SocialApp
+from django.contrib.sites.models import Site
+
+# Create a SocialApp entry
+app = SocialApp.objects.create(
+    provider='google',
+    name='Google',
+    client_id='YOUR_CLIENT_ID',
+    secret='YOUR_SECRET_KEY'
+)
+
+# Associate the SocialApp with your site
+site = Site.objects.get(id=1)
+app.sites.add(site)
+
+# Verify the creation
+print(SocialApp.objects.all())
+```
+
 ## Getting Started
 - In terminal: `git clone https://github.com/silvagabriel07/EventEase`
 - create the virtual environment: `python -m venv venv`
