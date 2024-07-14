@@ -1,0 +1,144 @@
+.custom-container{
+    margin-top: 10%;
+    margin-bottom: 8%;
+    padding: 3%;
+    border-radius: 20px;
+    background-color: #380087;
+    color: white;
+
+}
+
+
+.cta-button {
+    display: inline-block;
+    background-color: #f85a40;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.cta-button:hover {
+    background-color: #c94834;
+    color: #380087;
+}
+
+h1:hover{
+    color: #c94834;
+}
+
+.custom-form-width{
+    width: 35%;
+}
+
+.custom-errorlist{
+    color: rgb(229, 70, 70);
+    margin: 0;
+}
+
+.errorlist li{
+    color: rgb(229, 70, 70);
+    margin: 0;
+}
+
+.label-event{
+    text-decoration: underline;
+    font-size: 25px;
+    font-weight: 600;
+    color: #fb6a54;
+    margin-right: 5px;
+}
+.label-event:hover{
+    color: #d03119;
+}
+
+h1{
+    font-weight: 700;
+}
+.value-event{
+    padding-top: 15px;
+    padding-right: 10px;
+    padding-left: 10px;
+    display: inline-block;
+    border-radius: 10px;
+    background-color: #6126b4b7;
+}
+.value-event:hover{
+    background-color: #8d5ad491;
+}
+.value-description{
+    padding: 20px;
+    padding-bottom: 0;
+
+}
+.value-img{
+    border-radius:  10px;
+    width: 60%;
+    height: 400px;
+}
+.div-btns-solicitations{
+    display: inline; 
+    border: 2px solid #380087;
+    border-radius: 4px;
+    float: right;
+}
+.div-btns-solicitations:hover{
+    border-color: blueviolet;
+}
+.div-btns-solicitations a{
+    color: #380087;
+    text-decoration: underline;
+}
+
+.btn-leave{
+    padding: 10px;
+    background-color: rgb(186, 4, 4);
+}
+  .btn-leave:hover{
+    background-color: rgb(148, 4, 4);
+    color: regb(56, 27, 27);
+}
+
+.w{
+    color: rgb(171, 160, 3);
+    text-decoration: underline;
+}
+.a{
+    color: rgb(45, 201, 8);
+    text-decoration: underline;
+}
+.r{
+    color: rgb(247, 32, 32);
+    text-decoration: underline;
+}
+
+.article-w{
+    background-color: rgb(250, 245, 177)
+}
+.article-a{
+    background-color: rgb(181, 250, 165)
+}
+.article-r{
+    background-color: rgb(245, 135, 143)
+}
+
+.custom-mini-card{
+    background-color: white;
+    color: black;
+}
+
+.ntf-a{
+    background: #65f55b;
+}
+
+.ntf-r{
+    background: #f70a4d;
+}
+
+.ntf-removed{
+    background: #e81313;
+}
+
+.ntf-added{
+    background: #4eed93;
+}

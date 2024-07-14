@@ -1,0 +1,25 @@
+
+h1{
+    font-weight: 800;
+    text-align: center;
+}
+
+
+.c-auth{
+    width: 75%;
+}
+
+.c-form-text{
+    color: rgb(172, 172, 172);
+    font-size: small;
+}
+
+.warning-container{
+    width: 45%;
+    text-align: center;
+}
+.warning-container p{
+    color: rgb(219, 252, 72);
+}
+
+

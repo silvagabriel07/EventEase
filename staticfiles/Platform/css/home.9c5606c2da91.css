@@ -1,0 +1,119 @@
+header {
+    background-color: #454343;
+    color: #fff;
+    padding: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+p {
+    font-size: 16px;
+    margin: 10px 0;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.custom-card{
+    border-width: 10px;
+}
+
+.cta-button {
+    display: inline-block;
+    background-color: #f85a40;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.cta-button:hover {
+    background-color: #c94834;
+}
+
+.caracteristica-evento{
+    font-size: 12px
+  }
+
+  .btn-edit{
+    width: 120px;
+    text-align: center;
+  }
+
+.btn-uniq{
+    width: 100%;
+    text-align: center;
+}
+
+.custom-img-fluid{
+    height: 250px;
+    width: 100%;
+}
+
+
+
+/* Template explorar_eventos */
+.color-blue{
+    background-color: blue;
+    color: #fff;
+    border-color: #333;
+}
+
+.color-blue:hover{
+    background-color: rgb(13, 13, 187);
+    color: #cfcbcb;
+    border-color: #333;
+}
+.filter-select {
+    margin-top: 3px;
+    padding: 5px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+
+.filter-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.filter-button:hover {
+    background-color: #0056b3;
+}
+.div-select-filters{
+    display: inline;
+}    
+
+.btn-inline{
+    display: inline;
+}
+
+.status{
+    text-decoration: underline;
+}   
+
+.status label{
+    text-decoration: undeline;
+    color: #481194;
+    font-weight: 800;
+}
+
+.n-participants{
+    float: right;
+    font-size: 17px;
+}
+
+.has_passed{
+    background-color: #E6E6E6;
+}
