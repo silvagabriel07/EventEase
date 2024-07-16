@@ -1,5 +1,5 @@
 from django.test import TestCase
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from eventos.models import Event, Solicitation, Category
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -15,8 +15,8 @@ User = get_user_model()
 class TestViewExplorarEventos(TestCase):
     
     def setUp(self):
-        self.start_date_time = datetime.now() + timedelta(days=1)
-        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.start_date_time = timezone.now() + timedelta(days=1)
+        self.final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -82,7 +82,7 @@ class TestViewExplorarEventos(TestCase):
         self.assertEqual(len(list(response.context.get('page'))), 2)
     
     def test_select_start_date_time_filter_today_correctly(self):
-        current_date = datetime.now().date()
+        current_date = timezone.now().date()
         another_event = Event.objects.create(
             title='Titulo 2', 
             description='olá', 
@@ -106,7 +106,7 @@ class TestViewExplorarEventos(TestCase):
         self.assertEqual(events, list(expected_events))
 
     def test_select_start_date_time_filter_this_month_correctly(self):
-        current_date = datetime.now()
+        current_date = timezone.now()
         another_event = Event.objects.create(
             title='Titulo 2', 
             description='olá', 
@@ -131,7 +131,7 @@ class TestViewExplorarEventos(TestCase):
         self.assertEqual(events, list(expected_events))
         
     def test_select_start_date_time_filter_next_month_correctly(self):
-        current_date = datetime.now()
+        current_date = timezone.now()
         another_event = Event.objects.create(
             title='Titulo 2', 
             description='olá', 
@@ -156,7 +156,7 @@ class TestViewExplorarEventos(TestCase):
         self.assertEqual(events, list(expected_events))
 
     def test_select_start_date_time_filter_this_year_correctly(self):
-        current_date = datetime.now()
+        current_date = timezone.now()
         another_event = Event.objects.create(
             title='Titulo 2', 
             description='olá', 
@@ -408,8 +408,8 @@ class TestViewPerfil(TestCase):
 class TestViewVerPerfil(TestCase):
     
     def setUp(self) -> None:
-        self.start_date_time = datetime.now() + timedelta(days=1)
-        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.start_date_time = timezone.now() + timedelta(days=1)
+        self.final_date_time = timezone.now() + timedelta(days=4)
         Category.objects.create(name='Categoria A')
 
         self.any_user = User.objects.create_user(
@@ -467,8 +467,8 @@ class TestViewVerPerfil(TestCase):
 class TestViewVerEventosParticipando(TestCase):
     
     def setUp(self) -> None:
-        self.start_date_time = datetime.now() + timedelta(days=1)
-        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.start_date_time = timezone.now() + timedelta(days=1)
+        self.final_date_time = timezone.now() + timedelta(days=4)
         Category.objects.create(name='Categoria A')
 
         self.any_user = User.objects.create_user(
@@ -519,8 +519,8 @@ class TestViewVerEventosParticipando(TestCase):
 class TestViewVerEventosOrganizando(TestCase):
     
     def setUp(self) -> None:
-        self.start_date_time = datetime.now() + timedelta(days=1)
-        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.start_date_time = timezone.now() + timedelta(days=1)
+        self.final_date_time = timezone.now() + timedelta(days=4)
         Category.objects.create(name='Categoria A')
 
         self.any_user = User.objects.create_user(

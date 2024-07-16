@@ -60,7 +60,7 @@ class Event(models.Model):
         return self.participants.all().count()
 
     def has_passed(self):
-        return self.final_date_time < datetime.now().replace(tzinfo=timezone.utc)
+        return self.final_date_time < timezone.now().replace(tzinfo=timezone.utc)
 
     def accept_user(self, user_id):
         try:

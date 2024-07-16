@@ -19,7 +19,7 @@ class TestViewOrganizando(TestCase):
         self.any_user.is_active = True
         self.any_user.save()
         
-        self.start_date_time = datetime.now().replace(tzinfo=timezone.utc) + timedelta(days=1) 
+        self.start_date_time = timezone.now().replace(tzinfo=timezone.utc) + timedelta(days=1) 
         self.final_date_time = self.start_date_time + timedelta(days=20)
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(
@@ -63,8 +63,8 @@ class TestViewOrganizando(TestCase):
 class TestViewCriarEvento(TestCase):
     
     def setUp(self) -> None:
-        self.start_date_time = (datetime.now() + timedelta(days=2)).strftime('%d/%m/%Y')
-        self.final_date_time = (datetime.now() + timedelta(days=4)).strftime('%d/%m/%Y')
+        self.start_date_time = (timezone.now() + timedelta(days=2)).strftime('%d/%m/%Y')
+        self.final_date_time = (timezone.now() + timedelta(days=4)).strftime('%d/%m/%Y')
         self.uploaded_file = SimpleUploadedFile(
             name='event_banner.png',
             content=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00d\x00\x00\x00d\x08\x06\x00\x00\x00\x1f\xf3\xffa\x00\x00\x00\x06bKGD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\tpHYs\x00\x00\x0b\xf8\x00\x00\x0b\xf8\x01\xc7o\xa8d\x00\x00\x00\x06PLTE\xff\xff\xff\x00\x00\x00\xc0\xc0\xc0\xf7\xf7\xf7\x00\x00\x00\xfc\x00\x00\x00\x00gAMA\x00\x00\xaf\xc8\x37\x05\x8a\xe9\x00\x00\x00\tpHYs\x00\x00\x0b\xf8\x00\x00\x0b\xf8\x01\xc7o\xa8d\x00\x00\x00\x06PLTE\xff\xff\xff\x00\x00\x00\xc0\xc0\xc0\xf7\xf7\xf7\x00\x00\x00\xfc\x00\x00\x00\x00gAMA\x00\x00\xaf\xc8\x37\x05\x8a\xe9\x00\x00\x00\x1aIDATx\xda\xed\xc1\x01\x0d\x00\x00\x08\xc0\xc0\xec\x7fY\x00\x00\x00\x00IEND\xaeB`\x82',
@@ -128,8 +128,8 @@ class TestViewCriarEvento(TestCase):
 class TestViewEditarEvento(TestCase):
     
     def setUp(self) -> None:
-        self.start_date_time = datetime.now() + timedelta(days=2)
-        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.start_date_time = timezone.now() + timedelta(days=2)
+        self.final_date_time = timezone.now() + timedelta(days=4)
         self.uploaded_file = SimpleUploadedFile(
             name='event_banner.png',
             content=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00d\x00\x00\x00d\x08\x06\x00\x00\x00\x1f\xf3\xffa\x00\x00\x00\x06bKGD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\tpHYs\x00\x00\x0b\xf8\x00\x00\x0b\xf8\x01\xc7o\xa8d\x00\x00\x00\x06PLTE\xff\xff\xff\x00\x00\x00\xc0\xc0\xc0\xf7\xf7\xf7\x00\x00\x00\xfc\x00\x00\x00\x00gAMA\x00\x00\xaf\xc8\x37\x05\x8a\xe9\x00\x00\x00\tpHYs\x00\x00\x0b\xf8\x00\x00\x0b\xf8\x01\xc7o\xa8d\x00\x00\x00\x06PLTE\xff\xff\xff\x00\x00\x00\xc0\xc0\xc0\xf7\xf7\xf7\x00\x00\x00\xfc\x00\x00\x00\x00gAMA\x00\x00\xaf\xc8\x37\x05\x8a\xe9\x00\x00\x00\x1aIDATx\xda\xed\xc1\x01\x0d\x00\x00\x08\xc0\xc0\xec\x7fY\x00\x00\x00\x00IEND\xaeB`\x82',
@@ -233,8 +233,8 @@ class TestViewEditarEvento(TestCase):
 class TestViewExcluirEvento(TestCase):
     
     def setUp(self) -> None:
-        self.start_date_time = datetime.now() + timedelta(days=2)
-        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.start_date_time = timezone.now() + timedelta(days=2)
+        self.final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -284,8 +284,8 @@ class TestViewExcluirEvento(TestCase):
 class TestViewSolicitacoesEvento(TestCase):
     
     def setUp(self) -> None:
-        self.start_date_time = datetime.now() + timedelta(days=2)
-        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.start_date_time = timezone.now() + timedelta(days=2)
+        self.final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -455,8 +455,8 @@ class TestViewSolicitacoesEvento(TestCase):
 class TestRejeitarSolicitacao(TestCase):
     
     def setUp(self) -> None:
-        self.start_date_time = datetime.now() + timedelta(days=2)
-        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.start_date_time = timezone.now() + timedelta(days=2)
+        self.final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -498,7 +498,7 @@ class TestRejeitarSolicitacao(TestCase):
     
     def test_rejeitar_solicitacao_event_has_passed(self):
         self.client.login(email='email@gmail.com', password='senhaqualquer12')
-        self.any_event.final_date_time = datetime.now().replace(tzinfo=timezone.utc) - timedelta(days=2) 
+        self.any_event.final_date_time = timezone.now().replace(tzinfo=timezone.utc) - timedelta(days=2) 
         self.any_event.save()    
         response = self.client.get(reverse('rejeitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
         self.assertEqual(Solicitation.objects.first().status, 'w')
@@ -534,8 +534,8 @@ class TestRejeitarSolicitacao(TestCase):
 class TestAceitarSolicitacao(TestCase):
     
     def setUp(self) -> None:
-        self.start_date_time = datetime.now() + timedelta(days=2)
-        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.start_date_time = timezone.now() + timedelta(days=2)
+        self.final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -577,7 +577,7 @@ class TestAceitarSolicitacao(TestCase):
     
     def test_aceitar_solicitacao_event_has_passed(self):
         self.client.login(email='email@gmail.com', password='senhaqualquer12')
-        self.any_event.final_date_time = datetime.now().replace(tzinfo=timezone.utc) - timedelta(days=2) 
+        self.any_event.final_date_time = timezone.now().replace(tzinfo=timezone.utc) - timedelta(days=2) 
         self.any_event.save()    
         response = self.client.get(reverse('aceitar_solicitacao', args=[self.any_event.id, self.another_user.id]))
         self.assertEqual(Solicitation.objects.first().status, 'w')
@@ -623,8 +623,8 @@ class TestAceitarSolicitacao(TestCase):
 class TestViewVerMais(TestCase):
     
     def setUp(self) -> None:
-        self.start_date_time = datetime.now() + timedelta(days=2)
-        self.final_date_time = datetime.now() + timedelta(days=4)
+        self.start_date_time = timezone.now() + timedelta(days=2)
+        self.final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -815,8 +815,8 @@ class TestViewVerMais(TestCase):
 class TestViewParticipantes(TestCase):
     
     def setUp(self) -> None:
-        start_date_time = datetime.now() + timedelta(days=2)
-        final_date_time = datetime.now() + timedelta(days=4)
+        start_date_time = timezone.now() + timedelta(days=2)
+        final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -873,8 +873,8 @@ class TestViewParticipantes(TestCase):
 class TestViewRemoverParticipante(TestCase):
     
     def setUp(self) -> None:
-        start_date_time = datetime.now() + timedelta(days=2)
-        final_date_time = datetime.now() + timedelta(days=4)
+        start_date_time = timezone.now() + timedelta(days=2)
+        final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -948,8 +948,8 @@ class TestViewRemoverParticipante(TestCase):
 class TestViewParticipar(TestCase):
     
     def setUp(self) -> None:
-        start_date_time = datetime.now() + timedelta(days=2)
-        final_date_time = datetime.now() + timedelta(days=4)
+        start_date_time = timezone.now() + timedelta(days=2)
+        final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -1097,8 +1097,8 @@ class TestViewParticipar(TestCase):
 class TestViewParticipando(TestCase):
     
     def setUp(self) -> None:
-        start_date_time = datetime.now() + timedelta(days=2)
-        final_date_time = datetime.now() + timedelta(days=4)
+        start_date_time = timezone.now() + timedelta(days=2)
+        final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -1146,11 +1146,11 @@ class TestViewParticipando(TestCase):
             category_id=1, 
             private=False, 
             free=False,             
-            start_date_time=datetime.now() - timedelta(days=2), 
-            final_date_time=datetime.now() - timedelta(days=1), 
+            start_date_time=timezone.now() - timedelta(days=2), 
+            final_date_time=timezone.now() - timedelta(days=1), 
         )
-        self.any_event.start_date_time = datetime.now() - timedelta(days=3)
-        self.any_event.final_date_time = datetime.now() - timedelta(days=2)
+        self.any_event.start_date_time = timezone.now() - timedelta(days=3)
+        self.any_event.final_date_time = timezone.now() - timedelta(days=2)
         self.any_event.save()
         Solicitation.objects.create(user=self.another_user, event=self.any_event)
         Solicitation.objects.create(user=self.another_user, event=any_event2)
@@ -1172,8 +1172,8 @@ class TestViewParticipando(TestCase):
             category_id=1, 
             private=False, 
             free=False,             
-            start_date_time=datetime.now() - timedelta(days=2), 
-            final_date_time=datetime.now() - timedelta(days=1), 
+            start_date_time=timezone.now() - timedelta(days=2), 
+            final_date_time=timezone.now() - timedelta(days=1), 
         )
         any_event3 = Event.objects.create(
             title='Titulo 3', 
@@ -1182,11 +1182,11 @@ class TestViewParticipando(TestCase):
             category_id=1, 
             private=False, 
             free=False,             
-            start_date_time=datetime.now() - timedelta(days=2), 
-            final_date_time=datetime.now() - timedelta(days=1), 
+            start_date_time=timezone.now() - timedelta(days=2), 
+            final_date_time=timezone.now() - timedelta(days=1), 
         )
-        self.any_event.start_date_time = datetime.now() - timedelta(days=3)
-        self.any_event.final_date_time = datetime.now() - timedelta(days=2)
+        self.any_event.start_date_time = timezone.now() - timedelta(days=3)
+        self.any_event.final_date_time = timezone.now() - timedelta(days=2)
         self.any_event.save()
         Solicitation.objects.create(user=self.another_user, event=self.any_event)
         Solicitation.objects.create(user=self.another_user, event=any_event2)
@@ -1219,11 +1219,11 @@ class TestViewParticipando(TestCase):
             category_id=1, 
             private=False, 
             free=False,             
-            start_date_time=datetime.now() - timedelta(days=2), 
-            final_date_time=datetime.now() - timedelta(days=1), 
+            start_date_time=timezone.now() - timedelta(days=2), 
+            final_date_time=timezone.now() - timedelta(days=1), 
         )
-        self.any_event.start_date_time = datetime.now() - timedelta(days=3)
-        self.any_event.final_date_time = datetime.now() - timedelta(days=2)
+        self.any_event.start_date_time = timezone.now() - timedelta(days=3)
+        self.any_event.final_date_time = timezone.now() - timedelta(days=2)
         self.any_event.save()
         self.any_event.participants.add(self.another_user)
         any_event2.participants.add(self.another_user)
@@ -1244,8 +1244,8 @@ class TestViewParticipando(TestCase):
             category_id=1, 
             private=False, 
             free=False,             
-            start_date_time=datetime.now() + timedelta(days=2), 
-            final_date_time=datetime.now() + timedelta(days=1), 
+            start_date_time=timezone.now() + timedelta(days=2), 
+            final_date_time=timezone.now() + timedelta(days=1), 
         )
         any_event2.participants.add(self.another_user)
         self.any_event.participants.add(self.another_user)
@@ -1264,8 +1264,8 @@ class TestViewParticipando(TestCase):
             category_id=1, 
             private=False, 
             free=False,             
-            start_date_time=datetime.now() + timedelta(days=2), 
-            final_date_time=datetime.now() + timedelta(days=1), 
+            start_date_time=timezone.now() + timedelta(days=2), 
+            final_date_time=timezone.now() + timedelta(days=1), 
         )
         any_event2.participants.add(self.another_user)
         self.any_event.participants.add(self.another_user)
@@ -1284,11 +1284,11 @@ class TestViewParticipando(TestCase):
             category_id=1, 
             private=False, 
             free=False,             
-            start_date_time=datetime.now() + timedelta(days=1), 
-            final_date_time=datetime.now() + timedelta(days=2), 
+            start_date_time=timezone.now() + timedelta(days=1), 
+            final_date_time=timezone.now() + timedelta(days=2), 
         )
-        self.any_event.start_date_time = datetime.now() + timedelta(days=3)
-        self.any_event.start_date_time = datetime.now() + timedelta(days=4)
+        self.any_event.start_date_time = timezone.now() + timedelta(days=3)
+        self.any_event.start_date_time = timezone.now() + timedelta(days=4)
         self.any_event.save()
         
         any_event2.participants.add(self.another_user)
@@ -1316,11 +1316,11 @@ class TestViewParticipando(TestCase):
             category_id=1, 
             private=False, 
             free=False,             
-            start_date_time=datetime.now() + timedelta(days=1), 
-            final_date_time=datetime.now() + timedelta(days=2), 
+            start_date_time=timezone.now() + timedelta(days=1), 
+            final_date_time=timezone.now() + timedelta(days=2), 
         )
-        self.any_event.start_date_time = datetime.now() + timedelta(days=3)
-        self.any_event.start_date_time = datetime.now() + timedelta(days=4)
+        self.any_event.start_date_time = timezone.now() + timedelta(days=3)
+        self.any_event.start_date_time = timezone.now() + timedelta(days=4)
         self.any_event.save()
         
         any_event2.participants.add(self.another_user)        
@@ -1343,8 +1343,8 @@ class TestViewParticipando(TestCase):
             category_id=1, 
             private=False, 
             free=False,             
-            start_date_time=datetime.now() + timedelta(days=1), 
-            final_date_time=datetime.now() + timedelta(days=2), 
+            start_date_time=timezone.now() + timedelta(days=1), 
+            final_date_time=timezone.now() + timedelta(days=2), 
         )
         self.any_event.participants.add(self.another_user)
         any_event2.participants.add(self.another_user)        
@@ -1364,8 +1364,8 @@ class TestViewParticipando(TestCase):
             category_id=1, 
             private=True, 
             free=True,
-            start_date_time=datetime.now() + timedelta(days=1), 
-            final_date_time=datetime.now() + timedelta(days=2), 
+            start_date_time=timezone.now() + timedelta(days=1), 
+            final_date_time=timezone.now() + timedelta(days=2), 
         )
         Solicitation.objects.create(event=self.any_event, user=self.another_user)
         Solicitation.objects.create(event=any_event2, user=self.another_user)
@@ -1381,8 +1381,8 @@ class TestViewParticipando(TestCase):
 class TestViewDeixarEvento(TestCase):
     
     def setUp(self) -> None:
-        start_date_time = datetime.now() + timedelta(days=2)
-        final_date_time = datetime.now() + timedelta(days=4)
+        start_date_time = timezone.now() + timedelta(days=2)
+        final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 

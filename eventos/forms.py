@@ -1,5 +1,5 @@
 from django import forms
-from datetime import datetime
+from datetime import datetime, timezone
 from .models import Category, Event
 
 class CustomDateTimeField(forms.DateTimeField):
@@ -36,7 +36,7 @@ class EventForm(forms.ModelForm):
         return event_banner
 
     def clean(self):
-        data_atual = datetime.now()
+        data_atual = timezone.now()
         start_date_time = self.cleaned_data.get('start_date_time')
         final_date_time = self.cleaned_data.get('final_date_time')        
         if start_date_time and final_date_time:

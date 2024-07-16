@@ -9,12 +9,12 @@ from django.contrib.messages import constants
 from account_manager.utils import need_set_age
 from account_manager.models import User
 from .utils import user_is_organizer
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 # Views de organizando
 @login_required
 def organizando(request):
-    data_atual = datetime.now()
+    data_atual = timezone.now()
     include_has_passed = request.POST.get('include_has_passed')
     my_events = Event.objects.filter(organizer=request.user)
     if not include_has_passed:
@@ -222,11 +222,11 @@ def participando(request, render_solicitations=0):
         solicitation_filter = request.GET.get('select_status_solicitation', 'w')
         if solicitation_filter not in ['a', 'r', 'w']:
             solicitation_filter = 'w'        
-        events = Event.objects.filter(solicitation__user=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1, hours=1))
+        events = Event.objects.filter(solicitation__user=user).filter(final_date_time__gte=timezone.now() - timedelta(days=1, hours=1))
         events = events.annotate(status_solicitation=F('solicitation__status')).filter(status_solicitation=solicitation_filter)
 
     else:
-        events = Event.objects.filter(participants=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1, hours=1))
+        events = Event.objects.filter(participants=user).filter(final_date_time__gte=timezone.now() - timedelta(days=1, hours=1))
     
     order = request.GET.get('select_order', 'title')
     if order not in ['title', 'start_date_time', 'num_participants']:

@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import override_settings
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from eventos.models import Event, Solicitation, Category
 
 start_of_url = 'http://127.0.0.1:8000'
@@ -11,8 +11,8 @@ User = get_user_model()
 
 class TestSignalsSendSolicitationNotification(TestCase):
     def setUp(self):
-        start_date_time = datetime.now() + timedelta(days=2)
-        final_date_time = datetime.now() + timedelta(days=4)
+        start_date_time = timezone.now() + timedelta(days=2)
+        final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 
@@ -96,8 +96,8 @@ class TestSignalsSendSolicitationNotification(TestCase):
     
 class TestSignalsSendParticipantNotification(TestCase):
     def setUp(self):
-        start_date_time = datetime.now() + timedelta(days=2)
-        final_date_time = datetime.now() + timedelta(days=4)
+        start_date_time = timezone.now() + timedelta(days=2)
+        final_date_time = timezone.now() + timedelta(days=4)
         self.any_user = User.objects.create_user(
             username='user 1', 
             password='senhaqualquer12', 

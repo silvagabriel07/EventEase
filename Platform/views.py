@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from eventos.models import Event, Category
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import ProfileForm, PhoneNumberForm
@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 def home(request):
     num_featured_events = 6
-    data_atual = datetime.now()
+    data_atual = timezone.now()
     # Para pegar os eventos que já passaram se o evento passou à apenas um dia
     featured_events = Event.objects.filter(final_date_time__gte=data_atual - timedelta(days=1)).annotate(qtd_part=Count('participants')).order_by('-qtd_part')[:num_featured_events]
     return render(request, 'home.html', {'events': featured_events})
@@ -26,7 +26,7 @@ def explorar_eventos(request):
     select_start_date_time = request.GET.get('select_start_date_time')
     select_private = request.GET.get('select_private')
     select_free = request.GET.get('select_free')
-    data_atual = datetime.now()
+    data_atual = timezone.now()
     # Para pegar os eventos que já passaram se o evento passou à apenas um dia
     events = Event.objects.filter(final_date_time__gte=data_atual - timedelta(days=1))
     categories = Category.objects.all()
@@ -134,7 +134,7 @@ def ver_eventos_participando(request, user_id):
     except User.DoesNotExist:
         messages.add_message(request, constants.ERROR, 'Usuário não existe.')
         return redirect('home')
-    event_participanting = user.event_participants.filter(final_date_time__gte=datetime.now() - timedelta(days=1))
+    event_participanting = user.event_participants.filter(final_date_time__gte=timezone.now() - timedelta(days=1))
     return render(request, 'ver_eventos_participando.html', {'user': user, 'events_participanting': event_participanting})
 
 
@@ -144,7 +144,7 @@ def ver_eventos_organizando(request, user_id):
     except User.DoesNotExist:
         messages.add_message(request, constants.ERROR, 'Usuário não existe.')
         return redirect('home')
-    events_organizing = Event.objects.filter(organizer=user).filter(final_date_time__gte=datetime.now() - timedelta(days=1))
+    events_organizing = Event.objects.filter(organizer=user).filter(final_date_time__gte=timezone.now() - timedelta(days=1))
     return render(request, 'ver_eventos_organizando.html', {'user': user, 'events_organizing': events_organizing})
 
 

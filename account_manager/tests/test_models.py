@@ -2,7 +2,7 @@ from django.test import TestCase
 from account_manager.models import User, PhoneNumber
 from django.core.files.uploadedfile import SimpleUploadedFile
 from eventos.models import Event, Category, Solicitation
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.db.utils import IntegrityError
 from django.core.files.storage import default_storage
 from django.core.exceptions import ValidationError
@@ -76,8 +76,8 @@ class TestModelUser(TestCase):
             category_id=1, 
             private=False, 
             free=False,
-            start_date_time=datetime.now() + timedelta(days=1), 
-            final_date_time=datetime.now() + timedelta(days=2)
+            start_date_time=timezone.now() + timedelta(days=1), 
+            final_date_time=timezone.now() + timedelta(days=2)
         )
         event.participants.add(any_user)
         self.assertTrue(any_user.is_user_participant(event))
@@ -105,8 +105,8 @@ class TestModelUser(TestCase):
             category_id=1, 
             private=False, 
             free=False,
-            start_date_time=datetime.now() + timedelta(days=1), 
-            final_date_time=datetime.now() + timedelta(days=2)
+            start_date_time=timezone.now() + timedelta(days=1), 
+            final_date_time=timezone.now() + timedelta(days=2)
         )
         self.assertFalse(any_user.is_user_participant(event))
 
@@ -133,8 +133,8 @@ class TestModelUser(TestCase):
             category_id=1, 
             private=False, 
             free=False,
-            start_date_time=datetime.now() + timedelta(days=1), 
-            final_date_time=datetime.now() + timedelta(days=2)
+            start_date_time=timezone.now() + timedelta(days=1), 
+            final_date_time=timezone.now() + timedelta(days=2)
         )
         Solicitation.objects.create(
             user=any_user,
@@ -165,8 +165,8 @@ class TestModelUser(TestCase):
             category_id=1, 
             private=False, 
             free=False,
-            start_date_time=datetime.now() + timedelta(days=1), 
-            final_date_time=datetime.now() + timedelta(days=2)
+            start_date_time=timezone.now() + timedelta(days=1), 
+            final_date_time=timezone.now() + timedelta(days=2)
         )
         self.assertFalse(any_user.user_already_solicited(event))
 

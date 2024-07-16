@@ -1,7 +1,7 @@
 from django.test import TestCase
 from eventos.forms import EventForm, Category, Event
 from django.core.files.uploadedfile import SimpleUploadedFile
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 
 # PRECISO FAZER MUITO MAIS TESTES PARA ESSE FORM
@@ -10,8 +10,8 @@ class TestFormEventForm(TestCase):
     
     def setUp(self) -> None:
         # Crie um arquivo temporário simulado
-        self.start_date_time = (datetime.now() + timedelta(days=2)).strftime('%d/%m/%Y')
-        self.final_date_time = (datetime.now() + timedelta(days=4)).strftime('%d/%m/%Y')
+        self.start_date_time = (timezone.now() + timedelta(days=2)).strftime('%d/%m/%Y')
+        self.final_date_time = (timezone.now() + timedelta(days=4)).strftime('%d/%m/%Y')
 
         self.uploaded_file = SimpleUploadedFile(
             name='event_banner.png',
@@ -88,7 +88,7 @@ class TestFormEventForm(TestCase):
         self.assertEqual(len(form.errors['final_date_time']), 1)
 
     def test_DateTimeField_start_data_time_after_final_date_time(self):
-        start_date_time = final_date_time = (datetime.now() + timedelta(days=1)).strftime('%d/%m/%Y')
+        start_date_time = final_date_time = (timezone.now() + timedelta(days=1)).strftime('%d/%m/%Y')
 
         data = {
             'title': 'Título Qualquer',
@@ -103,8 +103,8 @@ class TestFormEventForm(TestCase):
         self.assertEqual(form.errors['__all__'][0], 'Data inicial não pode ser após a data final do evento.')
 
     def test_DateTimeField_has_passed(self):
-        start_date_time = (datetime.now() - timedelta(days=2)).strftime('%d/%m/%Y')
-        final_date_time = (datetime.now() - timedelta(days=1)).strftime('%d/%m/%Y')
+        start_date_time = (timezone.now() - timedelta(days=2)).strftime('%d/%m/%Y')
+        final_date_time = (timezone.now() - timedelta(days=1)).strftime('%d/%m/%Y')
         data = {
             'title': 'Título Qualquer',
             'description': 'Descrição qualquer',
@@ -117,7 +117,7 @@ class TestFormEventForm(TestCase):
         self.assertEqual(form.errors['__all__'][0], 'Data informada já passou.')
 
     def test_start_date_time_and_final_date_time_is_equal(self):
-        start_date_time = final_date_time = (datetime.now() + timedelta(days=1)).strftime('%d/%m/%Y')
+        start_date_time = final_date_time = (timezone.now() + timedelta(days=1)).strftime('%d/%m/%Y')
         data = {
             'title': 'Título Qualquer',
             'description': 'Descrição qualquer',

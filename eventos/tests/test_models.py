@@ -24,7 +24,7 @@ class TestModelEvent(TestCase):
             name='Categoria 1'
             )
         
-        start_date_time = datetime.now().replace(tzinfo=timezone.utc) + timedelta(days=1) 
+        start_date_time = timezone.now().replace(tzinfo=timezone.utc) + timedelta(days=1) 
         final_date_time = start_date_time + timedelta(days=20)
 
         self.any_event = Event.objects.create(
@@ -104,8 +104,8 @@ class TestModelEvent(TestCase):
             category=self.any_category, 
             private=False, 
             free=False,             
-            start_date_time=datetime.now().replace(tzinfo=timezone.utc) - timedelta(days=2), 
-            final_date_time=datetime.now().replace(tzinfo=timezone.utc) - timedelta(days=1), 
+            start_date_time=timezone.now().replace(tzinfo=timezone.utc) - timedelta(days=2), 
+            final_date_time=timezone.now().replace(tzinfo=timezone.utc) - timedelta(days=1), 
         )
         self.assertTrue(event_passed.has_passed())
         
@@ -171,7 +171,7 @@ class TestModelSolicitation(TestCase):
             name='Categoria 1'
             )
         
-        start_date_time = datetime.now().replace(tzinfo=timezone.utc) + timedelta(days=1) 
+        start_date_time = timezone.now().replace(tzinfo=timezone.utc) + timedelta(days=1) 
         final_date_time = start_date_time + timedelta(days=20)
 
         self.any_event = Event.objects.create(
