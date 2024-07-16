@@ -33,7 +33,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = ENVIRONMENT == 'development'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'eventease.up.railway.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'eventease.up.railway.app:8080']
 
 CSRF_TRUSTED_ORIGINS = ['https://eventease.up.railway.app']
 
