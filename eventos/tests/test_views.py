@@ -4,7 +4,8 @@ from django.test import TestCase
 from eventos.views import User
 from eventos.models import Event, Category, Solicitation
 from django.urls import reverse
-from datetime import datetime, timezone, timedelta
+from datetime import timedelta
+from django.utils import timezone
 from django.contrib import messages
 
 class TestViewOrganizando(TestCase):

@@ -2,7 +2,8 @@ from django.test import TestCase
 from account_manager.models import User, PhoneNumber
 from django.core.files.uploadedfile import SimpleUploadedFile
 from eventos.models import Event, Category, Solicitation
-from datetime import datetime, timedelta, timezone
+from django.utils import timezone
+from datetime import timedelta
 from django.db.utils import IntegrityError
 from django.core.files.storage import default_storage
 from django.core.exceptions import ValidationError

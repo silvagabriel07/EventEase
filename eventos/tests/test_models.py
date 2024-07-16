@@ -1,6 +1,7 @@
 from django.test import TestCase
 from eventos.models import Event, Category, User, Solicitation
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
+from django.utils import timezone
 from django.db.utils import IntegrityError
 
 class TestModelEvent(TestCase):

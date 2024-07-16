@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from eventos.models import Event, Category
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
+from django.utils import timezone
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import ProfileForm, PhoneNumberForm

@@ -3,7 +3,8 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import override_settings
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
+from django.utils import timezone
 from eventos.models import Event, Solicitation, Category
 
 start_of_url = 'http://127.0.0.1:8000'

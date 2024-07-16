@@ -1,5 +1,6 @@
 from django import forms
-from datetime import datetime, timezone
+from datetime import datetime
+from django.utils import timezone
 from .models import Category, Event
 
 class CustomDateTimeField(forms.DateTimeField):

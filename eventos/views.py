@@ -9,7 +9,8 @@ from django.contrib.messages import constants
 from account_manager.utils import need_set_age
 from account_manager.models import User
 from .utils import user_is_organizer
-from datetime import datetime, timedelta, timezone
+from datetime import timedelta
+from django.utils import timezone
 
 # Views de organizando
 @login_required

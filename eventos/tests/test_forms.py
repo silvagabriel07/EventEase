@@ -1,8 +1,8 @@
 from django.test import TestCase
 from eventos.forms import EventForm, Category, Event
 from django.core.files.uploadedfile import SimpleUploadedFile
-from datetime import datetime, timedelta, timezone
-import os
+from datetime import timedelta
+from django.utils import timezone
 
 # PRECISO FAZER MUITO MAIS TESTES PARA ESSE FORM
 # PRECISO COBRIR TODAS AS POSSIVILIDADES DE ERRO COM ESSE FORM.

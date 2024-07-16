@@ -1,7 +1,7 @@
 from django.db import models
 from account_manager.models import User
 from django.core.exceptions import ObjectDoesNotExist
-from datetime import datetime, timezone
+from django.utils import timezone
 from django.utils import timezone as zone
 
 # Create your models here.
@@ -60,7 +60,7 @@ class Event(models.Model):
         return self.participants.all().count()
 
     def has_passed(self):
-        return self.final_date_time < timezone.now().replace(tzinfo=timezone.utc)
+        return self.final_date_time < timezone.now()
 
     def accept_user(self, user_id):
         try:

@@ -1,5 +1,6 @@
 from django.test import TestCase
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from django.utils import timezone
 from eventos.models import Event, Solicitation, Category
 from django.contrib.auth import get_user_model
 from django.urls import reverse

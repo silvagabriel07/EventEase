@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.test import TestCase
 from eventos.utils import user_is_organizer
 from eventos.models import Category, Event, User
-from datetime import datetime, timedelta, timezone
-from django.urls import reverse
+from datetime import timedelta
+from django.utils import timezone
 
 class TestFunctionUserIsOrganizer(TestCase):
     
