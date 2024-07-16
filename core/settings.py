@@ -37,6 +37,8 @@ ALLOWED_HOSTS = ['eventease.up.railway.app', 'localhost', '127.0.0.1']
 
 CSRF_TRUSTED_ORIGINS = ['https://eventease.up.railway.app', 'http://eventease.up.railway.app']
 
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin-allow-popups'
+
 # Application definition
 
 INSTALLED_APPS = [
