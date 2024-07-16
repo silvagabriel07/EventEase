@@ -13,6 +13,8 @@ from pathlib import Path
 import os
 from django.contrib.messages import constants
 from environ import Env
+import dj_database_url
+
 
 env = Env()
 Env.read_env()
@@ -106,7 +108,9 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
+POSTGRESQL_LOCALLY = False
+if env('ENVIRONMENT') == 'production' or POSTGRESQL_LOCALLY:
+    DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
