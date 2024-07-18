@@ -1,15 +1,15 @@
 {% extends 'base/base.html' %}
 
 {% load static %}
-{% block 'head' %}
+{% block head %}
   <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
   <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
 
 {% endblock %}
 
-{% block 'title' %}Eventos - Participando{% endblock %}
+{% block title %}Eventos - Participando{% endblock %}
 
-{% block 'body' %}
+{% block body %}
 <header>
     <div class="container">
           <h1>Meus Eventos - {% if not render_solicitations %}Participando{% else %}Solicitações para Participação{% endif %}</h1>

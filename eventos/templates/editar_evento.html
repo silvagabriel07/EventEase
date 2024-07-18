@@ -1,14 +1,14 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block 'head' %}
+{% block head %}
     <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
 
 {% endblock %}
 
-{% block 'title' %}Editar Evento{% endblock %}
+{% block title %}Editar Evento{% endblock %}
 
-{% block 'body' %}
+{% block body %}
     <div class="container custom-container">
         {% if form.errors %}
         <ul class="errorlist">

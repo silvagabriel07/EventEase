@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block 'head' %}
+{% block head %}
     <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
     <style>
@@ -20,9 +20,9 @@
     </style>
 {% endblock %}
 
-{% block 'title' %}Perfil{% endblock %}
+{% block title %}Perfil{% endblock %}
 
-{% block 'body' %}    
+{% block body %}    
 
     <div class="container custom-container c-auth">
         <h1>Perfil</h1>
@@ -116,7 +116,7 @@
     </div>
 {% endblock %}
 
-{% block 'endbody' %}  
+{% block title %}  
 <script>
 
 let hiddens = document.getElementsByClassName('hid-form');

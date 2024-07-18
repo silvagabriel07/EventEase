@@ -1,14 +1,14 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block 'head' %}
+{% block head %}
     <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
-{% endblock 'head' %}
+{% endblock head %}
 
-{% block 'title' %}Ver Perfil{% endblock 'title' %}
+{% block title %}Ver Perfil{% endblock %}
 
-{% block 'body' %}
+{% block body %}
     <div class="container custom-container c-auth" >
         <h1>Ver Perfil - {{ user.username }}</h1>
         <hr>
@@ -65,4 +65,4 @@
 
         <hr>
     </div>
-{% endblock 'body' %}
+{% endblock %}

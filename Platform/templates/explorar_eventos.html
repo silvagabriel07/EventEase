@@ -1,14 +1,14 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block 'head' %}
+{% block head %}
   <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
   
 {% endblock %}
 
-{% block 'title' %}EventEase - Explorar{% endblock %}
+{% block title %}EventEase - Explorar{% endblock %}
 
-{% block 'body' %}
+{% block body %}
     <header>
         <p>Procure eventos facilmente...</p>
         <form action="{% url 'explorar_eventos' %}" method="get">
@@ -146,6 +146,6 @@
 </section><!-- End Blog Section -->
 
 {% endblock %}
-{% block 'endbody' %}
+{% block title %}
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-{% endblock 'endbody' %}
+{% endblock %}

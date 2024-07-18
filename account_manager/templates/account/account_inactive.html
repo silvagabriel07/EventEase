@@ -3,14 +3,14 @@
 {% load static %}
 {% load i18n %}
 
-{% block 'head' %}
+{% block head %}
     <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
     <link rel="stylesheet" href="{% static 'accounts/css/accounts.css' %}">
 {% endblock %}
 
-{% block 'title' %}{% trans "Account Inactive" %}{% endblock %}
+{% block title %}{% trans "Account Inactive" %}{% endblock %}
 
-{% block 'body' %}
+{% block body %}
     {% block content %}
 
     <div class="container custom-container c-auth">

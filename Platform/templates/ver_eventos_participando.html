@@ -2,14 +2,14 @@
 
 {% load static %}
 
-{% block 'head' %}
+{% block head %}
   <link rel="stylesheet" href="{% static 'Platform/css/home.css' %}">
   <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
 {% endblock %}
 
-{% block 'title' %}{{ user.username }} - Eventos Participando{% endblock 'title' %}
+{% block title %}{{ user.username }} - Eventos Participando{% endblock %}
 
-{% block 'body' %}
+{% block body %}
     <div class="container custom-container ">
         {% if messages %}
         <br>

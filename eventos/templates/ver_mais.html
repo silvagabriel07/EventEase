@@ -1,13 +1,13 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block 'head' %}
+{% block head %}
     <link rel="stylesheet" href="{% static 'eventos/css/eventos.css' %}">
 {% endblock %}
 
-{% block 'title' %}Ver mais - {{ event.title }}{% endblock %}
+{% block title %}Ver mais - {{ event.title }}{% endblock %}
 
-{% block 'body' %}
+{% block body %}
 <div class="container custom-container">
     {% if messages %}
     <br>
