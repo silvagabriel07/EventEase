@@ -17,64 +17,6 @@
 
 </head>
 <body>
-  <header id="header" class="header d-flex align-items-center">
-    
-    <div class="container-fluid container-xl d-flex align-items-center justify-content-between">
-      <a href="{% url 'home' %}" class="logo d-flex align-items-center">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <img src="{% static 'assets/img/logo.png' %}" alt=""> 
-        <h1>Event<span>Ease</span></h1>
-      </a>
-      <nav id="navbar" class="navbar">
-        <ul>
-          <li><a style="text-decoration: none;" href="{% url 'home' %}">Home</a></li>
-          <li><a style="text-decoration: none;" href="{% url 'explorar_eventos' %}">Explorar</a></li>
-          <li class="dropdown"><a style="text-decoration: none;" href="#"><span>Meus Eventos</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
-            <ul>
-
-              {% if request.user.is_authenticated %}
-                <li><a style="text-decoration: none;" href="{% url 'participando' 0 %}">Participando</a></li>
-              {% else %}
-                <li><a style="text-decoration: none;" href="{% url 'account_login' %}">Participando</a></li>
-              {% endif %}
-
-              {% if request.user.is_authenticated %}
-                <li><a style="text-decoration: none;" href="{% url 'organizando' %}">Organizando</a></li>
-              {% else %}
-                <li><a style="text-decoration: none;" href="{% url 'account_login' %}">Organizando</a></li>
-              {% endif %}
-            </ul>
-          </li>
-          {% if request.user.is_authenticated %}
-            <li><a style="text-decoration: none;" href="{% url 'notifications:unread' %}">
-              
-                <i class="bi bi-bell-fill" style="font-size: 20px;">{% if notifications_count > 0 %}{{ notifications_count }}{% endif %}</i></a></li>
-              
-          {% endif %}
-          {% if request.user.is_authenticated %}
-              <li class="dropdown"><a style="text-decoration: none;" href="#"><span><img width="30px" src="{{ request.user.user_img.url }}"></span> <i class="bi bi-chevron-down dropdown-indicator profile-picture"></i></a>
-            {% else %}
-            <li class="dropdown"><a style="text-decoration: none;" href="#"><span><img width="30px" src="{% static 'Platform/img/img_perfil.png' %}"></span> <i class="bi bi-chevron-down dropdown-indicator profile-picture"></i></a>
-              {% endif %}
-            <ul>
-              <li><a style="text-decoration: none;" href="{% url 'perfil' %}">Perfil</a></li>
-              {% if user.is_authenticated %}
-                <li><a style="text-decoration: none;" href="{% url 'account_logout' %}">Logout</a></li>
-              {% else %}
-              <li><a style="text-decoration: none;" href="{% url 'account_login' %}">Login</a></li>
-              {% endif %}
-            </ul>
-          </li>
-
-
-        </ul>
-      </nav><!-- .navbar -->
-
-      <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
-      <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
-
-    </div>
-  </header><!-- End Header -->
 
   {% block body %}{% endblock %}
 
@@ -103,4 +45,3 @@
 <!--    -------------------------------------------------------------------------------------------                -->
 <!--    -------------------------------------------------------------------------------------------                -->
 <!--    -------------------------------------------------------------------------------------------                -->
-
