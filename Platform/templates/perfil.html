@@ -46,7 +46,18 @@
                 </a> 
             </div>
             <div class="mb-3">
-                    {{ form.user_img }}
+                <div class="form-group">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        {% if not user_img_is_default %}
+                        <a class="btn btn-danger delete-btn" href="{% url 'remover_user_img' %}" title='Remover imagem de usuário' >
+                          <i class="bi bi-trash" style="color: white;"></i>
+                        </a>
+                        {% endif %}
+                        {{ form.user_img }}
+                      </div>
+                    </div>
+                  </div>
                 {% if form.user_img.errors %}
                     <ul class="errorlist">
                         {% for error in form.user_img.errors %}

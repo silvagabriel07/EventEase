@@ -92,6 +92,7 @@ def explorar_eventos(request):
 @login_required
 def perfil(request):
     user_img = request.user.user_img
+    user_img_is_default = user_img == DEFAULT_USER_IMG
     if request.method == 'GET':
         phone_numbers = request.user.phonenumber_set.all()
         extra = 0
@@ -103,7 +104,7 @@ def perfil(request):
 
         form_filho = form_factory(instance=request.user)
         form = ProfileForm(instance=request.user)
-        return render(request, 'perfil.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
+        return render(request, 'perfil.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img, 'user_img_is_default': user_img_is_default})
     elif request.method == 'POST':
         form_factory = forms.inlineformset_factory(User, PhoneNumber, form=PhoneNumberForm)
         form_filho = form_factory(request.POST, instance=request.user)
@@ -151,9 +152,6 @@ def ver_eventos_organizando(request, user_id):
 
 @login_required
 def remover_user_img(request):
-    if request.user.user_img:
-        old_user_img = request.user.user_img
-        request.user.user_img = DEFAULT_USER_IMG
-        request.user.save()
-        
+    request.user.user_img = DEFAULT_USER_IMG
+    request.user.save()
     return redirect('perfil')
