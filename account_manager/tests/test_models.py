@@ -1,5 +1,5 @@
 from django.test import TestCase
-from account_manager.models import User, PhoneNumber
+from account_manager.models import User, PhoneNumber, DEFAULT_USER_IMG
 from django.core.files.uploadedfile import SimpleUploadedFile
 from eventos.models import Event, Category, Solicitation
 from django.utils import timezone
@@ -34,7 +34,7 @@ class TestModelUser(TestCase):
             email='anyuser@gmail.com',
             password='senhaqualquer12',
         )
-        self.assertEqual(user.user_img, '/user_img/user_img.png')
+        self.assertEqual(user.user_img, DEFAULT_USER_IMG)
     
     def test_user_is_minor(self):
         any_user = User.objects.create_user(
@@ -185,7 +185,6 @@ class TestModelUser(TestCase):
                 email='email@gmail.com',
                 password='senhaqualquer12',
             )
-
 
 class TestManagerCustomUserManager(TestCase):
     

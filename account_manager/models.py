@@ -46,6 +46,7 @@ class CustomUserManager(UserManager):
 
         return self._create_user(email=email, password=password, username=username, **extra_fields)
 
+DEFAULT_USER_IMG = '/user_img/user_img.png'
 
 class User(AbstractUser):
     last_name = first_name = None
@@ -54,7 +55,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=60, unique=False)
     email = models.EmailField(max_length=254, unique=True, blank=False, null=False)
     idade = models.IntegerField(default=None, blank=True, null=True)
-    user_img = models.FileField(upload_to='user_img', default='/user_img/user_img.png')
+    user_img = models.FileField(upload_to='user_img', default=DEFAULT_USER_IMG)
 
     objects = CustomUserManager()
 

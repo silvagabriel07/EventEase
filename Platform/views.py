@@ -6,10 +6,11 @@ from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .forms import ProfileForm, PhoneNumberForm
 from django import forms
-from account_manager.models import User, PhoneNumber
+from account_manager.models import User, PhoneNumber, DEFAULT_USER_IMG
 from django.contrib.messages import constants
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+import os
 
 # Create your views here.
 def home(request):
@@ -148,4 +149,11 @@ def ver_eventos_organizando(request, user_id):
     events_organizing = Event.objects.filter(organizer=user).filter(final_date_time__gte=timezone.now() - timedelta(days=1))
     return render(request, 'ver_eventos_organizando.html', {'user': user, 'events_organizing': events_organizing})
 
-
+@login_required
+def remover_user_img(request):
+    if request.user.user_img:
+        old_user_img = request.user.user_img
+        request.user.user_img = DEFAULT_USER_IMG
+        request.user.save()
+        
+    return redirect('perfil')

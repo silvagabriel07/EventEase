@@ -1,15 +1,17 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory, override_settings
+from Platform.views import remover_user_img
 from datetime import datetime, timedelta
 from django.utils import timezone
 from eventos.models import Event, Solicitation, Category
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 from unittest.mock import patch
-from account_manager.models import PhoneNumber
+from account_manager.models import PhoneNumber, DEFAULT_USER_IMG
 from Platform.forms import ProfileForm
 from django.forms import BaseInlineFormSet
 from django.contrib import messages
 from django.core.files.uploadedfile import SimpleUploadedFile
+import tempfile
 
 User = get_user_model()
 
@@ -560,5 +562,36 @@ class TestViewVerEventosOrganizando(TestCase):
         response = self.client.get(reverse('ver_eventos_organizando', args=[self.any_user.id]))
         self.assertTemplateUsed(response, 'ver_eventos_organizando.html')
 
-
-    
+@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
+class TestRemoveUserImg(TestCase):
+    def test_remove_user_img_from_user_with_img(self):
+        uploaded_file = SimpleUploadedFile(
+            name='customized_user_img.png',
+            content=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00d\x00\x00\x00d\x08\x06\x00\x00\x00\x1f\xf3\xffa\x00\x00\x00\x06bKGD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\tpHYs\x00\x00\x0b\xf8\x00\x00\x0b\xf8\x01\xc7o\xa8d\x00\x00\x00\x06PLTE\xff\xff\xff\x00\x00\x00\xc0\xc0\xc0\xf7\xf7\xf7\x00\x00\x00\xfc\x00\x00\x00\x00gAMA\x00\x00\xaf\xc8\x37\x05\x8a\xe9\x00\x00\x00\tpHYs\x00\x00\x0b\xf8\x00\x00\x0b\xf8\x01\xc7o\xa8d\x00\x00\x00\x06PLTE\xff\xff\xff\x00\x00\x00\xc0\xc0\xc0\xf7\xf7\xf7\x00\x00\x00\xfc\x00\x00\x00\x00gAMA\x00\x00\xaf\xc8\x37\x05\x8a\xe9\x00\x00\x00\x1aIDATx\xda\xed\xc1\x01\x0d\x00\x00\x08\xc0\xc0\xec\x7fY\x00\x00\x00\x00IEND\xaeB`\x82',
+            content_type='image/png'
+        )
+        user_with_image = User.objects.create_user(
+            username='user1',
+            email='email1@gmail.com',
+            password='senhaqualquer12',
+            idade=20,
+            user_img=uploaded_file
+        )
+        self.assertIsNotNone(user_with_image.user_img)
+        request = RequestFactory()
+        request.user = user_with_image
+        remover_user_img(request)
+        self.assertEqual(user_with_image.user_img, DEFAULT_USER_IMG)
+        
+    def test_remove_user_img_from_user_without_img(self):
+        user_without_image = User.objects.create_user(
+            username='user',
+            email='email@gmail.com',
+            password='senhaqualquer12',
+            idade=20,
+        )
+        self.assertIsNotNone(user_without_image.user_img)
+        request = RequestFactory()
+        request.user = user_without_image
+        remover_user_img(request)
+        self.assertEqual(user_without_image.user_img, DEFAULT_USER_IMG)

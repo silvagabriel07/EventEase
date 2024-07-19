@@ -187,4 +187,4 @@ class TestViewActivateAccount(TestCase):
         msgs1 = list(get_messages(response1.wsgi_request))
         self.assertEqual(len(msgs1), 1)
         self.assertEqual(str(msgs1[0]), 'Link de ativação de conta inválido.') 
-               
+

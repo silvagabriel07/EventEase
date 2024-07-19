@@ -2,6 +2,7 @@ from django.test import TestCase
 from Platform.forms import ProfileForm, PhoneNumberForm
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth import get_user_model
+from account_manager.models import DEFAULT_USER_IMG
 
 User = get_user_model()
 
@@ -58,7 +59,7 @@ class TestFormProfileForm(TestCase):
         }
         form = ProfileForm(data=data)
         self.assertTrue(form.is_valid())
-        self.assertEqual(form.cleaned_data['user_img'], '/user_img/user_img.png')
+        self.assertEqual(form.cleaned_data['user_img'], DEFAULT_USER_IMG)
         
 
 class TestFormPhoneNumberForm(TestCase):
