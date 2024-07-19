@@ -75,7 +75,15 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-
+    
+    def save(self, *args, **kwargs):
+        if self.pk is not None: 
+            user = User.objects.get(pk=self.pk)
+            # Make the email field uneditable
+            if user.email != self.email:
+                raise ValidationError("O campo 'email' não pode ser alterado.")
+        super().save(*args, **kwargs)
+        
 
 class PhoneNumber(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
