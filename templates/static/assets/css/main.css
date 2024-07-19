@@ -2677,3 +2677,21 @@ section {
     color: #c54734;
     text-decoration:solid;
 }
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555; 
+    border-radius: none; 
+}
+
+::-webkit-scrollbar-track {
+    background: #380087; 
+    border-radius: none; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: black; 
+}
