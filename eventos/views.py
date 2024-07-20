@@ -9,8 +9,9 @@ from django.contrib.messages import constants
 from account_manager.utils import need_set_age
 from account_manager.models import User
 from .utils import user_is_organizer
-from datetime import timedelta
+from datetime import timedelta, datetime
 from django.utils import timezone
+from django.conf import settings
 
 # Views de organizando
 @login_required
@@ -56,8 +57,13 @@ def editar_evento(request, event_id):
                 messages.add_message(request, constants.SUCCESS, 'Evento editado com sucesso.')
                 return redirect('organizando')
         else:
-            form = EventForm(instance=event)
-                    
+            form = EventForm(
+                instance=event,
+                initial={
+                    'start_date_time': event.start_date_time.strftime(settings.DATETIME_INPUT_FORMATS[0]),
+                    'final_date_time': event.final_date_time.strftime(settings.DATETIME_INPUT_FORMATS[0])
+                    }
+                )
         return render(request, 'editar_evento.html', {'form': form, 'event_banner': event_banner, 'event_id': event.id})
     
     

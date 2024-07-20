@@ -110,7 +110,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-POSTGRESQL_LOCALLY = True
+POSTGRESQL_LOCALLY = False
 if env('ENVIRONMENT') == 'production' or POSTGRESQL_LOCALLY:
     DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
@@ -178,6 +178,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+DATETIME_INPUT_FORMATS = ["%d/%m/%Y %H:%M",]  # '25/10/2006 14:30'
 
 
 DJANGO_NOTIFICATIONS_CONFIG = {

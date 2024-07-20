@@ -17,7 +17,7 @@ class TestFunctionUserIsOrganizer(TestCase):
         self.any_user.is_active = True
         self.any_user.save()
         
-        self.start_date_time = timezone.now().replace(tzinfo=timezone.utc) + timedelta(days=1) 
+        self.start_date_time = timezone.now() + timedelta(days=1) 
         self.final_date_time = self.start_date_time + timedelta(days=20)
         Category.objects.create(name='Categoria A')
         self.any_event = Event.objects.create(

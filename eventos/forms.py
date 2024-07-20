@@ -3,19 +3,6 @@ from datetime import datetime
 from django.utils import timezone
 from .models import Category, Event
 
-class CustomDateTimeField(forms.DateTimeField):
-    def to_python(self, value):
-        if value in self.empty_values:
-            return None
-        try:
-            return datetime.strptime(value, '%d/%m/%Y %H:%M')
-        except (ValueError, TypeError):
-            try:
-                return datetime.strptime(value, '%d/%m/%Y %H:%M:%S')
-            except  (ValueError, TypeError):
-                raise forms.ValidationError('Informe a data e hora no formato solicitado: DD/MM/AAAA HH:MM')
-
-
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
@@ -26,8 +13,8 @@ class EventForm(forms.ModelForm):
     category = forms.ModelChoiceField(required=True, label='Selecione a categoria do evento:', empty_label='Selecione', queryset=Category.objects.all(), widget=forms.Select(attrs={'class': 'form-control custom-form-width'}))
     private = forms.BooleanField(required=False, label='Privado:',widget=forms.CheckboxInput(attrs={'id': 'private','class': 'form-check-label'}))
     free = forms.BooleanField(required=False, label='Para todas as idades:',widget=forms.CheckboxInput(attrs={'id': 'free','class': 'form-check-label'}))
-    start_date_time = CustomDateTimeField(required=True, label='Data e hora de início:', input_formats=['%d/%m/%Y %H:%M'], widget=forms.DateTimeInput(attrs={'id': 'start_date_time', 'class': 'form-control custom-form-width', 'placeholder': 'DD/MM/AAAA HH:MM'}))
-    final_date_time = CustomDateTimeField(required=True, label='Data e hora de término:', input_formats=['%d/%m/%Y %H:%M'],widget=forms.DateTimeInput(attrs={'id': 'final_date_time', 'class': 'form-control custom-form-width', 'placeholder': 'DD/MM/AAAA HH:MM'}))
+    start_date_time = forms.DateTimeField(required=True, label='Data e hora de início:', widget=forms.DateTimeInput(attrs={'id': 'start_date_time', 'class': 'form-control custom-form-width', 'placeholder': 'dd/mm/aaaa hh:mm'}))
+    final_date_time = forms.DateTimeField(required=True, label='Data e hora de término:', widget=forms.DateTimeInput(attrs={'id': 'final_date_time', 'class': 'form-control custom-form-width', 'placeholder': 'dd/mm/aaaa hh:mm'}))
     event_banner = forms.FileField(required=False, label='Banner do evento:', widget=forms.FileInput(attrs={'id': 'event_banner', 'class': 'form-control'}))
 
     def clean_event_banner(self):
