@@ -2,7 +2,7 @@ from django.db import models
 from account_manager.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone as zone
-
+from django_resized import ResizedImageField
 # Create your models here.
 
 class Category(models.Model):
@@ -24,7 +24,7 @@ class Event(models.Model):
     free = models.BooleanField(help_text='definir como True significa que é um evento livre, sem restrição de idade')
     start_date_time = models.DateTimeField(default=zone.now)
     final_date_time = models.DateTimeField(default=zone.now)
-    event_banner = models.FileField(upload_to='event_banners', default='/default_event_banner.png')
+    event_banner = ResizedImageField(size=[600, 600], quality=85, upload_to='event_banners', default='/default_event_banner.png')
     
     banned_users = models.ManyToManyField(User, related_name='banned_events', blank=True)
     

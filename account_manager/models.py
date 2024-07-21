@@ -3,6 +3,8 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
+from django_resized import ResizedImageField
+
 
 phone_number_validators = RegexValidator(
         regex=r'^\+\d{2} \d{5}-\d{4}$',
@@ -55,7 +57,7 @@ class User(AbstractUser):
     username = models.CharField(max_length=60, unique=False)
     email = models.EmailField(max_length=254, unique=True, blank=False, null=False)
     idade = models.IntegerField(default=None, blank=True, null=True)
-    user_img = models.FileField(upload_to='user_img', default=DEFAULT_USER_IMG)
+    user_img = ResizedImageField(size=[600, 600], quality=85, upload_to='user_img', default=DEFAULT_USER_IMG)
 
     objects = CustomUserManager()
 
