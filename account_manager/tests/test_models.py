@@ -1,30 +1,29 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from account_manager.models import User, PhoneNumber, DEFAULT_USER_IMG
-from django.core.files.uploadedfile import SimpleUploadedFile
 from eventos.models import Event, Category, Solicitation
 from django.utils import timezone
 from datetime import timedelta
 from django.db.utils import IntegrityError
 from django.core.files.storage import default_storage
 from django.core.exceptions import ValidationError
+from Platform.utils import create_image_file
+import tempfile
 
 
+@override_settings(MEDIA_ROOT=tempfile.mkdtemp())
 class TestModelUser(TestCase):
     
     def test_user_image_path(self):
-        image = SimpleUploadedFile(
-            name='test_img.jpg',
-            content=b'\x00\x01\x02\x03',
-            content_type='image/jpeg'
-        )
+        uploaded_image = create_image_file()
         user = User.objects.create_user(
             username='any user',
             idade=17,
             email='anyuser@gmail.com',
             password='senhaqualquer12',
-            user_img=image
+            user_img=uploaded_image
         )
-        self.assertTrue(user.user_img.url.startswith('/user_img/test_img.jpg'))
+        print(user.user_img.url)
+        self.assertTrue(user.user_img.url.startswith('/media/user_img/'))
         default_storage.delete(user.user_img.path)
 
     def test_create_user_without_user_img_defines_a_default_image(self):

@@ -10,7 +10,7 @@ from account_manager.models import PhoneNumber, DEFAULT_USER_IMG
 from Platform.forms import ProfileForm
 from django.forms import BaseInlineFormSet
 from django.contrib import messages
-from django.core.files.uploadedfile import SimpleUploadedFile
+from Platform.utils import create_image_file
 import tempfile
 
 User = get_user_model()
@@ -565,17 +565,13 @@ class TestViewVerEventosOrganizando(TestCase):
 @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
 class TestRemoveUserImg(TestCase):
     def test_remove_user_img_from_user_with_img(self):
-        uploaded_file = SimpleUploadedFile(
-            name='customized_user_img.png',
-            content=b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00d\x00\x00\x00d\x08\x06\x00\x00\x00\x1f\xf3\xffa\x00\x00\x00\x06bKGD\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\tpHYs\x00\x00\x0b\xf8\x00\x00\x0b\xf8\x01\xc7o\xa8d\x00\x00\x00\x06PLTE\xff\xff\xff\x00\x00\x00\xc0\xc0\xc0\xf7\xf7\xf7\x00\x00\x00\xfc\x00\x00\x00\x00gAMA\x00\x00\xaf\xc8\x37\x05\x8a\xe9\x00\x00\x00\tpHYs\x00\x00\x0b\xf8\x00\x00\x0b\xf8\x01\xc7o\xa8d\x00\x00\x00\x06PLTE\xff\xff\xff\x00\x00\x00\xc0\xc0\xc0\xf7\xf7\xf7\x00\x00\x00\xfc\x00\x00\x00\x00gAMA\x00\x00\xaf\xc8\x37\x05\x8a\xe9\x00\x00\x00\x1aIDATx\xda\xed\xc1\x01\x0d\x00\x00\x08\xc0\xc0\xec\x7fY\x00\x00\x00\x00IEND\xaeB`\x82',
-            content_type='image/png'
-        )
+        uploaded_image = create_image_file()
         user_with_image = User.objects.create_user(
             username='user1',
             email='email1@gmail.com',
             password='senhaqualquer12',
             idade=20,
-            user_img=uploaded_file
+            user_img=uploaded_image
         )
         self.assertIsNotNone(user_with_image.user_img)
         request = RequestFactory()
