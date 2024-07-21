@@ -1,5 +1,9 @@
 # EventEase
 _If you just want to start: [Getting Started](https://github.com/silvagabriel07/EventEase#getting-started)._
+# Or just test it by accessing the domain of the deployed project: https://eventease.up.railway.app
+
+Observation: If you want to use a Google account to log into the production environment, you'll need to send an email to me (gsilvexist@gmail.com) to add your Gmail address as one of the authorized emails for testing. This is necessary because Google’s OAuth policy requires it for deployed applications that are not intended for real production use.
+---
 ### Brief Description: 
 This project is a social network that allows users to organize events and interact with themselves through these events, participating or organizing. EventEase is not just limited to the usual CRUDE operations in events. This project is designed to handle more intricate resources related to events and has them fully integrated, operating for example, with solicitations, blocked users, notification system, etc. All resources in the system have been implemented with the appropriate permissions logic.
 ### Goals: 
