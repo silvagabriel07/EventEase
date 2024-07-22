@@ -10,7 +10,7 @@ from account_manager.models import User, PhoneNumber, DEFAULT_USER_IMG
 from django.contrib.messages import constants
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-import os
+from Platform.utils import remove_obj_img
 
 # Create your views here.
 def home(request):
@@ -152,6 +152,8 @@ def ver_eventos_organizando(request, user_id):
 
 @login_required
 def remover_user_img(request):
-    request.user.user_img = DEFAULT_USER_IMG
-    request.user.save()
+    if remove_obj_img(request.user, field_img_name='user_img'):
+        messages.add_message(request, constants.SUCCESS, 'Imagem de usuário removida.')
+    else:
+        messages.add_message(request, constants.ERROR, 'Não foi possível remover a imagem de usuário.')    
     return redirect('perfil')

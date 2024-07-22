@@ -11,6 +11,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+DEFAULT_EVENT_BANNER = 'event_banners/default_event_banner.png'
 
 class Event(models.Model):
     title = models.CharField(max_length=40)
@@ -24,7 +25,7 @@ class Event(models.Model):
     free = models.BooleanField(help_text='definir como True significa que é um evento livre, sem restrição de idade')
     start_date_time = models.DateTimeField(default=zone.now)
     final_date_time = models.DateTimeField(default=zone.now)
-    event_banner = ResizedImageField(size=[600, 600], quality=85, upload_to='event_banners', default='/default_event_banner.png')
+    event_banner = ResizedImageField(size=[600, 600], quality=85, upload_to='event_banners', default=DEFAULT_EVENT_BANNER)
     
     banned_users = models.ManyToManyField(User, related_name='banned_events', blank=True)
     

@@ -35,22 +35,30 @@
             <h1>Editar Evento</h1><hr>
         <form method="post" enctype="multipart/form-data"> {% csrf_token %}
             <div class="mb-3">
-                <label for="img_event_banner">Banner do Evento Atual:</label> <br>
-                <a id="img_event_banner" href="{{ event_banner.url }}">
+                <label for="id_event_banner">{{ form.event_banner.label }}:</label> <br>
+                <a href="{{ event_banner.url }}">
                     <img class="value-img" src="{{ event_banner.url }}">
                 </a> 
             </div>
-
             <div class="mb-3">
-                <label for="event_banner">{{ form.event_banner.label }}</label>
-                {{ form.event_banner }}
+                      <div class="input-group" style="width: 370px;">
+                        {% if not event_banner_is_default %}
+                        <a class="btn btn-danger delete-btn" href="{% url 'remover_event_banner' event_id %}" title='Remover imagem de usuário' >
+                          <i class="bi bi-trash" style="color: white;"></i>
+                        </a>
+                        {% endif %}
+                        {{ form.event_banner }}
+                      </div>
+
+
+
                 {% if form.event_banner.errors %}
                 <ul class="errorlist">
                     {% for error in form.event_banner.errors %}
                         <li style="color: rgb(229, 70, 70);">{{ error }}</li>
                     {% endfor %}
                 </ul>
-            {% endif %}
+                {% endif %}
           
             </div>
 

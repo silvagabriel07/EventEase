@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from .models import Event, Solicitation
+from .models import Event, Solicitation, DEFAULT_EVENT_BANNER
 from django.db.models import Count, F
 from .forms import EventForm
 from django.contrib.auth.decorators import login_required
@@ -12,6 +12,7 @@ from .utils import user_is_organizer
 from datetime import timedelta, datetime
 from django.utils import timezone
 from django.conf import settings
+from Platform.utils import remove_obj_img
 
 # Views de organizando
 @login_required
@@ -43,13 +44,13 @@ def criar_evento(request):
 @login_required
 def editar_evento(request, event_id):        
     event = Event.objects.filter(id=event_id).first()
+    event_banner_is_default = event.event_banner == DEFAULT_EVENT_BANNER
     if not user_is_organizer(request, event): 
         return redirect('organizando')
     elif event.has_passed():
         messages.add_message(request, constants.ERROR, f'Não é possível editar o evento "{event.title}", pois ele já passou.')
         return redirect('organizando')
     else:
-        event_banner = event.event_banner
         if request.method == 'POST':
             form = EventForm(request.POST, request.FILES, instance=event)
             if form.is_valid():
@@ -64,7 +65,7 @@ def editar_evento(request, event_id):
                     'final_date_time': event.final_date_time.strftime(settings.DATETIME_INPUT_FORMATS[0])
                     }
                 )
-        return render(request, 'editar_evento.html', {'form': form, 'event_banner': event_banner, 'event_id': event.id})
+        return render(request, 'editar_evento.html', {'form': form, 'event_banner': event.event_banner, 'event_id': event.id, 'event_banner_is_default': event_banner_is_default})
     
     
 @login_required
@@ -75,6 +76,15 @@ def excluir_evento(request, event_id):
         messages.add_message(request, constants.SUCCESS, f'Evento {event.title} excluído com sucesso.') 
     return redirect('organizando')
 
+
+@login_required
+def remover_event_banner(request, event_id):
+    event = request.user.event_set.get(id=event_id)
+    if remove_obj_img(event, field_img_name='event_banner'):
+        messages.add_message(request, constants.SUCCESS, 'Banner do evento removido.')
+    else:
+        messages.add_message(request, constants.ERROR, 'Não foi possível remover o banner do evento.')    
+    return redirect(reverse('editar_evento', args=[event.id]))
 
 @login_required
 def solicitacoes_evento(request, event_id):
