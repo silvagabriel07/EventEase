@@ -93,8 +93,11 @@ class PhoneNumber(models.Model):
     phone_number = models.CharField(max_length=14, validators=[phone_number_validators])
     
     def clean(self):
-        existing_phone_numbers = PhoneNumber.objects.filter(user=self.user)
-        if existing_phone_numbers.count() >= 3:
+        existing_phone_numbers = PhoneNumber.objects.filter(user=self.user).exclude(id=self.id)
+        # If the user is adding a new phone number and already have 3
+        if self.id is None and existing_phone_numbers.count() >= 3:
+            raise ValidationError('Um usuário só pode ter no máximo 3 números de telefone.')
+        elif existing_phone_numbers.count() > 3:
             raise ValidationError('Um usuário só pode ter no máximo 3 números de telefone.')
         super().clean()
 
