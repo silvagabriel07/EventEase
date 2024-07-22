@@ -108,9 +108,7 @@
                                 {{ form_ }}
                             </p>
                         {% else %}
-                            <p hidden class="hid-form">
-                                {{ form_ }}
-                            </p>
+                            <div hidden class="hid-form">{{ form_ }}</div>
                         {% endif %}
                     {% endif %}
                     {% if forloop.last %} 
@@ -127,7 +125,8 @@
     </div>
 {% endblock %}
 
-{% block endbody %}  
+{% block endbody %} 
+<h1>nao si o qeu nao sei o que la</h1> 
 <script>
 
 let hiddens = document.getElementsByClassName('hid-form');
