@@ -7,6 +7,7 @@ from django.utils.encoding import force_bytes
 from django.core.mail import EmailMessage
 from django.shortcuts import  redirect
 from .tokens import account_activation_token
+from core.settings import ENVIRONMENT
 
 def need_set_age(request, user):
     if not user.idade:
@@ -18,12 +19,15 @@ def activateEmail(request, user, to_email):
     if request.user.is_active:
         return redirect('home')
     email_subject = 'Ative sua Conta'
-    message = render_to_string('account/email/activate_account.html', {
+    context ={
         'user': user,
         'domain': get_current_site(request).domain,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
         'token': account_activation_token.make_token(user),
-    })
+    }
+    if ENVIRONMENT == 'development':
+        context['domain'] = 'localhost:8000'
+    message = render_to_string('account/email/activate_account.html', context)
     email = EmailMessage(email_subject, message, to=[to_email])
     if email.send():
         message = f'Senhor <b>{user}</b>, por favor, vá até sua caixa de mensagens em seu email <b>{to_email}</b> e clique no link de ativação de conta para completar seu cadastro. <b>Nota:</b> Verifique sua caixa de spam.'
