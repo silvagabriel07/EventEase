@@ -59,9 +59,7 @@ class TestUtilsActivateEmail(TestCase):
         response = self.client.get(reverse('home'))
         activateEmail(response.wsgi_request, self.user, self.user.email)        
         email = mail.outbox[0].body
-        if 'example.com' in email:
-            email = email.replace('example.com', 'http://127.0.0.1:8000')
-        url = email.split()[-1]
+        url = 'http://' + email.split()[-1]
         response = self.client.get(url)
         
         self.user.refresh_from_db()

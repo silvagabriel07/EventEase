@@ -22,7 +22,6 @@ class TestModelUser(TestCase):
             password='senhaqualquer12',
             user_img=uploaded_image
         )
-        print(user.user_img.url)
         self.assertTrue(user.user_img.url.startswith('/media/user_img/'))
         default_storage.delete(user.user_img.path)
 
