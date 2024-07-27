@@ -40,44 +40,48 @@ def explorar_eventos(request):
         events = events.filter(category_id=select_category)
 
     if select_start_date_time:
-        if select_start_date_time == 'today':
-            events = events.filter(start_date_time__year=data_atual.year).filter(start_date_time__month=data_atual.month).filter(start_date_time__day=data_atual.day)
-        elif select_start_date_time == 'this_month':
-            events = events.filter(start_date_time__month=data_atual.month)
-        elif select_start_date_time == 'next_month':
-            events = events.filter(start_date_time__month=data_atual.month + 1)
-        elif select_start_date_time == 'this_year':
-            events = events.filter(start_date_time__year=data_atual.year)
+        match select_start_date_time:
+            case 'today':
+                events = events.filter(start_date_time__year=data_atual.year).filter(start_date_time__month=data_atual.month).filter(start_date_time__day=data_atual.day)
+            case 'this_month':
+                events = events.filter(start_date_time__month=data_atual.month)
+            case 'next_month':
+                events = events.filter(start_date_time__month=data_atual.month + 1)
+            case 'this_year':
+                events = events.filter(start_date_time__year=data_atual.year)
 
     if select_private:
-        if select_private == "true":
-            events = events.filter(private=True)
-        elif select_private == "false":
-            events = events.filter(private=False)
+        match select_private:
+            case "true":
+                events = events.filter(private=True)
+            case "false":
+                events = events.filter(private=False)
 
     if select_free:
-        if select_free == "true":
-            events = events.filter(free=True)
-        elif select_free == "false":
-            events = events.filter(free=False)
+        match select_free:
+            case "true":
+                events = events.filter(free=True)
+            case "false":
+                events = events.filter(free=False)
 
     if select_num_participants:
-        if select_num_participants == 'gt_10':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=10)
-        elif select_num_participants == 'lt_10':    
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=10)
-        elif select_num_participants == 'gt_20':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=20)
-        elif select_num_participants == 'lt_20':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=20)
-        elif select_num_participants == 'gt_50':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=50)
-        elif select_num_participants == 'lt_50':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=50)
-        elif select_num_participants == 'gt_100':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=100)
-        elif select_num_participants == 'lt_100':
-            events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=100)
+        match select_num_participants:
+            case 'gt_10':
+                events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=10)
+            case 'lt_10':    
+                events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=10)
+            case 'gt_20':
+                events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=20)
+            case 'lt_20':
+                events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=20)
+            case 'gt_50':
+                events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=50)
+            case 'lt_50':
+                events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=50)
+            case 'gt_100':
+                events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__gte=100)
+            case 'lt_100':
+                events = events.annotate(qtd_part=Count('participants')).filter(qtd_part__lte=100)
         
     page_num = request.GET.get('page', '1')
     event_paginator = Paginator(events, 24)

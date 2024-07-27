@@ -12,6 +12,7 @@ from django.forms import BaseInlineFormSet
 from django.contrib import messages
 from Platform.utils import create_image_file
 import tempfile
+from unittest.mock import patch
 
 User = get_user_model()
 
@@ -562,9 +563,11 @@ class TestViewVerEventosOrganizando(TestCase):
         response = self.client.get(reverse('ver_eventos_organizando', args=[self.any_user.id]))
         self.assertTemplateUsed(response, 'ver_eventos_organizando.html')
 
+
 @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
 class TestRemoveUserImg(TestCase):
-    def test_remove_user_img_from_user_with_img(self):
+    @patch('Platform.views.messages')
+    def test_remove_user_img_from_user_with_img(self, mock_messages):
         uploaded_image = create_image_file()
         user_with_image = User.objects.create_user(
             username='user1',
@@ -576,10 +579,12 @@ class TestRemoveUserImg(TestCase):
         self.assertIsNotNone(user_with_image.user_img)
         request = RequestFactory()
         request.user = user_with_image
+        mock_messages.add_message.return_value = None
         remover_user_img(request)
         self.assertEqual(user_with_image.user_img, DEFAULT_USER_IMG)
-        
-    def test_remove_user_img_from_user_without_img(self):
+
+    @patch('Platform.views.messages')
+    def test_remove_user_img_from_user_without_img(self, mock_messages):
         user_without_image = User.objects.create_user(
             username='user',
             email='email@gmail.com',
@@ -589,5 +594,6 @@ class TestRemoveUserImg(TestCase):
         self.assertIsNotNone(user_without_image.user_img)
         request = RequestFactory()
         request.user = user_without_image
+        mock_messages.add_message.return_value = None
         remover_user_img(request)
         self.assertEqual(user_without_image.user_img, DEFAULT_USER_IMG)
