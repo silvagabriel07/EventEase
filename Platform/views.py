@@ -120,8 +120,7 @@ def perfil(request):
             form_filho.save()
             messages.add_message(request, constants.SUCCESS, 'Alterações salvas.')
             return redirect('perfil')
-        else:
-            return render(request, 'perfil.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
+        return render(request, 'perfil.html', {'form': form, 'form_filho': form_filho, 'user_img': user_img})
 
         
 def ver_perfil(request, user_id):
@@ -156,8 +155,9 @@ def ver_eventos_organizando(request, user_id):
 
 @login_required
 def remover_user_img(request):
+    message = {'type': 'constants.ERROR', 'content': 'conNão foi possível remover a imagem de usuário.'}
     if remove_obj_img(request.user, field_img_name='user_img'):
-        messages.add_message(request, constants.SUCCESS, 'Imagem de usuário removida.')
-    else:
-        messages.add_message(request, constants.ERROR, 'Não foi possível remover a imagem de usuário.')    
+        message['type'] = constants.SUCCESS
+        message['content'] = 'Imagem de usuário removida.'
+    messages.add_message(request, message['type'], message['content'])    
     return redirect('perfil')

@@ -36,9 +36,8 @@ class ProfileForm(forms.ModelForm):
     def clean_idade(self):
         idade = self.cleaned_data['idade']
         if idade:
-            if idade < 14:
-                self.add_error('idade', 'Menores de 14 anos não podem se cadastrar.')
-            else:
+            if idade >= 14:
                 return idade
-        else:
-            self.add_error('idade', 'É necessário informar a idade.')
+            self.add_error('idade', 'Menores de 14 anos não podem se cadastrar.')
+            return
+        self.add_error('idade', 'É necessário informar a idade.')
