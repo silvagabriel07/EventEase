@@ -1,0 +1,41 @@
+services:
+  easypostgres:
+    image: postgres
+    networks:
+      - easynetwork
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres_easy
+    volumes:
+      - easyvolume:/var/lib/postgresql/data
+    restart: always  
+
+  eventease:
+    build: .
+    networks:
+      - easynetwork
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      DATABASE_NAME: postgres_easy
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      DATABASE_PORT: 5432
+      DATABASE_HOST: easypostgres  
+      POSTGRES_FROM: local
+    depends_on:
+      - easypostgres 
+    ports:
+      - 8000:8000
+    restart: always 
+
+networks:
+  easynetwork:
+    driver: bridge 
+
+volumes:
+  easyvolume: 
+     
