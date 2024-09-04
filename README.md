@@ -1,6 +1,6 @@
 # EventEase
 _If you just want to start: [Getting Started](https://github.com/silvagabriel07/EventEase#getting-started)._
-# Or just test it by accessing the domain of the deployed project: https://eventease.up.railway.app
+# Or just test it by accessing the domain of the deployed project: https://eventease.up.railway.app (It is no longer activated)
 
 Observation: If you want to use a Google account to log into the production environment, you'll need to send an email to me (gsilvexist@gmail.com) to add your Gmail address as one of the authorized emails for testing. This is necessary because Google’s OAuth policy requires it for deployed applications that are not intended for real production use.
 ---
